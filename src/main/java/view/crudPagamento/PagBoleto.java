@@ -1,4 +1,4 @@
-package view.crud;
+package view.crudPagamento;
 
 import java.awt.Color;
 import java.awt.EventQueue;

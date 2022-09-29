@@ -6,8 +6,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import view.crud.PagBoleto;
-import view.crud.PagCartao;
+import view.crudPagamento.PagBoleto;
+import view.crudPagamento.PagCartao;
 
 import java.awt.Color;
 
@@ -22,7 +22,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JLabel;
 
-public class TMain extends JFrame {
+public class MainView extends JFrame {
 
 	/**
 	 * 
@@ -39,7 +39,7 @@ public class TMain extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					TMain frame = new TMain();
+					MainView frame = new MainView();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -49,7 +49,7 @@ public class TMain extends JFrame {
 	}
 	
 	
-	private TMain() {
+	private MainView() {
 		setTitle("Loja");
 		initComponents();
 		eventHandler();
