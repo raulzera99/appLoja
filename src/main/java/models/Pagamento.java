@@ -2,12 +2,13 @@ package models;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
-import javax.persistence.JoinColumn;
-import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 
 import models.enums.EstadoPagamento;
@@ -19,12 +20,14 @@ public class Pagamento implements Serializable {
 
 	// Attributes
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
 	private Long id;
+	
+	@Column(name = "estado_pagamento")
 	private Integer estado;
 
-	@JoinColumn(name = "pedido_id")
-	@OneToOne
-	@MapsId
+	@OneToOne(mappedBy = "pagamento")
 	private Pedido pedido;
 
 	// Constructors

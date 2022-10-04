@@ -2,13 +2,12 @@ package models;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
-import javax.persistence.CollectionTable;
-import javax.persistence.ElementCollection;
+import java.util.List;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -21,37 +20,48 @@ import models.enums.TipoCliente;
 @Table(name = "table_cliente")
 public class Cliente implements Serializable {
 	private static final long serialVersionUID = 1L;
+	
 	// Attributes
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
+	@Column(name = "nome")
 	private String nome;
+	@Column(name = "email")
 	private String email;
+	@Column(name = "cpfOuCnpj")
 	private String cpfOuCnpj;
+	@Column(name = "tipo")
 	private Integer tipo;
 
-	@OneToMany(mappedBy = "cliente")
+	@OneToMany(mappedBy = "cliente", fetch = FetchType.EAGER)
 	public List<Endereco> enderecos = new ArrayList<Endereco>();
 
-	@ElementCollection
-	@CollectionTable(name = "TELEFONE")
-	private Set<String> telefones = new HashSet<String>();
+	@OneToMany(mappedBy = "cliente", fetch = FetchType.EAGER)
+	private List<Telefone> telefones = new ArrayList<Telefone>();
 
-	@OneToMany(mappedBy = "cliente")
+	@OneToMany(mappedBy = "cliente", fetch = FetchType.EAGER)
 	private List<Pedido> pedidos = new ArrayList<Pedido>();
 
 	// Constructors
 	public Cliente() {
 	}
 
-	public Cliente(Integer id, String nome, String email, String cpfOuCnpj, TipoCliente tipo) {
+
+	public Cliente(Integer id, String nome, String email, String cpfOuCnpj, Integer tipo, List<Endereco> enderecos,
+			List<Telefone> telefones, List<Pedido> pedidos) {
 		super();
 		this.id = id;
 		this.nome = nome;
 		this.email = email;
 		this.cpfOuCnpj = cpfOuCnpj;
-		this.tipo = tipo.getCod();
+		this.tipo = tipo;
+		this.enderecos = enderecos;
+		this.telefones = telefones;
+		this.pedidos = pedidos;
 	}
+
+
 
 	// Methods
 	public Integer getId() {
@@ -102,12 +112,16 @@ public class Cliente implements Serializable {
 		this.enderecos = enderecos;
 	}
 
-	public Set<String> getTelefones() {
+	public List<Telefone> getTelefones() {
 		return telefones;
 	}
 
-	public void setTelefones(Set<String> telefones) {
+	public void setTelefones(List<Telefone> telefones) {
 		this.telefones = telefones;
+	}
+
+	public void setTipo(Integer tipo) {
+		this.tipo = tipo;
 	}
 
 	public List<Pedido> getPedidos() {

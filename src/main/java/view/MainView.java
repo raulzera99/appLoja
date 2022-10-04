@@ -6,8 +6,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import view.crudPagamento.PagBoleto;
-import view.crudPagamento.PagCartao;
+import view.pagamentos.PagamentoComBoletoView;
+import view.pagamentos.PagamentoComCartaoView;
 
 import java.awt.Color;
 
@@ -60,7 +60,7 @@ public class MainView extends JFrame {
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
 						try {
-							PagCartao frame = new PagCartao();
+							PagamentoComCartaoView frame = new PagamentoComCartaoView();
 							frame.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -74,7 +74,7 @@ public class MainView extends JFrame {
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
 						try {
-							PagBoleto frame = new PagBoleto();
+							PagamentoComBoletoView frame = new PagamentoComBoletoView();
 							frame.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();

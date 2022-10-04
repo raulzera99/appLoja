@@ -32,15 +32,16 @@ public class Pedido implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date instante;
 		
-	@OneToOne(cascade=CascadeType.ALL, mappedBy="pedido" )
+	@OneToOne(cascade=CascadeType.ALL)
+	@JoinColumn(name = "id_pagamento", referencedColumnName = "id")
 	private Pagamento pagamento;
 	
-	@ManyToOne
-	@JoinColumn(name="cliente_id")
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name="id_cliente", referencedColumnName = "id")
 	private Cliente cliente;
 	
-	@ManyToOne
-	@JoinColumn(name="endereco_id")
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name="id_endereco", referencedColumnName = "id")
 	private Endereco enderecoDeEntrega;
 	
 	@OneToMany(mappedBy="id.pedido")

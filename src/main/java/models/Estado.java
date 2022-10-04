@@ -4,13 +4,17 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "table_estado")
 public class Estado implements Serializable{
 	private static final long serialVersionUID = 1L;
 
@@ -19,9 +23,10 @@ public class Estado implements Serializable{
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
 	
+	@Column(name = "nome")
 	private String nome;
 	
-	@OneToMany(mappedBy="estado")
+	@OneToMany(mappedBy="estado", fetch = FetchType.EAGER)
 	private List<Cidade> cidades = new ArrayList<Cidade>();
 
 	public Estado(Integer id, String nome) {

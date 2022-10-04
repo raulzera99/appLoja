@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,6 +16,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 @Entity
 public class Produto implements Serializable {
@@ -21,20 +24,27 @@ public class Produto implements Serializable {
 	//Attributes
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
 	private Integer id;
 	
+	@Column(name = "nome")
 	private String nome;
 	
+	@Column(name = "preco")
 	private double preco;
 	
 	@ManyToMany
-	@JoinTable(name="PRODUTO_CATEGORIA",
-	joinColumns = @JoinColumn(name="produto_id"),
-	inverseJoinColumns= @JoinColumn(name = "categoria_id"))
+	@JoinTable(name="produto_categoria",
+	joinColumns = @JoinColumn(name="id_produto"),
+	inverseJoinColumns= @JoinColumn(name = "id_categoria"))
 	private List<Categoria> categorias = new ArrayList<Categoria>();
 	
 	@OneToMany(mappedBy="id.produto")
 	private Set<ItemPedido> itens = new HashSet<ItemPedido>();
+	
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "id_codigo", referencedColumnName = "id")
+	private Codigo codigo;
 	
 	
 	//Constructors

@@ -2,23 +2,33 @@ package models;
 
 import java.io.Serializable;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-@SuppressWarnings("serial")
 @Entity
 @Table(name="table_telefone")
 public class Telefone implements Serializable{
+	private static final long serialVersionUID = 2139428886156390986L;
+
 	//Attributes
+	@Column(name = "numero")
 	private String numero;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
 	private Long id;
+	
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "id_cliente", referencedColumnName = "id")
+	private Cliente cliente;
 	
 	//Constructors
 	
@@ -31,13 +41,28 @@ public class Telefone implements Serializable{
 
 	//Methods
 	
-	@Column(name="numero", nullable = false)
 	public String getNumero() {
 		return numero;
 	}
 
 	public void setNumero(String numero) {
 		this.numero = numero;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Cliente getCliente() {
+		return cliente;
+	}
+
+	public void setCliente(Cliente cliente) {
+		this.cliente = cliente;
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-package view.crudPagamento;
+package view.pagamentos;
 
 import java.awt.EventQueue;
 
@@ -19,7 +19,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
 
-public class PagCartao extends JFrame {
+public class PagamentoComCartaoView extends JFrame {
 
 	/**
 	 * 
@@ -44,7 +44,7 @@ public class PagCartao extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					PagCartao frame = new PagCartao();
+					PagamentoComCartaoView frame = new PagamentoComCartaoView();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -54,7 +54,7 @@ public class PagCartao extends JFrame {
 	}
 
 	
-	public PagCartao() {
+	public PagamentoComCartaoView() {
 		setBackground(new Color(0, 0, 0));
 		setTitle("Pagamento Cartão");
 		initComponents();

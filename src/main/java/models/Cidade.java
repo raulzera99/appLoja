@@ -1,28 +1,41 @@
 package models;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
 
 @Entity
+@Table(name = "table_cidade")
 public class Cidade implements Serializable{
 	private static final long serialVersionUID = 1L;
 
 	//Attributes
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name = "id")
 	private Integer id;
 	
+	@Column(name = "nome")
 	private String nome;
 	
-	@ManyToOne
-	@JoinColumn(name="estado_id")
+	@OneToMany(mappedBy = "cidade", fetch = FetchType.EAGER)
+	private List<Endereco> enderecos = new ArrayList<Endereco>();
+	
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name="id_estado", referencedColumnName = "id")
 	private Estado estado;
 
 	public Cidade(Integer id, String nome, Estado estado) {

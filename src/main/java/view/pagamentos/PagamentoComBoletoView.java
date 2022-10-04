@@ -1,4 +1,4 @@
-package view.crudPagamento;
+package view.pagamentos;
 
 import java.awt.Color;
 import java.awt.EventQueue;
@@ -17,7 +17,7 @@ import javax.swing.border.EmptyBorder;
 import models.PagamentoComBoleto;
 import services.PagamentoBoletoService;
 
-public class PagBoleto extends JFrame {
+public class PagamentoComBoletoView extends JFrame {
 
 	/**
 	 * 
@@ -43,7 +43,7 @@ public class PagBoleto extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					PagBoleto frame = new PagBoleto();
+					PagamentoComBoletoView frame = new PagamentoComBoletoView();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -56,7 +56,7 @@ public class PagBoleto extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public PagBoleto() {
+	public PagamentoComBoletoView() {
 		setBackground(new Color(0, 0, 0));
 		setTitle("Pagamento com Boleto");
 		initComponents();
