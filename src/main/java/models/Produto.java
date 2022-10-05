@@ -9,6 +9,7 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -17,15 +18,17 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "table_produto")
 public class Produto implements Serializable {
 	private static final long serialVersionUID = 1L;
 	//Attributes
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
-	private Integer id;
+	private Long id;
 	
 	@Column(name = "nome")
 	private String nome;
@@ -33,13 +36,13 @@ public class Produto implements Serializable {
 	@Column(name = "preco")
 	private double preco;
 	
-	@ManyToMany
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinTable(name="produto_categoria",
 	joinColumns = @JoinColumn(name="id_produto"),
 	inverseJoinColumns= @JoinColumn(name = "id_categoria"))
 	private List<Categoria> categorias = new ArrayList<Categoria>();
 	
-	@OneToMany(mappedBy="id.produto")
+	@OneToMany(mappedBy="produto")
 	private Set<ItemPedido> itens = new HashSet<ItemPedido>();
 	
 	@OneToOne(cascade = CascadeType.ALL)
@@ -47,12 +50,14 @@ public class Produto implements Serializable {
 	private Codigo codigo;
 	
 	
+	
+	
 	//Constructors
 	
 	public Produto() {
 	}
 
-	public Produto(Integer id, String nome, double preco) {
+	public Produto(Long id, String nome, double preco) {
 		super();
 		this.id = id;
 		this.nome = nome;
@@ -62,11 +67,11 @@ public class Produto implements Serializable {
 	//Methods
 	
 	
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 	

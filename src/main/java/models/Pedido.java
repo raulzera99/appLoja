@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -27,6 +28,7 @@ public class Pedido implements Serializable {
 	// Attributes
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
 	private Long id;
 	
 	@Temporal(TemporalType.TIMESTAMP)
@@ -44,7 +46,7 @@ public class Pedido implements Serializable {
 	@JoinColumn(name="id_endereco", referencedColumnName = "id")
 	private Endereco enderecoDeEntrega;
 	
-	@OneToMany(mappedBy="id.pedido")
+	@OneToMany(mappedBy="pedido")
 	private Set<ItemPedido> itens = new HashSet<ItemPedido>();
 	
 	// Constructors

@@ -2,45 +2,48 @@ package models;
 
 import java.io.Serializable;
 
-import javax.persistence.EmbeddedId;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "ItemPedido")
 public class ItemPedido implements Serializable{
 	private static final long serialVersionUID = 1L;
-
-	@EmbeddedId
-	private ItemPedidoPK id = new ItemPedidoPK();
+	//Attributes
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
+	private Long id;
 	
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "id_produto", referencedColumnName = "id")
+	private Produto produto;
+	
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "id_pedido", referencedColumnName = "id")
+	private Pedido pedido;
+	
+	@Column(name = "desconto")
 	private double desconto;
+	@Column(name = "quantidade")
 	private Integer quantidade;
+	@Column(name = "preco")
 	private double preco;
 	
 	public ItemPedido() {}
 
 	public ItemPedido(Pedido pedido, Produto produto, double desconto, Integer quantidade, double preco) {
 		super();
-		id.setPedido(pedido);
-		id.setProduto(produto);
 		this.desconto = desconto;
 		this.quantidade = quantidade;
 		this.preco = preco;
-	}
-	
-	public Pedido getPedido() {
-		return id.getPedido();
-	}
-	
-	public Produto getProduto() {
-		return id.getProduto();
-	}
-	
-	public ItemPedidoPK getId() {
-		return id;
-	}
-
-	public void setId(ItemPedidoPK id) {
-		this.id = id;
 	}
 
 	public Double getDesconto() {
