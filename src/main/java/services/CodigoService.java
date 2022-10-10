@@ -71,7 +71,7 @@ public class CodigoService {
 			
 			try {
 				getTx().begin();
-				getDao().removeCodigo(id);
+				getDao().removeCodigoById(id);
 				getTx().commit();
 			}
 			catch(Exception e) {

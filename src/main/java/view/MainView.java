@@ -1,36 +1,30 @@
 package view;
 
+import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import view.pagamentos.PagamentoComBoletoView;
 import view.pagamentos.PagamentoComCartaoView;
-
-import java.awt.Color;
-
-import javax.swing.JMenuBar;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import java.awt.Font;
-
-
-
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import javax.swing.JLabel;
+import view.pagamentos.TablePagamentoBoletoPanel;
 
 public class MainView extends JFrame {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 2435012607684752695L;
-	private JPanel contentPane;
+	JPanel contentPane;
+	TablePagamentoBoletoPanel tablePagamentoBoletoPanel = new TablePagamentoBoletoPanel();
 	JMenuItem mntm_pagamentoCartao = new JMenuItem("Cartão");
 	JMenuItem mntm_pagamentoBoleto = new JMenuItem("Boleto");
+	
 
 	/**
 	 * Launch the application.
@@ -54,8 +48,10 @@ public class MainView extends JFrame {
 		initComponents();
 		eventHandler();
 	}
+	
 	private void eventHandler() {
 		mntm_pagamentoCartao.addActionListener(new ActionListener() {
+			
 			public void actionPerformed(ActionEvent e) {
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
@@ -70,24 +66,15 @@ public class MainView extends JFrame {
 			}
 		});
 		mntm_pagamentoBoleto.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				EventQueue.invokeLater(new Runnable() {
-					public void run() {
-						try {
-							PagamentoComBoletoView frame = new PagamentoComBoletoView();
-							frame.setVisible(true);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-				});
-			}
+			
+			
 		});
 	}
 
 	private void initComponents() {
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1115, 530);
+		setBounds(100, 100, 1115, 647);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(86, 86, 86));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -95,6 +82,7 @@ public class MainView extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
+
 		JPanel topBar = new JPanel();
 		topBar.setBackground(new Color(245, 41, 5));
 		topBar.setBounds(0, 0, 1101, 119);
@@ -178,8 +166,14 @@ public class MainView extends JFrame {
 		
 		JPanel botBar = new JPanel();
 		botBar.setBackground(new Color(245, 41, 5));
-		botBar.setBounds(0, 467, 1101, 26);
+		botBar.setBounds(10, 571, 1079, 26);
 		contentPane.add(botBar);
 		botBar.setLayout(null);
+		
+		JPanel panelTables = new JPanel();
+		panelTables.setBounds(10, 130, 1079, 430);
+		contentPane.add(panelTables);
+		panelTables.setVisible(rootPaneCheckingEnabled);
+		panelTables.add(tablePagamentoBoletoPanel);
 	}
 }
