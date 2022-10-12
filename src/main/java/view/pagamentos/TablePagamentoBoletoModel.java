@@ -10,7 +10,7 @@ import view.table.JTableModel;
 
 public class TablePagamentoBoletoModel extends JTableModel<PagamentoComBoleto>{
 	private static final long serialVersionUID = 2259690966041330349L;
-private List<PagamentoComBoleto> tabela;
+	private List<PagamentoComBoleto> tabela;
 	
 	private final String colunaPagamentoBoleto[] = {"Código","Estado do pagamento", "Data de vencimento", "Data de pagamento"};
 	
@@ -44,6 +44,7 @@ private List<PagamentoComBoleto> tabela;
 			case 3:{
 				return pagamentoBoleto.getDataPagamento();
 			}
+			
 			default:
 				return null;
 			
@@ -66,6 +67,7 @@ private List<PagamentoComBoleto> tabela;
 			case 3:{
 				return Date.class;
 			}
+			
 
 			default:
 				return null;

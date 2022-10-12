@@ -7,23 +7,22 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
+
 
 import models.enums.TipoCliente;
 
 @Entity
-@Table(name = "table_cliente")
 public class Cliente implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	// Attributes
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
 	private Integer id;
 	@Column(name = "nome")
 	private String nome;
@@ -34,13 +33,13 @@ public class Cliente implements Serializable {
 	@Column(name = "tipo")
 	private Integer tipo;
 
-	@OneToMany(mappedBy = "cliente", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "cliente")
 	public List<Endereco> enderecos = new ArrayList<Endereco>();
 
-	@OneToMany(mappedBy = "cliente", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "cliente")
 	private List<Telefone> telefones = new ArrayList<Telefone>();
 
-	@OneToMany(mappedBy = "cliente", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "cliente")
 	private List<Pedido> pedidos = new ArrayList<Pedido>();
 
 	// Constructors

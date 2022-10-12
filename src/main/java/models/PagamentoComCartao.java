@@ -1,13 +1,16 @@
 package models;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 
 import models.enums.EstadoPagamento;
+
 @Entity
 public class PagamentoComCartao extends Pagamento{
 	private static final long serialVersionUID = 1L;
 	
 	//Attributes
+	@Column(name = "numeroDeParcelas")
 	private Integer numeroDeParcelas;
 	
 	//Constructors

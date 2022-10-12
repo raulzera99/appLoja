@@ -7,14 +7,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
 import models.enums.EstadoPagamento;
 
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
 public class Pagamento implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -28,6 +26,7 @@ public class Pagamento implements Serializable {
 	private Integer estado;
 
 	@OneToOne(mappedBy = "pagamento")
+	@JoinColumn(name = "id_pedido", referencedColumnName = "id")
 	private Pedido pedido;
 
 	// Constructors

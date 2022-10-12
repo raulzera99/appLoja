@@ -6,6 +6,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
+import config.Page;
 import models.PagamentoComBoleto;
 
 public class PagamentoComBoletoDAO {
@@ -45,6 +46,43 @@ public class PagamentoComBoletoDAO {
 		pagamentosBoleto = query.getResultList();
 		
 		return pagamentosBoleto;
+	}
+
+	public Page<PagamentoComBoleto> listaPaginada(int paginaAtual, Integer tamanhoPagina) {
+		List<PagamentoComBoleto> listaPagamentoBoleto = new ArrayList<PagamentoComBoleto>();
+		Page<PagamentoComBoleto> page = new Page<PagamentoComBoleto>();
+		
+		Long total = count();
+		
+		Integer pagina = ((paginaAtual - 1)*tamanhoPagina);
+		
+		if(pagina < 0) {
+			pagina = 0;
+		}
+		
+		Double totalPaginas = Math.ceil(total.doubleValue() / tamanhoPagina.doubleValue());
+		
+		TypedQuery<PagamentoComBoleto> query = getEm()
+				.createQuery("SELECT p FROM PagamentoComBoleto p", PagamentoComBoleto.class);
+		
+		listaPagamentoBoleto = query.setFirstResult(pagina)
+				.setMaxResults(tamanhoPagina)
+				.getResultList();
+		
+		page.setContent(listaPagamentoBoleto);
+		page.setPage(paginaAtual);
+		page.setPageSize(tamanhoPagina);
+		page.setTotalRecords(total.intValue());
+		page.setTotalPage(totalPaginas.intValue());
+		
+		return page;
+	}
+
+	private Long count() {
+		TypedQuery<Long> query = getEm()
+				.createQuery("SELECT COUNT(p) FROM PagamentoComBoleto p", Long.class);
+		Long total = query.getSingleResult();
+		return total;
 	}
 	
 }

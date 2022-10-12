@@ -22,7 +22,7 @@ public class RenderHeaderTable implements TableCellRenderer{
 			component = new JLabel((String)""+value);
 			((JLabel)component).setHorizontalAlignment(SwingConstants.CENTER);
 			((JLabel)component).setSize(30, component.getWidth());
-			((JLabel)component).setPreferredSize(new Dimension(3, component.getWidth()));
+			((JLabel)component).setPreferredSize(new Dimension(6, component.getWidth()));
 			
 		}
 		

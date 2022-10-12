@@ -14,14 +14,15 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import view.pagamentos.PagamentoComBoletoView;
 import view.pagamentos.PagamentoComCartaoView;
 import view.pagamentos.TablePagamentoBoletoPanel;
 
 public class MainView extends JFrame {
 	private static final long serialVersionUID = 2435012607684752695L;
+	
 	JPanel contentPane;
-	TablePagamentoBoletoPanel tablePagamentoBoletoPanel = new TablePagamentoBoletoPanel();
+	TablePagamentoBoletoPanel tablePagamentoBoletoPanel = TablePagamentoBoletoPanel.getInstance();
+	JPanel topBar;
 	JMenuItem mntm_pagamentoCartao = new JMenuItem("Cartão");
 	JMenuItem mntm_pagamentoBoleto = new JMenuItem("Boleto");
 	
@@ -66,6 +67,10 @@ public class MainView extends JFrame {
 			}
 		});
 		mntm_pagamentoBoleto.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				tablePagamentoBoletoPanel.setVisible(true);
+				
+			}
 			
 			
 		});
@@ -74,13 +79,17 @@ public class MainView extends JFrame {
 	private void initComponents() {
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1115, 647);
+		setBounds(100, 100, 1115, 685);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(86, 86, 86));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		
+		getContentPane().add(tablePagamentoBoletoPanel);
+		tablePagamentoBoletoPanel.setVisible(false);
+		tablePagamentoBoletoPanel.setBounds(10, 130, 1079, 468);
 		
 
 		JPanel topBar = new JPanel();
@@ -166,14 +175,9 @@ public class MainView extends JFrame {
 		
 		JPanel botBar = new JPanel();
 		botBar.setBackground(new Color(245, 41, 5));
-		botBar.setBounds(10, 571, 1079, 26);
+		botBar.setBounds(10, 609, 1079, 26);
 		contentPane.add(botBar);
 		botBar.setLayout(null);
 		
-		JPanel panelTables = new JPanel();
-		panelTables.setBounds(10, 130, 1079, 430);
-		contentPane.add(panelTables);
-		panelTables.setVisible(rootPaneCheckingEnabled);
-		panelTables.add(tablePagamentoBoletoPanel);
 	}
 }

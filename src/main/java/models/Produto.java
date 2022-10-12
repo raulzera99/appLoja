@@ -9,7 +9,6 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -18,10 +17,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.Table;
 
 @Entity
-@Table(name = "table_produto")
 public class Produto implements Serializable {
 	private static final long serialVersionUID = 1L;
 	//Attributes
@@ -36,7 +33,7 @@ public class Produto implements Serializable {
 	@Column(name = "preco")
 	private double preco;
 	
-	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(name="produto_categoria",
 	joinColumns = @JoinColumn(name="id_produto"),
 	inverseJoinColumns= @JoinColumn(name = "id_categoria"))

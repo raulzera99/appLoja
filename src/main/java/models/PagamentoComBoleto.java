@@ -18,7 +18,7 @@ public class PagamentoComBoleto extends Pagamento{
 	private Date dataVencimento;
 	
 	@Temporal(TemporalType.DATE)
-	private Date dataPagamento;
+	private Date dataPagamento;	
 	
 	//Constructors
 	public PagamentoComBoleto() {}

@@ -6,6 +6,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceContext;
 
+import config.Page;
 import dao.PagamentoComBoletoDAO;
 import models.PagamentoComBoleto;
 import persistence.DataBaseConnection;
@@ -105,5 +106,10 @@ public class PagamentoBoletoService {
 
 	private EntityManager getEm() {
 		return em;
+	}
+
+	public Page<PagamentoComBoleto> listaPaginada(int paginaAtual, int tamanhoPagina) {
+		
+		return dao.listaPaginada(paginaAtual, tamanhoPagina);
 	}
 }

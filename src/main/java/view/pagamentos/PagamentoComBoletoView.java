@@ -1,7 +1,6 @@
 package view.pagamentos;
 
 import java.awt.Color;
-import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,6 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import config.Constantes;
 import models.PagamentoComBoleto;
 import services.PagamentoBoletoService;
 
@@ -33,30 +33,53 @@ public class PagamentoComBoletoView extends JFrame {
 	private JTextField txtDataPagamento;
 	
 	private Long idPagBoleto = 0l;
+	
 	private PagamentoBoletoService pagamentoBoletoService;
-
 	private PagamentoComBoleto pagamentoBoleto;
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					PagamentoComBoletoView frame = new PagamentoComBoletoView();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	
+//	public static void main(String[] args) {
+//		EventQueue.invokeLater(new Runnable() {
+//			public void run() {
+//				try {
+//					PagamentoComBoletoView frame = new PagamentoComBoletoView();
+//					frame.setVisible(true);
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		});
+//	}
 	
 	
 	/**
 	 * Create the frame.
 	 */
-	public PagamentoComBoletoView() {
+	public PagamentoComBoletoView(PagamentoComBoleto pagamentoBoleto, Integer opcaoCadastro) {
+
+		if(opcaoCadastro == Constantes.INCLUIR) {
+			btnSalvar.setText("Incluir");
+			
+		}
+		else if(opcaoCadastro == Constantes.ALTERAR) {
+			consultarPagamentoBoleto(pagamentoBoleto.getId());
+			btnSalvar.setText("Alterar");
+		
+		}
+		else if(opcaoCadastro == Constantes.EXCLUIR) {
+			consultarPagamentoBoleto(pagamentoBoleto.getId());
+			btnSalvar.setText("Excluir");
+			
+		}
+		else if(opcaoCadastro == Constantes.CONSULTAR) {
+			consultarPagamentoBoleto(pagamentoBoleto.getId());
+			btnSalvar.setVisible(false);
+			btnCancelar.setBounds(135, 43, 113, 63);
+			btnCancelar.setText("Sair");
+		}
+		
 		setBackground(new Color(0, 0, 0));
 		setTitle("Pagamento com Boleto");
 		initComponents();
@@ -97,7 +120,7 @@ public class PagamentoComBoletoView extends JFrame {
 			pagamentoBoletoService = getPagBoletoService();
 			pagamentoBoleto = getPagBoleto();
 			
-			setPagBoletoview();
+			setPagamentoBoletoFromView();
 			pagamentoBoletoService.addPagamentoBoleto(pagamentoBoleto);
 			
 			limpa();
@@ -110,7 +133,7 @@ public class PagamentoComBoletoView extends JFrame {
 			pagamentoBoletoService = getPagBoletoService();
 			
 			pagamentoBoleto.setId(idPagBoleto);
-			setPagBoletoview();
+			setPagamentoBoletoFromView();
 			
 			pagamentoBoletoService.updatePagamentoBoleto(pagamentoBoleto);
 			limpa();
@@ -122,14 +145,16 @@ public class PagamentoComBoletoView extends JFrame {
 			
 			limpa();
 		}
-				
-		private void setPagBoletoview() {
-			pagamentoBoleto.setId(idPagBoleto);
-			pagamentoBoleto.setEstado(Integer.parseInt(txtEstado.getText()));
-			pagamentoBoleto.setDataPagamento(Date.valueOf(txtDataPagamento.getText()));
-			pagamentoBoleto.setDataVencimento(Date.valueOf(txtDataVencimento.getText()));
+		
+		public void consultarPagamentoBoleto(Long id) {
+			pagamentoBoletoService = getPagBoletoService();
+			pagamentoBoleto = getPagBoleto();
 			
+			pagamentoBoleto = pagamentoBoletoService.searchPagamentoComBoletoById(id);
+			
+			getPagamentoBoletoFromDataBase();
 		}
+				
 		
 		private void limpa() {
 			
@@ -138,6 +163,22 @@ public class PagamentoComBoletoView extends JFrame {
 			txtDataVencimento.setText("");
 			txtEstado.setText("");
 		}
+		
+		private void setPagamentoBoletoFromView() {
+			pagamentoBoleto.setId(idPagBoleto);
+			pagamentoBoleto.setEstado(Integer.parseInt(txtEstado.getText()));
+			pagamentoBoleto.setDataPagamento(Date.valueOf(txtDataPagamento.getText()));
+			pagamentoBoleto.setDataVencimento(Date.valueOf(txtDataVencimento.getText()));
+			
+		}
+		
+		private void getPagamentoBoletoFromDataBase() {
+			idPagBoleto = pagamentoBoleto.getId();
+			
+			txtEstado.setText(Integer.toString(pagamentoBoleto.getEstado()));
+			txtDataPagamento.setText(String.valueOf(pagamentoBoleto.getDataPagamento()));
+			txtDataVencimento.setText(String.valueOf(pagamentoBoleto.getDataVencimento()));
+			}
 		
 		private void initComponents() {
 			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
