@@ -48,41 +48,42 @@ public class PagamentoComBoletoDAO {
 		return pagamentosBoleto;
 	}
 
-	public Page<PagamentoComBoleto> listaPaginada(int paginaAtual, Integer tamanhoPagina) {
+	public Page<PagamentoComBoleto> listaPaginada(Integer page, Integer pageSize) {
 		List<PagamentoComBoleto> listaPagamentoBoleto = new ArrayList<PagamentoComBoleto>();
-		Page<PagamentoComBoleto> page = new Page<PagamentoComBoleto>();
+		Page<PagamentoComBoleto> pagina = new Page<PagamentoComBoleto>();
 		
 		Long total = count();
 		
-		Integer pagina = ((paginaAtual - 1)*tamanhoPagina);
+		Integer paginaAtual = ((page - 1)*pageSize);
 		
-		if(pagina < 0) {
-			pagina = 0;
+		if(paginaAtual < 0) {
+			paginaAtual = 0;
 		}
 		
-		Double totalPaginas = Math.ceil(total.doubleValue() / tamanhoPagina.doubleValue());
+		Double totalPaginas = Math.ceil(total.doubleValue() / pageSize.doubleValue());
 		
 		TypedQuery<PagamentoComBoleto> query = getEm()
 				.createQuery("SELECT p FROM PagamentoComBoleto p", PagamentoComBoleto.class);
 		
-		listaPagamentoBoleto = query.setFirstResult(pagina)
-				.setMaxResults(tamanhoPagina)
+		listaPagamentoBoleto = query.setFirstResult(paginaAtual)
+				.setMaxResults(pageSize)
 				.getResultList();
 		
-		page.setContent(listaPagamentoBoleto);
-		page.setPage(paginaAtual);
-		page.setPageSize(tamanhoPagina);
-		page.setTotalRecords(total.intValue());
-		page.setTotalPage(totalPaginas.intValue());
+		pagina.setContent(listaPagamentoBoleto);
+		pagina.setPage(page);
+		pagina.setPageSize(pageSize);
+		pagina.setTotalRecords(total.intValue());
+		pagina.setTotalPage(totalPaginas.intValue());
 		
-		return page;
+		return pagina;
 	}
 
 	private Long count() {
 		TypedQuery<Long> query = getEm()
 				.createQuery("SELECT COUNT(p) FROM PagamentoComBoleto p", Long.class);
 		Long total = query.getSingleResult();
-		return total;
+		
+		return total > 0L ? total:0L;
 	}
 	
 }

@@ -79,7 +79,7 @@ public class MainView extends JFrame {
 	private void initComponents() {
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1115, 685);
+		setBounds(100, 100, 1115, 823);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(86, 86, 86));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -89,7 +89,7 @@ public class MainView extends JFrame {
 		
 		getContentPane().add(tablePagamentoBoletoPanel);
 		tablePagamentoBoletoPanel.setVisible(false);
-		tablePagamentoBoletoPanel.setBounds(10, 130, 1079, 468);
+		tablePagamentoBoletoPanel.setBounds(10, 130, 1079, 600);
 		
 
 		JPanel topBar = new JPanel();
@@ -175,7 +175,7 @@ public class MainView extends JFrame {
 		
 		JPanel botBar = new JPanel();
 		botBar.setBackground(new Color(245, 41, 5));
-		botBar.setBounds(10, 609, 1079, 26);
+		botBar.setBounds(10, 747, 1079, 26);
 		contentPane.add(botBar);
 		botBar.setLayout(null);
 		

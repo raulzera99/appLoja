@@ -3,16 +3,25 @@ package models;
 import java.io.Serializable;
 
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 import models.enums.EstadoPagamento;
 
 @Entity
+@Table(name="table_pagamento")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name="tipo_pagamento", 
+  discriminatorType = DiscriminatorType.INTEGER)
 public class Pagamento implements Serializable {
 	private static final long serialVersionUID = 1L;
 

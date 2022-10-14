@@ -17,8 +17,10 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 @Entity
+@Table(name="table_produto")
 public class Produto implements Serializable {
 	private static final long serialVersionUID = 1L;
 	//Attributes
@@ -34,7 +36,7 @@ public class Produto implements Serializable {
 	private double preco;
 	
 	@ManyToMany(cascade = CascadeType.ALL)
-	@JoinTable(name="produto_categoria",
+	@JoinTable(name="table_produto_categoria",
 	joinColumns = @JoinColumn(name="id_produto"),
 	inverseJoinColumns= @JoinColumn(name = "id_categoria"))
 	private List<Categoria> categorias = new ArrayList<Categoria>();

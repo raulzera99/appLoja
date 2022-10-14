@@ -115,10 +115,10 @@ public class TablePagamentoBoletoPanel extends JPanel {
 	}
 	
 	private void initComponents() {
-		setBounds(new Rectangle(10, 130, 1079, 430));
+		setBounds(new Rectangle(10, 130, 1079, 468));
 		setLayout(null);
 		
-		scrollPane.setBounds(10, 11, 1065, 348);
+		scrollPane.setBounds(10, 11, 1065, 478);
 		add(scrollPane);
 		
 		scrollPane.setViewportView(scrollPaneTablePagamentoBoleto);
@@ -127,7 +127,7 @@ public class TablePagamentoBoletoPanel extends JPanel {
 		tablePagamentoBoleto.setFont(new Font("Tahoma", Font.PLAIN, 9));
 		scrollPaneTablePagamentoBoleto.setViewportView(tablePagamentoBoleto);
 		
-		panelButtons.setBounds(10, 370, 1065, 79);
+		panelButtons.setBounds(10, 500, 1065, 79);
 		add(panelButtons);
 		panelButtons.setLayout(null);
 		
@@ -232,7 +232,6 @@ public class TablePagamentoBoletoPanel extends JPanel {
 			coluna.setMaxWidth(350);
 			coluna.setPreferredWidth(325);
 		}
-		
 	}
 	
 	private void showPagamentoBoletoFrame(int opcaoCadastro) {
@@ -248,6 +247,7 @@ public class TablePagamentoBoletoPanel extends JPanel {
 			linha = tablePagamentoBoleto.getSelectedRow();
 			setColuna(tablePagamentoBoleto.getSelectedColumn());
 			pagamentoBoleto = model.getPagamentoBoleto(linha);
+			linha = -1;
 		}
 		else {
 			JOptionPane.showMessageDialog(null, "Selecione uma linha da tabela", "Erro", JOptionPane.ERROR_MESSAGE);

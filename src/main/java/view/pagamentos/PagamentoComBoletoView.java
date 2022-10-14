@@ -15,6 +15,7 @@ import javax.swing.border.EmptyBorder;
 
 import config.Constantes;
 import models.PagamentoComBoleto;
+import models.enums.EstadoPagamento;
 import services.PagamentoBoletoService;
 
 public class PagamentoComBoletoView extends JFrame {
@@ -25,8 +26,6 @@ public class PagamentoComBoletoView extends JFrame {
 	private static final long serialVersionUID = -2933295863195236029L;
 	private JPanel contentPane;
 	JButton btnSalvar = new JButton("Salvar");
-	JButton btnExcluir = new JButton("Excluir");
-	JButton btnAlterar = new JButton("Alterar");
 	JButton btnCancelar = new JButton("Cancelar");
 	private JTextField txtEstado;
 	private JTextField txtDataVencimento;
@@ -58,7 +57,11 @@ public class PagamentoComBoletoView extends JFrame {
 	 * Create the frame.
 	 */
 	public PagamentoComBoletoView(PagamentoComBoleto pagamentoBoleto, Integer opcaoCadastro) {
-
+		setBackground(new Color(0, 0, 0));
+		setTitle("Pagamento com Boleto");
+		initComponents();
+		eventhandler();
+		
 		if(opcaoCadastro == Constantes.INCLUIR) {
 			btnSalvar.setText("Incluir");
 			
@@ -76,14 +79,11 @@ public class PagamentoComBoletoView extends JFrame {
 		else if(opcaoCadastro == Constantes.CONSULTAR) {
 			consultarPagamentoBoleto(pagamentoBoleto.getId());
 			btnSalvar.setVisible(false);
-			btnCancelar.setBounds(135, 43, 113, 63);
+			btnCancelar.setBounds(225, 131, 114, 37);
 			btnCancelar.setText("Sair");
 		}
 		
-		setBackground(new Color(0, 0, 0));
-		setTitle("Pagamento com Boleto");
-		initComponents();
-		eventhandler();
+		
 	}
 	
 		private void eventhandler() {
@@ -95,17 +95,6 @@ public class PagamentoComBoletoView extends JFrame {
 					}else {
 						alterarPagBoleto();
 					}
-				}
-			});
-			
-			btnExcluir.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					excluirPagBoleto();
-				}
-			});
-			btnAlterar.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					alterarPagBoleto();
 				}
 			});
 			
@@ -175,14 +164,14 @@ public class PagamentoComBoletoView extends JFrame {
 		private void getPagamentoBoletoFromDataBase() {
 			idPagBoleto = pagamentoBoleto.getId();
 			
-			txtEstado.setText(Integer.toString(pagamentoBoleto.getEstado()));
+			txtEstado.setText((EstadoPagamento.toEnum(pagamentoBoleto.getEstado()).getDescricao()) );
 			txtDataPagamento.setText(String.valueOf(pagamentoBoleto.getDataPagamento()));
 			txtDataVencimento.setText(String.valueOf(pagamentoBoleto.getDataVencimento()));
 			}
 		
 		private void initComponents() {
 			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			setBounds(100, 100, 798, 476);
+			setBounds(100, 100, 571, 344);
 			contentPane = new JPanel();
 			contentPane.setBackground(new Color(0, 0, 0));
 			contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -192,7 +181,7 @@ public class PagamentoComBoletoView extends JFrame {
 			
 			JPanel panel = new JPanel();
 			panel.setBackground(new Color(211, 61, 48));
-			panel.setBounds(0, 0, 784, 101);
+			panel.setBounds(0, 0, 555, 105);
 			contentPane.add(panel);
 			panel.setLayout(null);
 			
@@ -204,7 +193,7 @@ public class PagamentoComBoletoView extends JFrame {
 			
 			JPanel panel_1 = new JPanel();
 			panel_1.setBackground(new Color(255, 255, 255));
-			panel_1.setBounds(0, 103, 784, 336);
+			panel_1.setBounds(0, 105, 555, 200);
 			contentPane.add(panel_1);
 			panel_1.setLayout(null);
 			
@@ -212,31 +201,14 @@ public class PagamentoComBoletoView extends JFrame {
 			btnSalvar.setForeground(new Color(255, 255, 255));
 			btnSalvar.setBackground(new Color(211, 61, 48));
 			btnSalvar.setFont(new Font("Segoe UI", Font.ITALIC, 15));
-			btnSalvar.setBounds(10, 278, 97, 29);
+			btnSalvar.setBounds(120, 131, 114, 37);
 			panel_1.add(btnSalvar);
-			
-			btnExcluir.setForeground(Color.WHITE);
-			btnExcluir.setFont(new Font("Segoe UI", Font.ITALIC, 15));
-			btnExcluir.setBackground(new Color(211, 61, 48));
-			btnExcluir.setBounds(117, 278, 97, 29);
-			panel_1.add(btnExcluir);
-			
-			JButton btnAlterar = new JButton("Alterar");
-			btnAlterar.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-				}
-			});
-			btnAlterar.setForeground(Color.WHITE);
-			btnAlterar.setFont(new Font("Segoe UI", Font.ITALIC, 15));
-			btnAlterar.setBackground(new Color(211, 61, 48));
-			btnAlterar.setBounds(224, 278, 97, 29);
-			panel_1.add(btnAlterar);
 			
 			
 			btnCancelar.setForeground(Color.WHITE);
 			btnCancelar.setFont(new Font("Segoe UI", Font.ITALIC, 15));
 			btnCancelar.setBackground(new Color(211, 61, 48));
-			btnCancelar.setBounds(331, 278, 97, 29);
+			btnCancelar.setBounds(320, 131, 114, 37);
 			panel_1.add(btnCancelar);
 			
 			JLabel lblestado = new JLabel("Estado :");
@@ -262,7 +234,7 @@ public class PagamentoComBoletoView extends JFrame {
 			
 			JPanel panel_2 = new JPanel();
 			panel_2.setBackground(new Color(211, 61, 48));
-			panel_2.setBounds(0, 317, 784, 21);
+			panel_2.setBounds(0, 179, 555, 21);
 			panel_1.add(panel_2);
 			panel_2.setLayout(null);
 			

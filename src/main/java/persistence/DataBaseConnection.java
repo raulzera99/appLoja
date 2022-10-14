@@ -43,7 +43,7 @@ public class DataBaseConnection {
 		propriedades.put("hibernate.c3p0.max_statements","50");
 		propriedades.put("hibernate.c3p0,timeout","1800");
 		propriedades.put("hibernate.dialect","org.hibernate.dialect.MySQL5Dialect");
-		propriedades.put("hibernate.show_sql","true");
+		propriedades.put("hibernate.show_sql","false");
 		propriedades.put("hibernate.format_sql","true");
 		propriedades.put("useUnicode","true");
 		propriedades.put("characterEncoding","UTF-8");

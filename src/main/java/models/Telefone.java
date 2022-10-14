@@ -10,11 +10,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 @Entity
+@Table(name="table_telefone")
 public class Telefone implements Serializable{
 	private static final long serialVersionUID = 2139428886156390986L;
-
+	
 	//Attributes
 	@Column(name = "numero")
 	private String numero;

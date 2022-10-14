@@ -4,13 +4,16 @@
     xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
     <persistence-unit name="apploja" transaction-type="RESOURCE_LOCAL">
   		<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-  		<class>com.apploja.models.Cliente</class>
   		<class>com.apploja.models.Categoria</class>
   		<class>com.apploja.models.Cidade</class>
+  		<class>com.apploja.models.Cliente</class>
+  		<class>com.apploja.models.Codigo</class>
   		<class>com.apploja.models.Endereco</class>
   		<class>com.apploja.models.Estado</class>
   		<class>com.apploja.models.ItemPedido</class>
-  		<class>com.apploja.models.ItemPedidoPK</class>
+  		<class>com.apploja.models.Pagamento</class>
+  		<class>com.apploja.models.PagamentoComBoleto</class>
+  		<class>com.apploja.models.PagamentoComCartao</class>
   		<class>com.apploja.models.Pedido</class>
   		<class>com.apploja.models.Produto</class>
   		<class>com.apploja.models.Telefone</class>
