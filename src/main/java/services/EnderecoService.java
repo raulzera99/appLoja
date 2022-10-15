@@ -1,108 +1,86 @@
 package services;
 
-import java.util.List;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
-import javax.persistence.PersistenceContext;
-
+import config.Page;
 import dao.EnderecoDAO;
 import models.Endereco;
-import persistence.DataBaseConnection;
 
-public class EnderecoService {
-	//Attributes
-		@PersistenceContext(unitName = "apploja")
-		private final EntityManager em;
-		
-		private EnderecoDAO dao;
-		
-		private EntityTransaction tx;
-		
-		//Constructors
-		public EnderecoService() {
-			em = DataBaseConnection.getConnection().getEntityManager();
-			dao = new EnderecoDAO(em);
-		}
-		
-		//Methods
-		public void addEndereco(Endereco endereco) {
-			tx = getEm().getTransaction();
-			try {
-				getTx().begin();
-				getDao().addEndereco(endereco);;
-				getTx().commit();
-			}
-			catch(Exception e) {
-				e.printStackTrace();
-				if(getTx().isActive()) {
-					getTx().rollback();
-				}
-			}
-			finally {
-				getEm().close();
-			}
-		}
-		
-		public Endereco updateEndereco(Endereco endereco) {
-			tx = getEm().getTransaction();
-			
-			try {
-				getTx().begin();
-				Endereco enderecoAtual = getDao().updateEndereco(endereco);
-				getTx().commit();
-				return enderecoAtual;
-			}
-			catch(Exception e) {
-				e.printStackTrace();
-				if(getTx().isActive()) {
-					getTx().rollback();
-				}
-			}
-			finally {
-				getEm().close();
-			}
-			return null;
-		}
-		
-		public void removeEndereco(Long id) {
-			tx = getEm().getTransaction();
-			
-			try {
-				getTx().begin();
-				getDao().removeEnderecoById(id);
-				getTx().commit();
-			}
-			catch(Exception e) {
-				e.printStackTrace();
-				if(getTx().isActive()) {
-					getTx().rollback();
-				}
-			}
-			finally {
-				getEm().close();
-			}
-		}
-		
-		public Endereco searchEnderecoById(Long id) {
-			Endereco endereco = new Endereco();
-			endereco = dao.searchEnderecoById(id);
-			return endereco;
-		}
-		
-		public List<Endereco> listAllEnderecos(){
-			return dao.listAllEnderecos();
-		}
-		
-		private EnderecoDAO getDao() {
-			return dao;
-		}
+public class EnderecoService extends DataBaseTransactionService<Endereco, Long>{
+	
+	private EnderecoDAO dao;
+	
+	
 
-		private EntityTransaction getTx() {
-			return tx;
-		}
+	public EnderecoService() {
+		dao = new EnderecoDAO(openEntityManager());
+	}
 
-		private EntityManager getEm() {
-			return em;
+	@Override
+	public void add(Endereco entity) {
+		try {
+			beginTransaction();
+			dao.add(entity);
+			commitTransaction();
 		}
+		catch(Exception e) {
+			e.printStackTrace();
+			if(isActiveTransaction()) {
+				rollbackTransaction();
+			}
+		}finally {
+			closeEntityManager();
+		}
+	}
+
+	@Override
+	public Endereco update(Endereco entity) {
+		Endereco endereco = null;
+		try {
+			beginTransaction();
+			endereco = dao.update(entity);
+			commitTransaction();
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			if(isActiveTransaction()) {
+				rollbackTransaction();
+			}
+		}finally {
+			closeEntityManager();
+		}
+		return endereco;
+	}
+
+	@Override
+	public void remove(Endereco entity) {
+		try {
+			beginTransaction();
+			dao.remove(entity);
+			commitTransaction();
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			if(isActiveTransaction()) {
+				rollbackTransaction();
+			}
+		}finally {
+			closeEntityManager();
+		}
+	}
+
+	@Override
+	public Endereco findById(Long id) {
+		Endereco endereco = new Endereco();
+		endereco = dao.searchById(id);
+		return endereco;
+	}
+
+	@Override
+	public Page<Endereco> listaPaginada(Integer page, Integer pageSize) {
+		return dao.listaPaginada(page, pageSize);
+	}
+
+	@Override
+	public Page<Endereco> listaPaginada(Integer page, Integer pageSize, String text) {
+		return dao.listaPaginada(page, pageSize, text);
+	}
 }

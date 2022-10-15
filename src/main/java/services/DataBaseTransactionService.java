@@ -1,5 +1,6 @@
-package services.a;
+package services;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 import javax.persistence.EntityManager;
@@ -9,7 +10,7 @@ import javax.persistence.PersistenceContext;
 import config.Page;
 import persistence.DataBaseConnection;
 
-public abstract class DataBaseTransactionService<T, ID> {
+public abstract class DataBaseTransactionService<T, ID extends Serializable> {
 	
 	@PersistenceContext(unitName = "apploja")
 	private EntityManager em;

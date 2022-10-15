@@ -9,7 +9,7 @@ import javax.swing.border.EmptyBorder;
 
 import models.PagamentoComCartao;
 
-import services.PagamentoCartaoService;
+import services.PagamentoComCartaoService;
 
 import java.awt.Color;
 import javax.swing.JButton;
@@ -34,7 +34,7 @@ public class PagamentoComCartaoView extends JFrame {
 	private JTextField txtParcelas;
 	
 	private long idPagCartao = 0l;
-	private PagamentoCartaoService pagamentoCartaoService;
+	private PagamentoComCartaoService pagamentoCartaoService;
 	
 	private PagamentoComCartao pagamentoCartao;
 	/**
@@ -92,32 +92,35 @@ public class PagamentoComCartaoView extends JFrame {
 		
 	}
 	
-	public void salvarPagCartao() {
+	public void add() {
 		pagamentoCartaoService = getPagCartaoService();
 		pagamentoCartao = getPagCartao();
 		
 		setPagCartaoview();
-		pagamentoCartaoService.addPagamentoCartao(pagamentoCartao);
+		pagamentoCartaoService.add(pagamentoCartao);
 		
 		limpa();
 		
 		
 	}
 	
-	public void alterarPagCartao() {
+	public void update() {
 		pagamentoCartao = getPagCartao();
 		pagamentoCartaoService = getPagCartaoService();
 		
 		pagamentoCartao.setId(idPagCartao);
 		setPagCartaoview();
 		
-		pagamentoCartaoService.updatePagamentoCartao(pagamentoCartao);
+		pagamentoCartaoService.update(pagamentoCartao);
 		limpa();
 	}
 	
-	public void excluirPagCartao() {
+	public void remove() {
 		pagamentoCartaoService = getPagCartaoService();
-		pagamentoCartaoService.removePagamentoCartao(idPagCartao);
+		PagamentoComCartao pagamento = new PagamentoComCartao();
+		pagamento = pagamentoCartaoService.findById(idPagCartao);
+		
+		pagamentoCartaoService.remove(pagamento);
 		
 		limpa();
 	}
@@ -137,8 +140,8 @@ public class PagamentoComCartaoView extends JFrame {
 		txtEstado.setText("");
 	}
 	
-	public PagamentoCartaoService getPagCartaoService() {
-		return new PagamentoCartaoService();
+	public PagamentoComCartaoService getPagCartaoService() {
+		return new PagamentoComCartaoService();
 	}
 	
 	public PagamentoComCartao getPagCartao() {

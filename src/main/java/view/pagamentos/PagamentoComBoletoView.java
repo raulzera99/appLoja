@@ -16,7 +16,7 @@ import javax.swing.border.EmptyBorder;
 import config.Constantes;
 import models.PagamentoComBoleto;
 import models.enums.EstadoPagamento;
-import services.PagamentoBoletoService;
+import services.PagamentoComBoletoService;
 
 public class PagamentoComBoletoView extends JFrame {
 
@@ -33,7 +33,7 @@ public class PagamentoComBoletoView extends JFrame {
 	
 	private Long idPagBoleto = 0l;
 	
-	private PagamentoBoletoService pagamentoBoletoService;
+	private PagamentoComBoletoService pagamentoBoletoService;
 	private PagamentoComBoleto pagamentoBoleto;
 	/**
 	 * Launch the application.
@@ -110,7 +110,7 @@ public class PagamentoComBoletoView extends JFrame {
 			pagamentoBoleto = getPagBoleto();
 			
 			setPagamentoBoletoFromView();
-			pagamentoBoletoService.addPagamentoBoleto(pagamentoBoleto);
+			pagamentoBoletoService.add(pagamentoBoleto);
 			
 			limpa();
 			
@@ -124,13 +124,15 @@ public class PagamentoComBoletoView extends JFrame {
 			pagamentoBoleto.setId(idPagBoleto);
 			setPagamentoBoletoFromView();
 			
-			pagamentoBoletoService.updatePagamentoBoleto(pagamentoBoleto);
+			pagamentoBoletoService.update(pagamentoBoleto);
 			limpa();
 		}
 		
 		public void excluirPagBoleto() {
 			pagamentoBoletoService = getPagBoletoService();
-			pagamentoBoletoService.removePagamentoComBoleto(idPagBoleto);
+			PagamentoComBoleto pagamento = new PagamentoComBoleto();
+			pagamento = pagamentoBoletoService.findById(idPagBoleto);
+			pagamentoBoletoService.remove(pagamento);
 			
 			limpa();
 		}
@@ -139,7 +141,7 @@ public class PagamentoComBoletoView extends JFrame {
 			pagamentoBoletoService = getPagBoletoService();
 			pagamentoBoleto = getPagBoleto();
 			
-			pagamentoBoleto = pagamentoBoletoService.searchPagamentoComBoletoById(id);
+			pagamentoBoleto = pagamentoBoletoService.findById(id);
 			
 			getPagamentoBoletoFromDataBase();
 		}
@@ -251,8 +253,8 @@ public class PagamentoComBoletoView extends JFrame {
 			panel_1.add(txtDataPagamento);
 		}
 		
-		public PagamentoBoletoService getPagBoletoService() {
-			return new PagamentoBoletoService();
+		public PagamentoComBoletoService getPagBoletoService() {
+			return new PagamentoComBoletoService();
 		}
 		
 		public PagamentoComBoleto getPagBoleto() {

@@ -1,109 +1,87 @@
+
 package services;
 
-import java.util.List;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
-import javax.persistence.PersistenceContext;
-
+import config.Page;
 import dao.EstadoDAO;
 import models.Estado;
-import persistence.DataBaseConnection;
 
-public class EstadoService {
-	//Attributes
-		@PersistenceContext(unitName = "apploja")
-		private final EntityManager em;
-		
-		private EstadoDAO dao;
-		
-		private EntityTransaction tx;
-		
-		//Constructors
-		public EstadoService() {
-			em = DataBaseConnection.getConnection().getEntityManager();
-			dao = new EstadoDAO(em);
-		}
-		
-		//Methods
-		public void addEstado(Estado estado) {
-			tx = getEm().getTransaction();
-			
-			try {
-				getTx().begin();
-				getDao().addEstado(estado);
-				getTx().commit();
-			}
-			catch(Exception e) {
-				e.printStackTrace();
-				if(getTx().isActive()) {
-					getTx().rollback();
-				}
-			}
-			finally {
-				getEm().close();
-			}
-		}
-		
-		public Estado updateEstado(Estado estado) {
-			tx = getEm().getTransaction();
-			
-			try {
-				getTx().begin();
-				Estado estadoAtual = getDao().updateEstado(estado);
-				getTx().commit();
-				return estadoAtual;
-			}
-			catch(Exception e) {
-				e.printStackTrace();
-				if(getTx().isActive()) {
-					getTx().rollback();
-				}
-			}
-			return null;
-		}
-		
-		public void removeEstado(Long id) {
-			tx = getEm().getTransaction();
-			try {
-				getTx().begin();
-				getDao().removeEstadoById(id);
-				getTx().commit();
-			}
-			catch(Exception e) {
-				e.printStackTrace();
-				if(getTx().isActive()) {
-					getTx().rollback();
-				}
-			}
-			finally {
-				getEm().close();
-			}
-		}
-		
-		public Estado searchEstadoById(Long id) {
-			Estado estado = new Estado();
-			estado = dao.searchEstadoById(id);
-			return estado;
-		}
-		
-		public List<Estado> listAllEstados(){
-			return dao.listAllEstados();
-		}
-		
-		public List<Estado> listAllEstadosByNome(String nome){
-			return dao.listEstadoByNome(nome);
-		}
-		
-		private EstadoDAO getDao() {
-			return dao;
-		}
+public class EstadoService extends DataBaseTransactionService<Estado, Long>{
+	
+	private EstadoDAO dao;
+	
+	
 
-		private EntityTransaction getTx() {
-			return tx;
-		}
+	public EstadoService() {
+		dao = new EstadoDAO(openEntityManager());
+	}
 
-		private EntityManager getEm() {
-			return em;
+	@Override
+	public void add(Estado entity) {
+		try {
+			beginTransaction();
+			dao.add(entity);
+			commitTransaction();
 		}
+		catch(Exception e) {
+			e.printStackTrace();
+			if(isActiveTransaction()) {
+				rollbackTransaction();
+			}
+		}finally {
+			closeEntityManager();
+		}
+	}
+
+	@Override
+	public Estado update(Estado entity) {
+		Estado estado = null;
+		try {
+			beginTransaction();
+			estado = dao.update(entity);
+			commitTransaction();
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			if(isActiveTransaction()) {
+				rollbackTransaction();
+			}
+		}finally {
+			closeEntityManager();
+		}
+		return estado;
+	}
+
+	@Override
+	public void remove(Estado entity) {
+		try {
+			beginTransaction();
+			dao.remove(entity);
+			commitTransaction();
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			if(isActiveTransaction()) {
+				rollbackTransaction();
+			}
+		}finally {
+			closeEntityManager();
+		}
+	}
+
+	@Override
+	public Estado findById(Long id) {
+		Estado estado = new Estado();
+		estado = dao.searchById(id);
+		return estado;
+	}
+
+	@Override
+	public Page<Estado> listaPaginada(Integer page, Integer pageSize) {
+		return dao.listaPaginada(page, pageSize);
+	}
+
+	@Override
+	public Page<Estado> listaPaginada(Integer page, Integer pageSize, String text) {
+		return dao.listaPaginada(page, pageSize, text);
+	}
 }

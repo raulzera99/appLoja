@@ -9,7 +9,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
 import config.Page;
-import models.Categoria;
 
 public class GenericDAO<T, ID extends Serializable>  {
 	private Class<T> classe;

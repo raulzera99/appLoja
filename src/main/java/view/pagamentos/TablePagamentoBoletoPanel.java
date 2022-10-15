@@ -16,7 +16,7 @@ import javax.swing.table.TableColumn;
 import config.Constantes;
 import config.Page;
 import models.PagamentoComBoleto;
-import services.PagamentoBoletoService;
+import services.PagamentoComBoletoService;
 import view.table.RenderHeaderTable;
 import view.table.RenderTable;
 
@@ -37,7 +37,7 @@ public class TablePagamentoBoletoPanel extends JPanel {
 	
 	private TablePagamentoBoletoModel model;
 	private Page<PagamentoComBoleto> page;
-	private PagamentoBoletoService pagamentoBoletoService;
+	private PagamentoComBoletoService pagamentoBoletoService;
 	private PagamentoComBoleto pagamentoBoleto;
 	
 	private int linha = 0;
@@ -261,11 +261,11 @@ public class TablePagamentoBoletoPanel extends JPanel {
 	
 	
 
-	public PagamentoBoletoService getPagamentoBoletoService() {
-		return new PagamentoBoletoService();
+	public PagamentoComBoletoService getPagamentoBoletoService() {
+		return new PagamentoComBoletoService();
 	}
 
-	public void setPagamentoBoletoService(PagamentoBoletoService pagamentoBoletoService) {
+	public void setPagamentoBoletoService(PagamentoComBoletoService pagamentoBoletoService) {
 		this.pagamentoBoletoService = pagamentoBoletoService;
 	}
 

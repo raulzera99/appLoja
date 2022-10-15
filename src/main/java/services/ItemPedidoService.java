@@ -1,109 +1,86 @@
 package services;
 
-import java.util.List;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
-import javax.persistence.PersistenceContext;
-
+import config.Page;
 import dao.ItemPedidoDAO;
 import models.ItemPedido;
-import persistence.DataBaseConnection;
 
-public class ItemPedidoService {
-	//Attributes
-		@PersistenceContext(unitName = "apploja")
-		private final EntityManager em;
-		
-		private ItemPedidoDAO dao;
-		
-		private EntityTransaction tx;
-		
-		//Constructors
-		public ItemPedidoService() {
-			em = DataBaseConnection.getConnection().getEntityManager();
-			dao = new ItemPedidoDAO(em);
-		}
-		
-		//Methods
-		public void addItemPedido(ItemPedido ItemPedido) {
-			tx = getEm().getTransaction();
-			
-			try {
-				getTx().begin();
-				getDao().addItemPedido(ItemPedido);
-				getTx().commit();
-			}
-			catch(Exception e) {
-				e.printStackTrace();
-				if(getTx().isActive()) {
-					getTx().rollback();
-				}
-			}
-			finally {
-				getEm().close();
-			}
-		}
-		
-		public ItemPedido updateItemPedido(ItemPedido ItemPedido) {
-			tx = getEm().getTransaction();
-			
-			try {
-				getTx().begin();
-				ItemPedido ItemPedidoAtual = getDao().updateItemPedido(ItemPedido);
-				getTx().commit();
-				return ItemPedidoAtual;
-			}
-			catch(Exception e) {
-				e.printStackTrace();
-				if(getTx().isActive()) {
-					getTx().rollback();
-				}
-			}
-			finally {
-				getEm().close();
-			}
-			return null;
-		}
-		
-		public void removeItemPedido(Long id) {
-			tx = getEm().getTransaction();
-			
-			try {
-				getTx().begin();
-				getDao().removeItemPedidoById(id);
-				getTx().commit();
-			}
-			catch(Exception e) {
-				e.printStackTrace();
-				if(getTx().isActive()) {
-					getTx().rollback();
-				}
-			}
-			finally {
-				getEm().close();
-			}
-		}
-		
-		public ItemPedido searchItemPedidoById(Long id) {
-			ItemPedido ItemPedido = new ItemPedido();
-			ItemPedido = dao.searchItemPedidoById(id);
-			return ItemPedido;
-		}
-		
-		public List<ItemPedido> listAllItemPedidos(){
-			return dao.listAllItensPedidos();
-		}
-		
-		private ItemPedidoDAO getDao() {
-			return dao;
-		}
+public class ItemPedidoService extends DataBaseTransactionService<ItemPedido, Long>{
+	
+	private ItemPedidoDAO dao;
+	
+	
 
-		private EntityTransaction getTx() {
-			return tx;
-		}
+	public ItemPedidoService() {
+		dao = new ItemPedidoDAO(openEntityManager());
+	}
 
-		private EntityManager getEm() {
-			return em;
+	@Override
+	public void add(ItemPedido entity) {
+		try {
+			beginTransaction();
+			dao.add(entity);
+			commitTransaction();
 		}
+		catch(Exception e) {
+			e.printStackTrace();
+			if(isActiveTransaction()) {
+				rollbackTransaction();
+			}
+		}finally {
+			closeEntityManager();
+		}
+	}
+
+	@Override
+	public ItemPedido update(ItemPedido entity) {
+		ItemPedido itemPedido = null;
+		try {
+			beginTransaction();
+			itemPedido = dao.update(entity);
+			commitTransaction();
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			if(isActiveTransaction()) {
+				rollbackTransaction();
+			}
+		}finally {
+			closeEntityManager();
+		}
+		return itemPedido;
+	}
+
+	@Override
+	public void remove(ItemPedido entity) {
+		try {
+			beginTransaction();
+			dao.remove(entity);
+			commitTransaction();
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			if(isActiveTransaction()) {
+				rollbackTransaction();
+			}
+		}finally {
+			closeEntityManager();
+		}
+	}
+
+	@Override
+	public ItemPedido findById(Long id) {
+		ItemPedido itemPedido = new ItemPedido();
+		itemPedido = dao.searchById(id);
+		return itemPedido;
+	}
+
+	@Override
+	public Page<ItemPedido> listaPaginada(Integer page, Integer pageSize) {
+		return dao.listaPaginada(page, pageSize);
+	}
+
+	@Override
+	public Page<ItemPedido> listaPaginada(Integer page, Integer pageSize, String text) {
+		return dao.listaPaginada(page, pageSize, text);
+	}
 }

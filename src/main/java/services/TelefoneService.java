@@ -1,109 +1,86 @@
 package services;
 
-import java.util.List;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
-import javax.persistence.PersistenceContext;
-
+import config.Page;
 import dao.TelefoneDAO;
 import models.Telefone;
-import persistence.DataBaseConnection;
 
-public class TelefoneService {
-	//Attributes
-		@PersistenceContext(unitName = "apploja")
-		private final EntityManager em;
-		
-		private TelefoneDAO dao;
-		
-		private EntityTransaction tx;
-		
-		//Constructors
-		public TelefoneService() {
-			em = DataBaseConnection.getConnection().getEntityManager();
-			dao = new TelefoneDAO(em);
-		}
-		
-		//Methods
-		public void addTelefone(Telefone telefone) {
-			tx = getEm().getTransaction();
-			
-			try {
-				getTx().begin();
-				getDao().addTelefone(telefone);
-				getTx().commit();
-			}
-			catch(Exception e) {
-				e.printStackTrace();
-				if(getTx().isActive()) {
-					getTx().rollback();
-				}
-			}
-			finally {
-				getEm().close();
-			}
-		}
-		
-		public Telefone updateTelefone(Telefone telefone) {
-			tx = getEm().getTransaction();
-			
-			try {
-				getTx().begin();
-				Telefone telefoneAtual = getDao().updateTelefone(telefone);
-				getTx().commit();
-				return telefoneAtual;
-			}
-			catch(Exception e) {
-				e.printStackTrace();
-				if(getTx().isActive()) {
-					getTx().rollback();
-				}
-			}
-			finally {
-				getEm().close();
-			}
-			return null;
-		}
-		
-		public void removeTelefone(Long id) {
-			tx = getEm().getTransaction();
-			
-			try {
-				getTx().begin();
-				getDao().removeTelefone(id);
-				getTx().commit();
-			}
-			catch(Exception e) {
-				e.printStackTrace();
-				if(getTx().isActive()) {
-					getTx().rollback();
-				}
-			}
-			finally {
-				getEm().close();
-			}
-		}
-		
-		public Telefone searchTelefoneById(Long id) {
-			Telefone telefone = new Telefone();
-			telefone = dao.searchTelefoneById(id);
-			return telefone;
-		}
-		
-		public List<Telefone> listAllTelefones(){
-			return dao.listAllTelefones();
-		}
-		
-		private TelefoneDAO getDao() {
-			return dao;
-		}
+public class TelefoneService extends DataBaseTransactionService<Telefone, Long>{
+	
+	private TelefoneDAO dao;
+	
+	
 
-		private EntityTransaction getTx() {
-			return tx;
-		}
+	public TelefoneService() {
+		dao = new TelefoneDAO(openEntityManager());
+	}
 
-		private EntityManager getEm() {
-			return em;
+	@Override
+	public void add(Telefone entity) {
+		try {
+			beginTransaction();
+			dao.add(entity);
+			commitTransaction();
 		}
+		catch(Exception e) {
+			e.printStackTrace();
+			if(isActiveTransaction()) {
+				rollbackTransaction();
+			}
+		}finally {
+			closeEntityManager();
+		}
+	}
+
+	@Override
+	public Telefone update(Telefone entity) {
+		Telefone telefone = null;
+		try {
+			beginTransaction();
+			telefone = dao.update(entity);
+			commitTransaction();
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			if(isActiveTransaction()) {
+				rollbackTransaction();
+			}
+		}finally {
+			closeEntityManager();
+		}
+		return telefone;
+	}
+
+	@Override
+	public void remove(Telefone entity) {
+		try {
+			beginTransaction();
+			dao.remove(entity);
+			commitTransaction();
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			if(isActiveTransaction()) {
+				rollbackTransaction();
+			}
+		}finally {
+			closeEntityManager();
+		}
+	}
+
+	@Override
+	public Telefone findById(Long id) {
+		Telefone telefone = new Telefone();
+		telefone = dao.searchById(id);
+		return telefone;
+	}
+
+	@Override
+	public Page<Telefone> listaPaginada(Integer page, Integer pageSize) {
+		return dao.listaPaginada(page, pageSize);
+	}
+
+	@Override
+	public Page<Telefone> listaPaginada(Integer page, Integer pageSize, String text) {
+		return dao.listaPaginada(page, pageSize, text);
+	}
 }

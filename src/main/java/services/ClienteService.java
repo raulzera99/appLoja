@@ -1,103 +1,86 @@
 package services;
 
-import java.util.List;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
-import javax.persistence.PersistenceContext;
-
+import config.Page;
 import dao.ClienteDAO;
 import models.Cliente;
-import persistence.DataBaseConnection;
 
-public class ClienteService {
-	// Attributes
-	@PersistenceContext(unitName = "apploja")
-	private final EntityManager em;
-
+public class ClienteService extends DataBaseTransactionService<Cliente, Long>{
+	
 	private ClienteDAO dao;
+	
+	
 
-	private EntityTransaction tx;
-
-	// Constructors
 	public ClienteService() {
-		em = DataBaseConnection.getConnection().getEntityManager();
-		dao = new ClienteDAO(em);
+		dao = new ClienteDAO(openEntityManager());
 	}
 
-	// Methods
-	public void addCliente(Cliente Cliente) {
-		tx = getEm().getTransaction();
-
+	@Override
+	public void add(Cliente entity) {
 		try {
-			getTx().begin();
-			getDao().addCliente(Cliente);
-			getTx().commit();
-		} catch (Exception e) {
+			beginTransaction();
+			dao.add(entity);
+			commitTransaction();
+		}
+		catch(Exception e) {
 			e.printStackTrace();
-			if (getTx().isActive()) {
-				getTx().rollback();
+			if(isActiveTransaction()) {
+				rollbackTransaction();
 			}
-		} finally {
-			getEm().close();
+		}finally {
+			closeEntityManager();
 		}
 	}
 
-	public Cliente updateCliente(Cliente Cliente) {
-		tx = getEm().getTransaction();
-
+	@Override
+	public Cliente update(Cliente entity) {
+		Cliente cliente = null;
 		try {
-			getTx().begin();
-			Cliente ClienteAtual = getDao().updateCliente(Cliente);
-			getTx().commit();
-			return ClienteAtual;
-		} catch (Exception e) {
-			e.printStackTrace();
-			if (getTx().isActive()) {
-				getTx().rollback();
-			}
-		} finally {
-			getEm().close();
+			beginTransaction();
+			cliente = dao.update(entity);
+			commitTransaction();
 		}
-		return null;
+		catch(Exception e) {
+			e.printStackTrace();
+			if(isActiveTransaction()) {
+				rollbackTransaction();
+			}
+		}finally {
+			closeEntityManager();
+		}
+		return cliente;
 	}
 
-	public void removeCliente(Long id) {
-		tx = getEm().getTransaction();
-
+	@Override
+	public void remove(Cliente entity) {
 		try {
-			getTx().begin();
-			getDao().removeClienteById(id);
-			getTx().commit();
-		} catch (Exception e) {
+			beginTransaction();
+			dao.remove(entity);
+			commitTransaction();
+		}
+		catch(Exception e) {
 			e.printStackTrace();
-			if (getTx().isActive()) {
-				getTx().rollback();
+			if(isActiveTransaction()) {
+				rollbackTransaction();
 			}
-		} finally {
-			getEm().close();
+		}finally {
+			closeEntityManager();
 		}
 	}
 
-	public Cliente searchClienteById(Long id) {
-		Cliente Cliente = new Cliente();
-		Cliente = dao.searchClienteById(id);
-		return Cliente;
+	@Override
+	public Cliente findById(Long id) {
+		Cliente cliente = new Cliente();
+		cliente = dao.searchById(id);
+		return cliente;
 	}
 
-	public List<Cliente> listAllClientes() {
-		return dao.listAllClientes();
+	@Override
+	public Page<Cliente> listaPaginada(Integer page, Integer pageSize) {
+		return dao.listaPaginada(page, pageSize);
 	}
 
-	private ClienteDAO getDao() {
-		return dao;
-	}
-
-	private EntityTransaction getTx() {
-		return tx;
-	}
-
-	private EntityManager getEm() {
-		return em;
+	@Override
+	public Page<Cliente> listaPaginada(Integer page, Integer pageSize, String text) {
+		return dao.listaPaginada(page, pageSize, text);
 	}
 }

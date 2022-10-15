@@ -1,108 +1,86 @@
 package services;
 
-import java.util.List;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
-import javax.persistence.PersistenceContext;
-
+import config.Page;
 import dao.PagamentoDAO;
 import models.Pagamento;
-import persistence.DataBaseConnection;
 
-public class PagamentoService {
-	//Attributes
-	@PersistenceContext(unitName = "apploja")
-	private final EntityManager em;
+public class PagamentoService extends DataBaseTransactionService<Pagamento, Long>{
 	
 	private PagamentoDAO dao;
 	
-	private EntityTransaction tx;
 	
-	//Constructors
+
 	public PagamentoService() {
-		em = DataBaseConnection.getConnection().getEntityManager();
-		dao = new PagamentoDAO(em);
+		dao = new PagamentoDAO(openEntityManager());
 	}
-	
-	//Methods
-	public void addPagamento(Pagamento pagamento) {
-		tx = getEm().getTransaction();
+
+	@Override
+	public void add(Pagamento entity) {
 		try {
-			getTx().begin();
-			getDao().addPagamento(pagamento);
-			getTx().commit();
+			beginTransaction();
+			dao.add(entity);
+			commitTransaction();
 		}
 		catch(Exception e) {
 			e.printStackTrace();
-			if(getTx().isActive()) {
-				getTx().rollback();
+			if(isActiveTransaction()) {
+				rollbackTransaction();
 			}
-		}
-		finally {
-			getEm().close();
+		}finally {
+			closeEntityManager();
 		}
 	}
-	
-	public Pagamento updatePagamento(Pagamento pagamento) {
-		tx = getEm().getTransaction();
-		
+
+	@Override
+	public Pagamento update(Pagamento entity) {
+		Pagamento pagamento = null;
 		try {
-			getTx().begin();
-			Pagamento pagamentoAtual = getDao().updatePagamento(pagamento);
-			getTx().commit();
-			return pagamentoAtual;
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-			if(getTx().isActive()) {
-				getTx().rollback();
-			}
-		}
-		finally {
-			getEm().close();
-		}
-		return null;
-	}
-	
-	public void removePagamento(Long id) {
-		tx = getEm().getTransaction();
-		
-		try {
-			getTx().begin();
-			getDao().removePagamentoById(id);
-			getTx().commit();
+			beginTransaction();
+			pagamento = dao.update(entity);
+			commitTransaction();
 		}
 		catch(Exception e) {
 			e.printStackTrace();
-			if(getTx().isActive()) {
-				getTx().rollback();
+			if(isActiveTransaction()) {
+				rollbackTransaction();
 			}
+		}finally {
+			closeEntityManager();
 		}
-		finally {
-			getEm().close();
-		}
-	}
-	
-	public Pagamento searchPagamentoById(Long id) {
-		Pagamento pagamento = new Pagamento();
-		pagamento = dao.searchPagamentoById(id);
 		return pagamento;
 	}
-	
-	public List<Pagamento> listAllPagamentos(){
-		return dao.listAllPagamentos();
-	}
-	
-	private PagamentoDAO getDao() {
-		return dao;
+
+	@Override
+	public void remove(Pagamento entity) {
+		try {
+			beginTransaction();
+			dao.remove(entity);
+			commitTransaction();
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			if(isActiveTransaction()) {
+				rollbackTransaction();
+			}
+		}finally {
+			closeEntityManager();
+		}
 	}
 
-	private EntityTransaction getTx() {
-		return tx;
+	@Override
+	public Pagamento findById(Long id) {
+		Pagamento pagamento = new Pagamento();
+		pagamento = dao.searchById(id);
+		return pagamento;
 	}
 
-	private EntityManager getEm() {
-		return em;
+	@Override
+	public Page<Pagamento> listaPaginada(Integer page, Integer pageSize) {
+		return dao.listaPaginada(page, pageSize);
+	}
+
+	@Override
+	public Page<Pagamento> listaPaginada(Integer page, Integer pageSize, String text) {
+		return dao.listaPaginada(page, pageSize, text);
 	}
 }

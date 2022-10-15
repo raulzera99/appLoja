@@ -1,109 +1,86 @@
 package services;
 
-import java.util.List;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
-import javax.persistence.PersistenceContext;
-
+import config.Page;
 import dao.PedidoDAO;
 import models.Pedido;
-import persistence.DataBaseConnection;
 
-public class PedidoService {
-	//Attributes
-		@PersistenceContext(unitName = "apploja")
-		private final EntityManager em;
-		
-		private PedidoDAO dao;
-		
-		private EntityTransaction tx;
-		
-		//Constructors
-		public PedidoService() {
-			em = DataBaseConnection.getConnection().getEntityManager();
-			dao = new PedidoDAO(em);
-		}
-		
-		//Methods
-		public void addPedido(Pedido Pedido) {
-			tx = getEm().getTransaction();
-			
-			try {
-				getTx().begin();
-				getDao().addPedido(Pedido);
-				getTx().commit();
-			}
-			catch(Exception e) {
-				e.printStackTrace();
-				if(getTx().isActive()) {
-					getTx().rollback();
-				}
-			}
-			finally {
-				getEm().close();
-			}
-		}
-		
-		public Pedido updatePedido(Pedido Pedido) {
-			tx = getEm().getTransaction();
-			
-			try {
-				getTx().begin();
-				Pedido PedidoAtual = getDao().updatePedido(Pedido);
-				getTx().commit();
-				return PedidoAtual;
-			}
-			catch(Exception e) {
-				e.printStackTrace();
-				if(getTx().isActive()) {
-					getTx().rollback();
-				}
-			}
-			finally {
-				getEm().close();
-			}
-			return null;
-		}
-		
-		public void removePedido(Long id) {
-			tx = getEm().getTransaction();
-			
-			try {
-				getTx().begin();
-				getDao().removePedidoById(id);
-				getTx().commit();
-			}
-			catch(Exception e) {
-				e.printStackTrace();
-				if(getTx().isActive()) {
-					getTx().rollback();
-				}
-			}
-			finally {
-				getEm().close();
-			}
-		}
-		
-		public Pedido searchPedidoById(Long id) {
-			Pedido Pedido = new Pedido();
-			Pedido = dao.searchPedidoById(id);
-			return Pedido;
-		}
-		
-		public List<Pedido> listAllPedidos(){
-			return dao.listAllPedidos();
-		}
-		
-		private PedidoDAO getDao() {
-			return dao;
-		}
+public class PedidoService extends DataBaseTransactionService<Pedido, Long>{
+	
+	private PedidoDAO dao;
+	
+	
 
-		private EntityTransaction getTx() {
-			return tx;
-		}
+	public PedidoService() {
+		dao = new PedidoDAO(openEntityManager());
+	}
 
-		private EntityManager getEm() {
-			return em;
+	@Override
+	public void add(Pedido entity) {
+		try {
+			beginTransaction();
+			dao.add(entity);
+			commitTransaction();
 		}
+		catch(Exception e) {
+			e.printStackTrace();
+			if(isActiveTransaction()) {
+				rollbackTransaction();
+			}
+		}finally {
+			closeEntityManager();
+		}
+	}
+
+	@Override
+	public Pedido update(Pedido entity) {
+		Pedido pedido = null;
+		try {
+			beginTransaction();
+			pedido = dao.update(entity);
+			commitTransaction();
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			if(isActiveTransaction()) {
+				rollbackTransaction();
+			}
+		}finally {
+			closeEntityManager();
+		}
+		return pedido;
+	}
+
+	@Override
+	public void remove(Pedido entity) {
+		try {
+			beginTransaction();
+			dao.remove(entity);
+			commitTransaction();
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			if(isActiveTransaction()) {
+				rollbackTransaction();
+			}
+		}finally {
+			closeEntityManager();
+		}
+	}
+
+	@Override
+	public Pedido findById(Long id) {
+		Pedido pedido = new Pedido();
+		pedido = dao.searchById(id);
+		return pedido;
+	}
+
+	@Override
+	public Page<Pedido> listaPaginada(Integer page, Integer pageSize) {
+		return dao.listaPaginada(page, pageSize);
+	}
+
+	@Override
+	public Page<Pedido> listaPaginada(Integer page, Integer pageSize, String text) {
+		return dao.listaPaginada(page, pageSize, text);
+	}
 }

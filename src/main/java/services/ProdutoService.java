@@ -1,113 +1,86 @@
 package services;
 
-import java.util.List;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
-import javax.persistence.PersistenceContext;
-
+import config.Page;
 import dao.ProdutoDAO;
 import models.Produto;
-import persistence.DataBaseConnection;
 
-public class ProdutoService {
-	//Attributes
-		@PersistenceContext(unitName = "apploja")
-		private final EntityManager em;
-		
-		private ProdutoDAO dao;
-		
-		private EntityTransaction tx;
-		
-		//Constructors
-		public ProdutoService() {
-			em = DataBaseConnection.getConnection().getEntityManager();
-			dao = new ProdutoDAO(em);
-		}
-		
-		//Methods
-		public void addProduto(Produto Produto) {
-			tx = getEm().getTransaction();
-			
-			try {
-				getTx().begin();
-				getDao().addProduto(Produto);
-				getTx().commit();
-			}
-			catch(Exception e) {
-				e.printStackTrace();
-				if(getTx().isActive()) {
-					getTx().rollback();
-				}
-			}
-			finally {
-				getEm().close();
-			}
-		}
-		
-		public Produto updateProduto(Produto Produto) {
-			tx = getEm().getTransaction();
-			
-			try {
-				getTx().begin();
-				Produto ProdutoAtual = getDao().updateProduto(Produto);
-				getTx().commit();
-				return ProdutoAtual;
-			}
-			catch(Exception e) {
-				e.printStackTrace();
-				if(getTx().isActive()) {
-					getTx().rollback();
-				}
-			}
-			finally {
-				getEm().close();
-			}
-			return null;
-		}
-		
-		public void removeProduto(Long id) {
-			tx = getEm().getTransaction();
-			
-			try {
-				getTx().begin();
-				getDao().removeProdutoById(id);
-				getTx().commit();
-			}
-			catch(Exception e) {
-				e.printStackTrace();
-				if(getTx().isActive()) {
-					getTx().rollback();
-				}
-			}
-			finally {
-				getEm().close();
-			}
-		}
-		
-		public Produto searchProdutoById(Long id) {
-			Produto Produto = new Produto();
-			Produto = dao.searchProdutoById(id);
-			return Produto;
-		}
-		
-		public List<Produto> listAllProdutos(){
-			return dao.listAllProdutos();
-		}
-		
-		public List<Produto> listAllProdutoByNome(String nome){
-			return dao.listProdutoByNome(nome);
-		}
-		
-		private ProdutoDAO getDao() {
-			return dao;
-		}
+public class ProdutoService extends DataBaseTransactionService<Produto, Long>{
+	
+	private ProdutoDAO dao;
+	
+	
 
-		private EntityTransaction getTx() {
-			return tx;
-		}
+	public ProdutoService() {
+		dao = new ProdutoDAO(openEntityManager());
+	}
 
-		private EntityManager getEm() {
-			return em;
+	@Override
+	public void add(Produto entity) {
+		try {
+			beginTransaction();
+			dao.add(entity);
+			commitTransaction();
 		}
+		catch(Exception e) {
+			e.printStackTrace();
+			if(isActiveTransaction()) {
+				rollbackTransaction();
+			}
+		}finally {
+			closeEntityManager();
+		}
+	}
+
+	@Override
+	public Produto update(Produto entity) {
+		Produto produto = null;
+		try {
+			beginTransaction();
+			produto = dao.update(entity);
+			commitTransaction();
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			if(isActiveTransaction()) {
+				rollbackTransaction();
+			}
+		}finally {
+			closeEntityManager();
+		}
+		return produto;
+	}
+
+	@Override
+	public void remove(Produto entity) {
+		try {
+			beginTransaction();
+			dao.remove(entity);
+			commitTransaction();
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			if(isActiveTransaction()) {
+				rollbackTransaction();
+			}
+		}finally {
+			closeEntityManager();
+		}
+	}
+
+	@Override
+	public Produto findById(Long id) {
+		Produto produto = new Produto();
+		produto = dao.searchById(id);
+		return produto;
+	}
+
+	@Override
+	public Page<Produto> listaPaginada(Integer page, Integer pageSize) {
+		return dao.listaPaginada(page, pageSize);
+	}
+
+	@Override
+	public Page<Produto> listaPaginada(Integer page, Integer pageSize, String text) {
+		return dao.listaPaginada(page, pageSize, text);
+	}
 }
