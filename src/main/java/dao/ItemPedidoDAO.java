@@ -6,47 +6,42 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
+import config.Page;
 import models.ItemPedido;
 
-public class ItemPedidoDAO {
-	private EntityManager em;
-	
-	public ItemPedidoDAO (EntityManager em){
-		this.em = em;
+public class ItemPedidoDAO extends GenericDAO<ItemPedido, Long>{
+
+	public ItemPedidoDAO(EntityManager em) {
+		super(em);
 	}
 	
-	public EntityManager getEm() {
-		return em;
-	}
-	
-	public void addItemPedido(ItemPedido itemPedido) {
-		getEm().persist(itemPedido);
-	}
-	
-	public ItemPedido updateItemPedido(ItemPedido itemPedido) {
-		return getEm().merge(itemPedido);
-	}
-	
-	public ItemPedido searchItemPedidoById(Long id) {
-		ItemPedido itemPedidoBuscado = new ItemPedido();
-		itemPedidoBuscado = getEm().find(ItemPedido.class, id);	
-		return itemPedidoBuscado;
-	}
-	
-	public void removeItemPedidoById(Long id) {
-		ItemPedido itemPedido = searchItemPedidoById(id);
-		getEm().remove(itemPedido);
-	}
-	
-	public List<ItemPedido> listAllItensPedidos(){
-		List<ItemPedido> itensPedidos = new ArrayList<ItemPedido>();
+
+	public Page<ItemPedido> listaPaginada(Integer page, Integer pageSize, String text) {
+		List<ItemPedido> lista = new ArrayList<ItemPedido>();
+		Long total = count();
+		Integer paginaAtual = ((page-1)*pageSize);
+		if(paginaAtual<0) {
+			paginaAtual = 0;
+		}
+		Double totalPaginas = Math.ceil(total.doubleValue() / pageSize.doubleValue());
+		TypedQuery<ItemPedido> query = getEntityManager()
+				.createQuery("SELECT c FROM ItemPedido c "
+						+ "WHERE c.desconto "
+						+ "LIKE (CONCAT('%',:text,'%')) "
+						+ "OR c.preco "
+						+ "LIKE (CONCAT('%',:text,'%')) "
+						+ "OR c.quantidade "
+						+ "LIKE (CONCAT('%',:text,'%')) ", ItemPedido.class);
 		
-		TypedQuery<ItemPedido> query = getEm()
-				.createQuery("SELECT itemPedido "
-						+ "FROM ItemPedido itemPedido", ItemPedido.class);
 		
-		itensPedidos = query.getResultList();
+		lista = query.setParameter("text", text)
+				.setFirstResult(paginaAtual)
+				.setMaxResults(pageSize)
+				.getResultList();
 		
-		return itensPedidos;
+		
+		
+		return getPaginas(lista, page, pageSize, totalPaginas.intValue(), total.intValue());
 	}
+
 }

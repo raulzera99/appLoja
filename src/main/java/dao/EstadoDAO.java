@@ -6,63 +6,38 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
+import config.Page;
 import models.Estado;
 
-public class EstadoDAO {
-	private EntityManager em;
-	
-	public EstadoDAO (EntityManager em) {
-		this.em = em;
+public class EstadoDAO extends GenericDAO<Estado, Long>{
+
+	public EstadoDAO(EntityManager em) {
+		super(em);
 	}
 	
-	public EntityManager getEm() {
-		return em;
+
+	public Page<Estado> listaPaginada(Integer page, Integer pageSize, String text) {
+		List<Estado> lista = new ArrayList<Estado>();
+		Long total = count();
+		Integer paginaAtual = ((page-1)*pageSize);
+		if(paginaAtual<0) {
+			paginaAtual = 0;
+		}
+		Double totalPaginas = Math.ceil(total.doubleValue() / pageSize.doubleValue());
+		TypedQuery<Estado> query = getEntityManager()
+				.createQuery("SELECT c FROM Estado c "
+						+ "WHERE c.nome "
+						+ "LIKE (CONCAT('%',:text,'%')) ", Estado.class);
+		
+		
+		lista = query.setParameter("text", text)
+				.setFirstResult(paginaAtual)
+				.setMaxResults(pageSize)
+				.getResultList();
+		
+		
+		
+		return getPaginas(lista, page, pageSize, totalPaginas.intValue(), total.intValue());
 	}
-	
-	public void addEstado(Estado estado) {
-		getEm().persist(estado);
-	}
-	
-	public Estado updateEstado(Estado estado) {
-		return getEm().merge(estado);
-	}
-	
-	public Estado searchEstadoById(Long id) {
-		Estado estadoBuscado = new Estado();
-		estadoBuscado = getEm().find(Estado.class, id);
-		return estadoBuscado;
-	}
-	
-	public void removeEstadoById(Long id) {
-		Estado estado = searchEstadoById(id);
-		getEm().remove(estado);
-	}
-	
-	public List<Estado> listAllEstados(){
-		List<Estado> estados = new ArrayList<Estado>();
-		
-		TypedQuery<Estado> query = getEm()
-				.createQuery("SELECT estado FROM Estado estado", Estado.class);
-		
-		estados = query.getResultList();
-		
-		return estados;
-	}
-	
-	public List<Estado> listEstadoByNome(String nome){
-		List<Estado> estados = new ArrayList<Estado>();
-		
-		TypedQuery<Estado> query = getEm()
-				.createQuery("SELECT etado FROM Estado estado "
-						+ "WHERE estado.nome =:nome", Estado.class);
-		
-		query.setParameter("nome", nome);
-		
-		estados = query.getResultList();
-		
-		return estados;
-		
-	}
-	
-	
+
 }

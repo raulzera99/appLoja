@@ -6,59 +6,40 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
+import config.Page;
 import models.Cidade;
 
-public class CidadeDAO {
-	private EntityManager em;
-	
-	public CidadeDAO (EntityManager em) {
-		this.em = em;
+public class CidadeDAO extends GenericDAO<Cidade, Long>{
+
+	public CidadeDAO(EntityManager em) {
+		super(em);
 	}
 	
-	public EntityManager getEm() {
-		return em;
-	}
-	
-	public void addCidade(Cidade cidade) {
-		getEm().persist(cidade);
-	}
-	
-	public Cidade updateCidade(Cidade cidade) {
-		return getEm().merge(cidade);
-	}
-	
-	public Cidade searchCidadeById(Long id) {
-		Cidade cidadeBuscada = new Cidade();
-		cidadeBuscada = getEm().find(Cidade.class, id);
-		return cidadeBuscada;
-	}
-	
-	public void removeCidadeById(Long id) {
-		Cidade cidade = searchCidadeById(id);
-		getEm().remove(cidade);
-	}
-	
-	public List<Cidade> listAllCidades(){
-		List<Cidade> cidades = new ArrayList<Cidade>();
+
+	public Page<Cidade> listaPaginada(Integer page, Integer pageSize, String text) {
+		List<Cidade> lista = new ArrayList<Cidade>();
+		Long total = count();
+		Integer paginaAtual = ((page-1)*pageSize);
+		if(paginaAtual<0) {
+			paginaAtual = 0;
+		}
+		Double totalPaginas = Math.ceil(total.doubleValue() / pageSize.doubleValue());
+		TypedQuery<Cidade> query = getEntityManager()
+				.createQuery("SELECT c FROM Cidade c "
+						+ "WHERE c.nome "
+						+ "LIKE (CONCAT('%',:text,'%')) "
+						+ "OR c.id_estado "
+						+ "LIKE (CONCAT('%',:text,'%')) ", Cidade.class);
 		
-		TypedQuery<Cidade> query = getEm()
-				.createQuery("SELECT cidade FROM Cidade cidade", Cidade.class);
 		
-		cidades = query.getResultList();
+		lista = query.setParameter("text", text)
+				.setFirstResult(paginaAtual)
+				.setMaxResults(pageSize)
+				.getResultList();
 		
-		return cidades;
+		
+		
+		return getPaginas(lista, page, pageSize, totalPaginas.intValue(), total.intValue());
 	}
-	
-	public List<Cidade> listCidadeByNome(String nome){
-		List<Cidade> cidades = new ArrayList<Cidade>();
-		
-		TypedQuery<Cidade> query = getEm()
-				.createQuery("SELECT cidade FROM Cidade cidade WHERE cidade.nome =:nome", Cidade.class);
-		
-		query.setParameter("nome", nome);
-		
-		cidades = query.getResultList();
-		
-		return cidades;
-	}
+
 }

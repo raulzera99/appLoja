@@ -6,44 +6,38 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
+import config.Page;
 import models.Pagamento;
 
-public class PagamentoDAO {
-	private EntityManager em;
-	
-	public PagamentoDAO (EntityManager em) {
-		this.em = em;
+public class PagamentoDAO extends GenericDAO<Pagamento, Long>{
+
+	public PagamentoDAO(EntityManager em) {
+		super(em);
 	}
 	
-	public EntityManager getEm() {
-		return em;
-	}
-	
-	public void addPagamento(Pagamento pagamento) {
-		getEm().persist(pagamento);
-	}
-	
-	public Pagamento updatePagamento(Pagamento pagamento) {
-		return getEm().merge(pagamento);
-	}
-	
-	public Pagamento searchPagamentoById(Long id) {
-		Pagamento pagamentoBuscado = new Pagamento();
-		pagamentoBuscado = getEm().find(Pagamento.class, id);
-		return pagamentoBuscado;
-	}
-	
-	public void removePagamentoById(Long id) {
-		Pagamento pagamento = searchPagamentoById(id);
-		getEm().remove(pagamento);
-	}
-	
-	public List<Pagamento> listAllPagamentos (){
-		List<Pagamento> pagamentos = new ArrayList<Pagamento>();
-		TypedQuery<Pagamento> query = getEm()
-				.createQuery("SELECT pagamento FROM Pagamento pagamento", Pagamento.class);
-		pagamentos = query.getResultList();
+
+	public Page<Pagamento> listaPaginada(Integer page, Integer pageSize, String text) {
+		List<Pagamento> lista = new ArrayList<Pagamento>();
+		Long total = count();
+		Integer paginaAtual = ((page-1)*pageSize);
+		if(paginaAtual<0) {
+			paginaAtual = 0;
+		}
+		Double totalPaginas = Math.ceil(total.doubleValue() / pageSize.doubleValue());
+		TypedQuery<Pagamento> query = getEntityManager()
+				.createQuery("SELECT c FROM Pagamento c "
+						+ "WHERE c.tipo_pagamento "
+						+ "LIKE (CONCAT('%',:text,'%')) ", Pagamento.class);
 		
-		return pagamentos;
+		
+		lista = query.setParameter("text", text)
+				.setFirstResult(paginaAtual)
+				.setMaxResults(pageSize)
+				.getResultList();
+		
+		
+		
+		return getPaginas(lista, page, pageSize, totalPaginas.intValue(), total.intValue());
 	}
+
 }

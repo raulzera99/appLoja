@@ -6,57 +6,41 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
+import config.Page;
 import models.Produto;
 
-public class ProdutoDAO {
-private EntityManager em;
-	
-	public ProdutoDAO (EntityManager em) {
-		this.em = em;
+public class ProdutoDAO extends GenericDAO<Produto, Long>{
+
+	public ProdutoDAO(EntityManager em) {
+		super(em);
 	}
 	
-	public EntityManager getEm() {
-		return em;
-	}
-	
-	public void addProduto(Produto produto) {
-		getEm().persist(produto);
-	}
-	
-	public Produto updateProduto(Produto produto) {
-		return getEm().merge(produto);
-	}
-	
-	public Produto searchProdutoById(Long id) {
-		Produto produtoBuscado = new Produto();
-		produtoBuscado = getEm().find(Produto.class, id);
-		return produtoBuscado;
-	}
-	
-	public void removeProdutoById(Long id) {
-		Produto produto = searchProdutoById(id);
-		getEm().remove(produto);
-	}
-	
-	public List<Produto> listAllProdutos(){
-		List<Produto> produtos = new ArrayList<Produto>();
-		TypedQuery<Produto> query = getEm().createQuery("SELECT p FROM Produto p", Produto.class);
-		produtos = query.getResultList();
+
+	public Page<Produto> listaPaginada(Integer page, Integer pageSize, String text) {
+		List<Produto> lista = new ArrayList<Produto>();
+		Long total = count();
+		Integer paginaAtual = ((page-1)*pageSize);
+		if(paginaAtual<0) {
+			paginaAtual = 0;
+		}
+		Double totalPaginas = Math.ceil(total.doubleValue() / pageSize.doubleValue());
+		TypedQuery<Produto> query = getEntityManager()
+				.createQuery("SELECT c FROM Produto c "
+						+ "WHERE c.nome "
+						+ "LIKE (CONCAT('%',:text,'%')) "
+						+ "OR c.preco "
+						+ "LIKE (CONCAT('%',:text,'%')) ", Produto.class);
 		
-		return produtos;
+		
+		lista = query.setParameter("text", text)
+				.setFirstResult(paginaAtual)
+				.setMaxResults(pageSize)
+				.getResultList();
+		
+		
+		
+		return getPaginas(lista, page, pageSize, totalPaginas.intValue(), total.intValue());
 	}
-	
-	public List<Produto> listProdutoByNome(String nome){
-		List<Produto> produtos = new ArrayList<Produto>();
-		
-		TypedQuery<Produto> query = getEm()
-				.createQuery("SELECT p FROM Produto p "
-						+ "WHERE Produto.nome =:nome", Produto.class);
-		
-		query.setParameter("nome", nome);
-		
-		produtos = query.getResultList();
-		
-		return produtos;
-	}
+
 }
+

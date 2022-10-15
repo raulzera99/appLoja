@@ -6,46 +6,38 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
+import config.Page;
 import models.Codigo;
 
-public class CodigoDAO {
-private EntityManager em;
-	
-	public CodigoDAO (EntityManager em) {
-		this.em = em;
+public class CodigoDAO extends GenericDAO<Codigo, Long>{
+
+	public CodigoDAO(EntityManager em) {
+		super(em);
 	}
 	
-	public EntityManager getEm() {
-		return em;
-	}
-	
-	public void addCodigo(Codigo codigo) {
-		getEm().persist(codigo);
-	}
-	
-	public Codigo updateCodigo(Codigo codigo) {
-		return getEm().merge(codigo);
-	}
-	
-	public Codigo searchCodigoById(Long id) {
-		Codigo codigoBuscado = new Codigo();
-		codigoBuscado = getEm().find(Codigo.class, id);
-		return codigoBuscado;
-	}
-	
-	public void removeCodigoById(Long id) {
-		Codigo codigo = searchCodigoById(id);
-		getEm().remove(codigo);
-	}
-	
-	public List<Codigo> listAllCodigos(){
-		List<Codigo> codigos = new ArrayList<Codigo>();
+
+	public Page<Codigo> listaPaginada(Integer page, Integer pageSize, String text) {
+		List<Codigo> lista = new ArrayList<Codigo>();
+		Long total = count();
+		Integer paginaAtual = ((page-1)*pageSize);
+		if(paginaAtual<0) {
+			paginaAtual = 0;
+		}
+		Double totalPaginas = Math.ceil(total.doubleValue() / pageSize.doubleValue());
+		TypedQuery<Codigo> query = getEntityManager()
+				.createQuery("SELECT c FROM Codigo c "
+						+ "WHERE c.numero "
+						+ "LIKE (CONCAT('%',:text,'%')) ", Codigo.class);
 		
-		TypedQuery<Codigo> query = getEm()
-				.createQuery("SELECT codigo FROM Codigo codigo", Codigo.class);
 		
-		codigos = query.getResultList();
+		lista = query.setParameter("text", text)
+				.setFirstResult(paginaAtual)
+				.setMaxResults(pageSize)
+				.getResultList();
 		
-		return codigos;
+		
+		
+		return getPaginas(lista, page, pageSize, totalPaginas.intValue(), total.intValue());
 	}
+
 }
