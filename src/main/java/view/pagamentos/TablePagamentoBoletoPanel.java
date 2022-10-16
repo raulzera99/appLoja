@@ -19,6 +19,9 @@ import models.PagamentoComBoleto;
 import services.PagamentoComBoletoService;
 import view.table.RenderHeaderTable;
 import view.table.RenderTable;
+import javax.swing.JTextField;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class TablePagamentoBoletoPanel extends JPanel {
 	private static final long serialVersionUID = -4694190107545197497L;
@@ -26,6 +29,7 @@ public class TablePagamentoBoletoPanel extends JPanel {
 	JScrollPane scrollPane = new JScrollPane();
 	JScrollPane scrollPaneTablePagamentoBoleto = new JScrollPane();
 	JPanel panelButtons = new JPanel();
+	JPanel panelSearch = new JPanel();
 	JButton btnPrimeiro = new JButton("Primeiro");
 	JButton btnAnterior = new JButton("Anterior");
 	JButton btnProximo = new JButton("Próximo");
@@ -34,6 +38,8 @@ public class TablePagamentoBoletoPanel extends JPanel {
 	JButton btnAlterar = new JButton("Alterar");
 	JButton btnRemover = new JButton("Remover");
 	JButton btnConsultar = new JButton("Consultar");
+	JTextField txtSearch = new JTextField();
+	
 	
 	private TablePagamentoBoletoModel model;
 	private Page<PagamentoComBoleto> page;
@@ -112,13 +118,20 @@ public class TablePagamentoBoletoPanel extends JPanel {
 				showPagamentoBoletoFrame(Constantes.CONSULTAR);
 			}
 		});
+		
+		txtSearch.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				
+				
+			}
+		});
 	}
 	
 	private void initComponents() {
 		setBounds(new Rectangle(10, 130, 1079, 468));
 		setLayout(null);
-		
-		scrollPane.setBounds(10, 11, 1065, 478);
+		scrollPane.setBounds(10, 64, 1065, 478);
 		add(scrollPane);
 		
 		scrollPane.setViewportView(scrollPaneTablePagamentoBoleto);
@@ -126,8 +139,7 @@ public class TablePagamentoBoletoPanel extends JPanel {
 		tablePagamentoBoleto = new JTable();
 		tablePagamentoBoleto.setFont(new Font("Tahoma", Font.PLAIN, 9));
 		scrollPaneTablePagamentoBoleto.setViewportView(tablePagamentoBoleto);
-		
-		panelButtons.setBounds(10, 500, 1065, 79);
+		panelButtons.setBounds(11, 550, 1065, 79);
 		add(panelButtons);
 		panelButtons.setLayout(null);
 		
@@ -163,6 +175,15 @@ public class TablePagamentoBoletoPanel extends JPanel {
 		
 		btnConsultar.setBounds(346, 45, 89, 23);
 		panelButtons.add(btnConsultar);
+		
+		
+		panelSearch.setBounds(10, 11, 1065, 42);
+		add(panelSearch);
+		panelSearch.setLayout(null);
+		
+		txtSearch.setBounds(160, 11, 748, 20);
+		panelSearch.add(txtSearch);
+		txtSearch.setColumns(10);
 	}
 	
 	public static TablePagamentoBoletoPanel getInstance() {
@@ -288,6 +309,4 @@ public class TablePagamentoBoletoPanel extends JPanel {
 	public void setColuna(int coluna) {
 		this.coluna = coluna;
 	}
-	
-	
 }

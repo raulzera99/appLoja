@@ -31,7 +31,7 @@ public class PagamentoComBoletoView extends JFrame {
 	private JTextField txtDataVencimento;
 	private JTextField txtDataPagamento;
 	
-	private Long idPagBoleto = 0l;
+	private Long idPagamentoComBoleto = 0l;
 	
 	private PagamentoComBoletoService pagamentoBoletoService;
 	private PagamentoComBoleto pagamentoBoleto;
@@ -67,17 +67,17 @@ public class PagamentoComBoletoView extends JFrame {
 			
 		}
 		else if(opcaoCadastro == Constantes.ALTERAR) {
-			consultarPagamentoBoleto(pagamentoBoleto.getId());
+			findById(pagamentoBoleto.getId());
 			btnSalvar.setText("Alterar");
 		
 		}
 		else if(opcaoCadastro == Constantes.EXCLUIR) {
-			consultarPagamentoBoleto(pagamentoBoleto.getId());
+			findById(pagamentoBoleto.getId());
 			btnSalvar.setText("Excluir");
 			
 		}
 		else if(opcaoCadastro == Constantes.CONSULTAR) {
-			consultarPagamentoBoleto(pagamentoBoleto.getId());
+			findById(pagamentoBoleto.getId());
 			btnSalvar.setVisible(false);
 			btnCancelar.setBounds(225, 131, 114, 37);
 			btnCancelar.setText("Sair");
@@ -90,10 +90,10 @@ public class PagamentoComBoletoView extends JFrame {
 		
 			btnSalvar.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					if(idPagBoleto == 0l) {
-						salvarPagBoleto();
+					if(idPagamentoComBoleto == 0l) {
+						add();
 					}else {
-						alterarPagBoleto();
+						update();
 					}
 				}
 			});
@@ -105,9 +105,9 @@ public class PagamentoComBoletoView extends JFrame {
 			});
 		}
 		
-		public void salvarPagBoleto() {
-			pagamentoBoletoService = getPagBoletoService();
-			pagamentoBoleto = getPagBoleto();
+		public void add() {
+			pagamentoBoletoService = getPagamentoComBoletoService();
+			pagamentoBoleto = getPagamentoComBoleto();
 			
 			setPagamentoBoletoFromView();
 			pagamentoBoletoService.add(pagamentoBoleto);
@@ -117,29 +117,29 @@ public class PagamentoComBoletoView extends JFrame {
 			
 		}
 		
-		public void alterarPagBoleto() {
-			pagamentoBoleto = getPagBoleto();
-			pagamentoBoletoService = getPagBoletoService();
+		public void update() {
+			pagamentoBoleto = getPagamentoComBoleto();
+			pagamentoBoletoService = getPagamentoComBoletoService();
 			
-			pagamentoBoleto.setId(idPagBoleto);
+			pagamentoBoleto.setId(idPagamentoComBoleto);
 			setPagamentoBoletoFromView();
 			
 			pagamentoBoletoService.update(pagamentoBoleto);
 			limpa();
 		}
 		
-		public void excluirPagBoleto() {
-			pagamentoBoletoService = getPagBoletoService();
+		public void remove() {
+			pagamentoBoletoService = getPagamentoComBoletoService();
 			PagamentoComBoleto pagamento = new PagamentoComBoleto();
-			pagamento = pagamentoBoletoService.findById(idPagBoleto);
+			pagamento = pagamentoBoletoService.findById(idPagamentoComBoleto);
 			pagamentoBoletoService.remove(pagamento);
 			
 			limpa();
 		}
 		
-		public void consultarPagamentoBoleto(Long id) {
-			pagamentoBoletoService = getPagBoletoService();
-			pagamentoBoleto = getPagBoleto();
+		public void findById(Long id) {
+			pagamentoBoletoService = getPagamentoComBoletoService();
+			pagamentoBoleto = getPagamentoComBoleto();
 			
 			pagamentoBoleto = pagamentoBoletoService.findById(id);
 			
@@ -149,14 +149,14 @@ public class PagamentoComBoletoView extends JFrame {
 		
 		private void limpa() {
 			
-			idPagBoleto = 0l;
+			idPagamentoComBoleto = 0l;
 			txtDataPagamento.setText("");
 			txtDataVencimento.setText("");
 			txtEstado.setText("");
 		}
 		
 		private void setPagamentoBoletoFromView() {
-			pagamentoBoleto.setId(idPagBoleto);
+			pagamentoBoleto.setId(idPagamentoComBoleto);
 			pagamentoBoleto.setEstado(Integer.parseInt(txtEstado.getText()));
 			pagamentoBoleto.setDataPagamento(Date.valueOf(txtDataPagamento.getText()));
 			pagamentoBoleto.setDataVencimento(Date.valueOf(txtDataVencimento.getText()));
@@ -164,7 +164,7 @@ public class PagamentoComBoletoView extends JFrame {
 		}
 		
 		private void getPagamentoBoletoFromDataBase() {
-			idPagBoleto = pagamentoBoleto.getId();
+			idPagamentoComBoleto = pagamentoBoleto.getId();
 			
 			txtEstado.setText((EstadoPagamento.toEnum(pagamentoBoleto.getEstado()).getDescricao()) );
 			txtDataPagamento.setText(String.valueOf(pagamentoBoleto.getDataPagamento()));
@@ -253,11 +253,11 @@ public class PagamentoComBoletoView extends JFrame {
 			panel_1.add(txtDataPagamento);
 		}
 		
-		public PagamentoComBoletoService getPagBoletoService() {
+		public PagamentoComBoletoService getPagamentoComBoletoService() {
 			return new PagamentoComBoletoService();
 		}
 		
-		public PagamentoComBoleto getPagBoleto() {
+		public PagamentoComBoleto getPagamentoComBoleto() {
 			return new PagamentoComBoleto();
 		}
 	

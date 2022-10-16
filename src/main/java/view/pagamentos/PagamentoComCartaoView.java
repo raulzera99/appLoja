@@ -33,7 +33,7 @@ public class PagamentoComCartaoView extends JFrame {
 	private JTextField txtEstado;
 	private JTextField txtParcelas;
 	
-	private long idPagCartao = 0l;
+	private long idPagamentoComCartao = 0l;
 	private PagamentoComCartaoService pagamentoCartaoService;
 	
 	private PagamentoComCartao pagamentoCartao;
@@ -65,17 +65,17 @@ public class PagamentoComCartaoView extends JFrame {
 		
 		btnSalvar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(idPagCartao == 0l) {
-					salvarPagCartao();
+				if(idPagamentoComCartao == 0l) {
+					add();
 				}else {
-					alterarPagCartao();
+					update();
 				}
 			}
 		});
 		
 		btnExcluir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				excluirPagCartao();
+				remove();
 			}
 		});
 		btnAlterar.addActionListener(new ActionListener() {
@@ -93,10 +93,10 @@ public class PagamentoComCartaoView extends JFrame {
 	}
 	
 	public void add() {
-		pagamentoCartaoService = getPagCartaoService();
-		pagamentoCartao = getPagCartao();
+		pagamentoCartaoService = getPagamentoComCartaoService();
+		pagamentoCartao = getPagamentoComCartao();
 		
-		setPagCartaoview();
+		setPagamentoComCartaoview();
 		pagamentoCartaoService.add(pagamentoCartao);
 		
 		limpa();
@@ -105,28 +105,28 @@ public class PagamentoComCartaoView extends JFrame {
 	}
 	
 	public void update() {
-		pagamentoCartao = getPagCartao();
-		pagamentoCartaoService = getPagCartaoService();
+		pagamentoCartao = getPagamentoComCartao();
+		pagamentoCartaoService = getPagamentoComCartaoService();
 		
-		pagamentoCartao.setId(idPagCartao);
-		setPagCartaoview();
+		pagamentoCartao.setId(idPagamentoComCartao);
+		setPagamentoComCartaoview();
 		
 		pagamentoCartaoService.update(pagamentoCartao);
 		limpa();
 	}
 	
 	public void remove() {
-		pagamentoCartaoService = getPagCartaoService();
+		pagamentoCartaoService = getPagamentoComCartaoService();
 		PagamentoComCartao pagamento = new PagamentoComCartao();
-		pagamento = pagamentoCartaoService.findById(idPagCartao);
+		pagamento = pagamentoCartaoService.findById(idPagamentoComCartao);
 		
 		pagamentoCartaoService.remove(pagamento);
 		
 		limpa();
 	}
 			
-	private void setPagCartaoview() {
-		pagamentoCartao.setId(idPagCartao);
+	private void setPagamentoComCartaoview() {
+		pagamentoCartao.setId(idPagamentoComCartao);
 		pagamentoCartao.setEstado(Integer.parseInt(txtEstado.getText()));
 		pagamentoCartao.setNumeroDeParcelas(Integer.parseInt(txtParcelas.getText()));
 		
@@ -135,16 +135,16 @@ public class PagamentoComCartaoView extends JFrame {
 	
 	private void limpa() {
 		
-		idPagCartao = 0l;
+		idPagamentoComCartao = 0l;
 		txtParcelas.setText("");
 		txtEstado.setText("");
 	}
 	
-	public PagamentoComCartaoService getPagCartaoService() {
+	public PagamentoComCartaoService getPagamentoComCartaoService() {
 		return new PagamentoComCartaoService();
 	}
 	
-	public PagamentoComCartao getPagCartao() {
+	public PagamentoComCartao getPagamentoComCartao() {
 		return new PagamentoComCartao();
 	}
 	
