@@ -25,15 +25,9 @@ public class Endereco implements Serializable{
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name = "id")
 	private Integer id;
-	
-	@Column(name = "logradouro")
-	private String logradouro;
-	
+
 	@Column(name = "numero")
 	private String numero;
-	
-	@Column(name = "complemento")
-	private String complemento;
 	
 	@Column(name = "bairro")
 	private String bairro;
@@ -58,9 +52,7 @@ public class Endereco implements Serializable{
 			Cliente cliente, Cidade cidade) {
 		super();
 		this.id = id;
-		this.logradouro = logradouro;
 		this.numero = numero;
-		this.complemento = complemento;
 		this.bairro = bairro;
 		this.cep = cep;
 		this.cliente = cliente;
@@ -80,23 +72,11 @@ public class Endereco implements Serializable{
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	public String getLogradouro() {
-		return logradouro;
-	}
-	public void setLogradouro(String logradouro) {
-		this.logradouro = logradouro;
-	}
 	public String getNumero() {
 		return numero;
 	}
 	public void setNumero(String numero) {
 		this.numero = numero;
-	}
-	public String getComplemento() {
-		return complemento;
-	}
-	public void setComplemento(String complemento) {
-		this.complemento = complemento;
 	}
 	public String getBairro() {
 		return bairro;
@@ -130,9 +110,7 @@ public class Endereco implements Serializable{
 		result = prime * result + ((bairro == null) ? 0 : bairro.hashCode());
 		result = prime * result + ((cep == null) ? 0 : cep.hashCode());
 		result = prime * result + ((cliente == null) ? 0 : cliente.hashCode());
-		result = prime * result + ((complemento == null) ? 0 : complemento.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((logradouro == null) ? 0 : logradouro.hashCode());
 		result = prime * result + ((numero == null) ? 0 : numero.hashCode());
 		return result;
 	}
@@ -162,20 +140,10 @@ public class Endereco implements Serializable{
 				return false;
 		} else if (!cliente.equals(other.cliente))
 			return false;
-		if (complemento == null) {
-			if (other.complemento != null)
-				return false;
-		} else if (!complemento.equals(other.complemento))
-			return false;
 		if (id == null) {
 			if (other.id != null)
 				return false;
 		} else if (!id.equals(other.id))
-			return false;
-		if (logradouro == null) {
-			if (other.logradouro != null)
-				return false;
-		} else if (!logradouro.equals(other.logradouro))
 			return false;
 		if (numero == null) {
 			if (other.numero != null)
@@ -188,8 +156,7 @@ public class Endereco implements Serializable{
 
 	@Override
 	public String toString() {
-		return "Endereco [id=" + id + ", logradouro=" + logradouro + ", numero=" + numero + ", complemento="
-				+ complemento + ", bairro=" + bairro + ", cep=" + cep + ", cliente=" + cliente + "]";
+		return "Endereco [id=" + id + ", numero=" + numero + ", bairro=" + bairro + ", cep=" + cep + ", cliente=" + cliente + "]";
 	}
 	
 	

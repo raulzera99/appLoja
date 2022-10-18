@@ -14,18 +14,21 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import view.pagamentos.PagamentoComCartaoView;
-import view.pagamentos.TablePagamentoBoletoPanel;
+import view.estado.TableEstadoPanel;
+import view.pagamentoComBoleto.TablePagamentoBoletoPanel;
+import view.pagamentoComCartao.TablePagamentoCartaoPanel;
 
 public class MainView extends JFrame {
 	private static final long serialVersionUID = 2435012607684752695L;
 	
 	JPanel contentPane;
 	TablePagamentoBoletoPanel tablePagamentoBoletoPanel = TablePagamentoBoletoPanel.getInstance();
+	TablePagamentoCartaoPanel tablePagamentoCartaoPanel = TablePagamentoCartaoPanel.getInstance();
+	TableEstadoPanel tableEstadoPanel = TableEstadoPanel.getInstance();
 	JPanel topBar;
 	JMenuItem mntm_pagamentoCartao = new JMenuItem("Cartão");
 	JMenuItem mntm_pagamentoBoleto = new JMenuItem("Boleto");
-	
+	JMenuItem mn_Estado = new JMenuItem("Estado");
 
 	/**
 	 * Launch the application.
@@ -52,46 +55,55 @@ public class MainView extends JFrame {
 	
 	private void eventHandler() {
 		mntm_pagamentoCartao.addActionListener(new ActionListener() {
-			
 			public void actionPerformed(ActionEvent e) {
-				EventQueue.invokeLater(new Runnable() {
-					public void run() {
-						try {
-							PagamentoComCartaoView frame = new PagamentoComCartaoView();
-							frame.setVisible(true);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-				});
+				setVisiblePanels(false);
+				tablePagamentoCartaoPanel.setVisible(true);
 			}
 		});
+		
 		mntm_pagamentoBoleto.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				setVisiblePanels(false);
 				tablePagamentoBoletoPanel.setVisible(true);
-				
 			}
-			
-			
 		});
+		
+		mn_Estado.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setVisiblePanels(false);
+				tableEstadoPanel.setVisible(true);
+			}
+		});
+	}
+	
+	private void setVisiblePanels(boolean b) {
+		tablePagamentoBoletoPanel.setVisible(b);
+		tablePagamentoCartaoPanel.setVisible(b);
+		tableEstadoPanel.setVisible(b);
+		
 	}
 
 	private void initComponents() {
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1115, 823);
+		setBounds(100, 100, 1115, 850);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(86, 86, 86));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		setVisiblePanels(false);
 		
 		getContentPane().add(tablePagamentoBoletoPanel);
-		tablePagamentoBoletoPanel.setVisible(false);
-		tablePagamentoBoletoPanel.setBounds(10, 130, 1079, 600);
+		tablePagamentoBoletoPanel.setBounds(10, 130, 1079, 645);
 		
+		getContentPane().add(tablePagamentoCartaoPanel);
+		tablePagamentoBoletoPanel.setBounds(10, 130, 1079, 645);
 
+		getContentPane().add(tableEstadoPanel);
+		tableEstadoPanel.setBounds(10, 130, 1079, 645);
+		
 		JPanel topBar = new JPanel();
 		topBar.setBackground(new Color(245, 41, 5));
 		topBar.setBounds(0, 0, 1101, 119);
@@ -127,7 +139,8 @@ public class MainView extends JFrame {
 		mntm_pagamentoCartao.setBackground(new Color(245, 41, 5));
 		mn_pagamento.add(mntm_pagamentoCartao);
 		
-		JMenuItem mn_Estado = new JMenuItem("Estado");
+		
+		
 		mn_Menu.add(mn_Estado);
 		mn_Estado.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 15));
 		mn_Estado.setBackground(new Color(245, 41, 5));
@@ -175,7 +188,7 @@ public class MainView extends JFrame {
 		
 		JPanel botBar = new JPanel();
 		botBar.setBackground(new Color(245, 41, 5));
-		botBar.setBounds(10, 747, 1079, 26);
+		botBar.setBounds(0, 785, 1101, 26);
 		contentPane.add(botBar);
 		botBar.setLayout(null);
 		

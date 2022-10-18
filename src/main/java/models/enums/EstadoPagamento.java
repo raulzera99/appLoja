@@ -44,6 +44,16 @@ public enum EstadoPagamento {
 		throw new IllegalArgumentException("INVALID ID :" + cod);
 	}
 	
+	public static String[] enumsToStringArray() {
+        String[] results = new String[EstadoPagamento.values().length];
+        int count = 0;
+        for (EstadoPagamento each  : EstadoPagamento.values()) {
+            results[count] = each.toString();
+            count++;
+        }
+        return results;
+    }
+
 	
 	
 }

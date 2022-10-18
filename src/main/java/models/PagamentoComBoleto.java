@@ -48,5 +48,13 @@ public class PagamentoComBoleto extends Pagamento{
 
 	public void setDataPagamento(Date dataPagamento) {
 		this.dataPagamento = dataPagamento;
+	}
+
+	@Override
+	public String toString() {
+		return "\nPagamentoComBoleto\n[dataVencimento = " + dataVencimento + "\ndataPagamento=" + dataPagamento
+				+ "\ngetId()=" + getId() + "\ngetEstado()=" + EstadoPagamento.toEnum(getEstado()).getDescricao() + "]";
 	}	
+	
+	
 }

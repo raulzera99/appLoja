@@ -34,4 +34,11 @@ public class PagamentoComCartao extends Pagamento{
 	public void setNumeroDeParcelas(Integer numeroDeParcelas) {
 		this.numeroDeParcelas = numeroDeParcelas;
 	}
+
+	@Override
+	public String toString() {
+		return "\nPagamentoComCartao \n[numeroDeParcelas = " + numeroDeParcelas + "\ngetId() = " + getId() + "\ngetEstado() = "
+				+ EstadoPagamento.toEnum(getEstado()).getDescricao() + "]";
+	}
+	
 }
