@@ -1,6 +1,8 @@
 
 package services;
 
+import java.util.List;
+
 import config.Page;
 import dao.EstadoDAO;
 import models.Estado;
@@ -83,5 +85,16 @@ public class EstadoService extends DataBaseTransactionService<Estado, Long>{
 	@Override
 	public Page<Estado> listaPaginada(Integer page, Integer pageSize, String text) {
 		return dao.listaPaginada(page, pageSize, text);
+	}
+	
+	public String[] listAllEstados() {
+		List<Estado> estados = dao.listAll();
+		String[] results = new String[estados.size()];
+		int i = 0;
+		for (Estado x : estados) {
+			results[i] = x.getNome();
+			i++;
+		}
+		return results;
 	}
 }

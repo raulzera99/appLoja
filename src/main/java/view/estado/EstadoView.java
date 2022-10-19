@@ -195,7 +195,7 @@ public class EstadoView extends JFrame {
 			contentPane.add(panel);
 			panel.setLayout(null);
 			
-			JLabel lblNewLabel = new JLabel("Pagamento Com Boleto");
+			JLabel lblNewLabel = new JLabel("Estado");
 			lblNewLabel.setForeground(new Color(255, 255, 255));
 			lblNewLabel.setFont(new Font("Segoe UI", Font.ITALIC, 30));
 			lblNewLabel.setBounds(10, 30, 386, 46);

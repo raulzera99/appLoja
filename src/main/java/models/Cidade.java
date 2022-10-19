@@ -26,7 +26,7 @@ public class Cidade implements Serializable{
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name = "id")
-	private Integer id;
+	private Long id;
 	
 	@Column(name = "nome")
 	private String nome;
@@ -38,7 +38,7 @@ public class Cidade implements Serializable{
 	@JoinColumn(name="id_estado", referencedColumnName = "id")
 	private Estado estado;
 
-	public Cidade(Integer id, String nome, Estado estado) {
+	public Cidade(Long id, String nome, Estado estado) {
 		super();
 		this.id = id;
 		this.nome = nome;
@@ -49,11 +49,11 @@ public class Cidade implements Serializable{
 		super();
 	}
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

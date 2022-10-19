@@ -83,4 +83,5 @@ public class CidadeService extends DataBaseTransactionService<Cidade, Long>{
 	public Page<Cidade> listaPaginada(Integer page, Integer pageSize, String text) {
 		return dao.listaPaginada(page, pageSize, text);
 	}
+	
 }

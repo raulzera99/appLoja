@@ -122,8 +122,7 @@ public class TablePagamentoBoletoPanel extends JPanel {
 		txtSearch.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
-				
-				
+				initTable();
 			}
 		});
 	}
