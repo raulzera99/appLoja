@@ -28,9 +28,9 @@ public class PagamentoComBoletoDAO extends GenericDAO<PagamentoComBoleto, Long>{
 				.createQuery("SELECT c FROM PagamentoComBoleto c "
 						+ "WHERE c.estado_pagamento "
 						+ "LIKE (CONCAT('%',:text,'%')) "
-						+ "OR c.dataVencimento "
+						+ "OR c.data_vencimento "
 						+ "LIKE (CONCAT('%',:text,'%')) "
-						+ "OR c.dataPagamento "
+						+ "OR c.data_pagamento "
 						+ "LIKE (CONCAT('%',:text,'%')) ", PagamentoComBoleto.class);
 		
 		

@@ -29,13 +29,10 @@ public class EstadoDAO extends GenericDAO<Estado, Long>{
 						+ "WHERE c.nome "
 						+ "LIKE (CONCAT('%',:text,'%')) ", Estado.class);
 		
-		
 		lista = query.setParameter("text", text)
 				.setFirstResult(paginaAtual)
 				.setMaxResults(pageSize)
 				.getResultList();
-		
-		
 		
 		return getPaginas(lista, page, pageSize, totalPaginas.intValue(), total.intValue());
 	}

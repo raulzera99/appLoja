@@ -1,21 +1,32 @@
 package services;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceContext;
 
 import config.Page;
+import message.MessageResponse;
+import message.ModelResponse;
+import message.Response;
 import persistence.DataBaseConnection;
+import services.errors.ErrorsData;
 
 public abstract class DataBaseTransactionService<T, ID extends Serializable> {
 	
 	@PersistenceContext(unitName = "apploja")
 	private EntityManager em;
 	
-	private EntityTransaction transaction;
+	protected List<ErrorsData> errorsData;
+	
+	protected Response response;
+	
+	protected MessageResponse<ErrorsData> errorData;
+	protected MessageResponse<T> messageResponse;
+	
+	protected ModelResponse<T> modelResponse;
 	
 	public EntityManager openEntityManager() {
 		if(Objects.isNull(em)) {
@@ -44,24 +55,60 @@ public abstract class DataBaseTransactionService<T, ID extends Serializable> {
 		em.close();
 	}
 	
-	public abstract void add(T entity);
+	public abstract Response add(T entity);
 	
-	public abstract T update(T entity);
+	public abstract Response update(T entity);
 	
-	public abstract void remove(T entity);
+	public abstract Response remove(T entity);
 	
-	public abstract T findById(ID id);
+	public abstract Response findById(ID id);
 	
 	public abstract Page<T> listaPaginada(Integer page, Integer pageSize);
 	
 	public abstract Page<T> listaPaginada(Integer page, Integer pageSize, String text);
 
-	public EntityTransaction getTransaction() {
-		return transaction;
+	public abstract Response validarDadosFromView(T objeto );
+	
+	public Response getResponse() {
+		return response;
 	}
 
-	public void setTransaction(EntityTransaction transaction) {
-		this.transaction = transaction;
+	public void setResponse(Response response) {
+		this.response = response;
+	}
+
+	public MessageResponse<T> getMessageResponse() {
+		return new MessageResponse<T>();
+	}
+
+	public void setMessageResponse(MessageResponse<T> messageResponse) {
+		this.messageResponse = messageResponse;
+	}
+
+	public ModelResponse<T> getModelResponse() {
+		return modelResponse;
+	}
+
+	public void setModelResponse(ModelResponse<T> modelResponse) {
+		this.modelResponse = modelResponse;
+	}
+	
+	public Response returnErrorOrNot() {
+		if(errorsData.size() > 0 ) {
+			response = getErrorData().message(errorsData, "",true);
+		}
+		else {
+			response = getErrorData().message(errorsData, "",false);
+		}
+		return response;
+	}
+
+	public MessageResponse<ErrorsData> getErrorData() {
+		return new MessageResponse<ErrorsData>();
+	}
+
+	public void setErrorData(MessageResponse<ErrorsData> errorData) {
+		this.errorData = errorData;
 	}
 	
 	
