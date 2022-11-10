@@ -26,19 +26,19 @@ import java.awt.event.KeyEvent;
 public class TablePagamentoBoletoPanel extends JPanel {
 	private static final long serialVersionUID = -4694190107545197497L;
 	JTable tablePagamentoBoleto;
-	JScrollPane scrollPane = new JScrollPane();
-	JScrollPane scrollPaneTablePagamentoBoleto = new JScrollPane();
-	JPanel panelButtons = new JPanel();
-	JPanel panelSearch = new JPanel();
-	JButton btnPrimeiro = new JButton("Primeiro");
-	JButton btnAnterior = new JButton("Anterior");
-	JButton btnProximo = new JButton("Próximo");
-	JButton btnUltimo = new JButton("Último");
-	JButton btnAdicionar = new JButton("Adicionar");
-	JButton btnAlterar = new JButton("Alterar");
-	JButton btnRemover = new JButton("Remover");
-	JButton btnConsultar = new JButton("Consultar");
-	JTextField txtSearch = new JTextField();
+	JScrollPane scrollPane;
+	JScrollPane scrollPaneTablePagamentoBoleto;
+	JPanel panelButtons;
+	JPanel panelSearch;
+	JButton btnPrimeiro;
+	JButton btnAnterior;
+	JButton btnProximo;
+	JButton btnUltimo;
+	JButton btnAdicionar;
+	JButton btnAlterar;
+	JButton btnRemover;
+	JButton btnConsultar;
+	JTextField txtSearch;
 	
 	
 	private TablePagamentoBoletoModel model;
@@ -128,58 +128,69 @@ public class TablePagamentoBoletoPanel extends JPanel {
 	}
 	
 	private void initComponents() {
+
+		scrollPane = new JScrollPane();
 		setBounds(new Rectangle(10, 130, 1079, 468));
 		setLayout(null);
 		scrollPane.setBounds(10, 64, 1065, 478);
 		add(scrollPane);
 		
+		scrollPaneTablePagamentoBoleto = new JScrollPane();
 		scrollPane.setViewportView(scrollPaneTablePagamentoBoleto);
 		
 		tablePagamentoBoleto = new JTable();
 		tablePagamentoBoleto.setFont(new Font("Tahoma", Font.PLAIN, 9));
 		scrollPaneTablePagamentoBoleto.setViewportView(tablePagamentoBoleto);
+		
+
+		panelButtons = new JPanel();
 		panelButtons.setBounds(11, 550, 1065, 79);
 		add(panelButtons);
 		panelButtons.setLayout(null);
 		
+
 		
+		btnPrimeiro = new JButton("Primeiro");
 		btnPrimeiro.setBounds(10, 11, 89, 23);
 		panelButtons.add(btnPrimeiro);
 		
-		
+		btnAnterior = new JButton("Anterior");
 		btnAnterior.setBounds(109, 11, 89, 23);
 		panelButtons.add(btnAnterior);
 		
-		
+
+		btnProximo = new JButton("Próximo");
 		btnProximo.setBounds(208, 11, 89, 23);
 		panelButtons.add(btnProximo);
 		
-		
+
+		btnUltimo = new JButton("Último");
 		btnUltimo.setBounds(307, 11, 89, 23);
 		panelButtons.add(btnUltimo);
 		
-		
+
+		btnAdicionar = new JButton("Adicionar");
 		btnAdicionar.setBounds(10, 45, 89, 23);
 		panelButtons.add(btnAdicionar);
-		
+
+		btnAlterar = new JButton("Alterar");
 		btnAlterar.setBounds(119, 45, 89, 23);
 		panelButtons.add(btnAlterar);
-		
-		
-		
+
+		btnRemover = new JButton("Remover");		
 		btnRemover.setBounds(233, 45, 89, 23);
 		panelButtons.add(btnRemover);
-		
-		
-		
+
+		btnConsultar = new JButton("Consultar");
 		btnConsultar.setBounds(346, 45, 89, 23);
 		panelButtons.add(btnConsultar);
 		
-		
+		panelSearch = new JPanel();
 		panelSearch.setBounds(10, 11, 1065, 42);
 		add(panelSearch);
 		panelSearch.setLayout(null);
 		
+		txtSearch = new JTextField();
 		txtSearch.setBounds(160, 11, 748, 20);
 		panelSearch.add(txtSearch);
 		txtSearch.setColumns(10);
@@ -194,7 +205,12 @@ public class TablePagamentoBoletoPanel extends JPanel {
 	
 	private void listarPagamentoBoleto() {
 		pagamentoBoletoService = getPagamentoBoletoService();
-		page = pagamentoBoletoService.listaPaginada(paginaAtual, tamanhoPagina);
+		if(txtSearch.equals("")) {
+			page = pagamentoBoletoService.listaPaginada(paginaAtual, tamanhoPagina);
+		}
+		else {
+			page = pagamentoBoletoService.listaPaginada(paginaAtual, tamanhoPagina, txtSearch.getText());
+		}
 		
 		if(paginaAtual == 1) {
 			btnPrimeiro.setEnabled(false);

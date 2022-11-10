@@ -60,8 +60,6 @@ public class ValidationRequiredField {
 			return campo == 0L ? true:false;
 		}
 		
-		
-		
 		return false;
 	}
 }

@@ -26,11 +26,11 @@ public class PagamentoComBoletoDAO extends GenericDAO<PagamentoComBoleto, Long>{
 		Double totalPaginas = Math.ceil(total.doubleValue() / pageSize.doubleValue());
 		TypedQuery<PagamentoComBoleto> query = getEntityManager()
 				.createQuery("SELECT c FROM PagamentoComBoleto c "
-						+ "WHERE c.estado_pagamento "
+						+ "WHERE c.estado "
 						+ "LIKE (CONCAT('%',:text,'%')) "
-						+ "OR c.data_vencimento "
+						+ "OR c.dataVencimento "
 						+ "LIKE (CONCAT('%',:text,'%')) "
-						+ "OR c.data_pagamento "
+						+ "OR c.dataPagamento "
 						+ "LIKE (CONCAT('%',:text,'%')) ", PagamentoComBoleto.class);
 		
 		

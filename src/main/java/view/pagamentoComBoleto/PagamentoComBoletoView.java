@@ -38,7 +38,7 @@ public class PagamentoComBoletoView extends JFrame {
 	JLabel lblMessageDataVencimento;
 	JLabel lblMessageDataPagamento;
 	
-	private Long idPagamentoComBoleto = 0l;
+	private Long idPagamentoComBoleto = 0L;
 	
 	private PagamentoComBoletoService pagamentoBoletoService;
 	private PagamentoComBoleto pagamentoBoleto;
@@ -143,8 +143,7 @@ public class PagamentoComBoletoView extends JFrame {
 				JOptionPane.showMessageDialog(null, modelResponse.getMessage(), "Adicionado", JOptionPane.INFORMATION_MESSAGE);
 			}
 			
-
-			pagamentoBoletoService.add(pagamentoBoleto);	
+			//pagamentoBoletoService.add(pagamentoBoleto);	
 			limpa();
 
 						
