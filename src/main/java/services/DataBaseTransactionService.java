@@ -1,6 +1,5 @@
 package services;
 
-import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
@@ -14,7 +13,7 @@ import message.Response;
 import persistence.DataBaseConnection;
 import services.errors.ErrorsData;
 
-public abstract class DataBaseTransactionService<T, ID extends Serializable> {
+public abstract class DataBaseTransactionService<T, ID> {
 	
 	@PersistenceContext(unitName = "apploja")
 	private EntityManager em;
@@ -86,7 +85,7 @@ public abstract class DataBaseTransactionService<T, ID extends Serializable> {
 	}
 
 	public ModelResponse<T> getModelResponse() {
-		return modelResponse;
+		return new ModelResponse<T>();
 	}
 
 	public void setModelResponse(ModelResponse<T> modelResponse) {

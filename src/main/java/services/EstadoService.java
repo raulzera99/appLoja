@@ -1,80 +1,99 @@
 
 package services;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import config.Page;
 import dao.EstadoDAO;
+import message.Response;
 import models.Estado;
+import services.errors.ErrorsData;
+import services.errors.ValidationRequiredField;
 
 public class EstadoService extends DataBaseTransactionService<Estado, Long>{
 	
 	private EstadoDAO dao;
 	
-	
+	private Response response = null;
 
 	public EstadoService() {
 		dao = new EstadoDAO(openEntityManager());
 	}
 
 	@Override
-	public void add(Estado entity) {
+	public Response add(Estado entity) {
 		try {
 			beginTransaction();
 			dao.add(entity);
 			commitTransaction();
+			response = getMessageResponse().message(entity, "Adicionado com êxito", false);
 		}
 		catch(Exception e) {
 			e.printStackTrace();
 			if(isActiveTransaction()) {
 				rollbackTransaction();
 			}
+			response = getMessageResponse().message(entity, e.getMessage(), true);
 		}finally {
 			closeEntityManager();
 		}
+		return response;
 	}
 
 	@Override
-	public Estado update(Estado entity) {
-		Estado estado = null;
+	public Response update(Estado entity) {
 		try {
 			beginTransaction();
-			estado = dao.update(entity);
+			dao.update(entity);
 			commitTransaction();
+			response = getMessageResponse().message(entity, "Alterado com êxito", false);
 		}
 		catch(Exception e) {
 			e.printStackTrace();
 			if(isActiveTransaction()) {
 				rollbackTransaction();
 			}
+			response = getMessageResponse().message(entity, e.getMessage(), true);
 		}finally {
 			closeEntityManager();
 		}
-		return estado;
+		return response;
 	}
 
 	@Override
-	public void remove(Estado entity) {
+	public Response remove(Estado entity) {
 		try {
 			beginTransaction();
 			dao.remove(entity);
 			commitTransaction();
+			response = getMessageResponse().message(entity, "Removido com êxito", false);
 		}
 		catch(Exception e) {
 			e.printStackTrace();
 			if(isActiveTransaction()) {
 				rollbackTransaction();
 			}
+			response = getMessageResponse().message(entity, e.getMessage(), true);
 		}finally {
 			closeEntityManager();
 		}
+		return response;
 	}
 
 	@Override
-	public Estado findById(Long id) {
-		Estado estado = new Estado();
-		estado = dao.searchById(id);
-		return estado;
+	public Response findById(Long id) {
+		Estado estado= null;
+		try {
+			estado = dao.searchById(id);
+			response = getMessageResponse().message(estado, "Encontrado com êxito !", false);	
+		} catch (Exception e) {
+			e.printStackTrace();
+			response = getMessageResponse().message(estado, e.getMessage(), true);	
+		} finally {
+			closeEntityManager();
+		}
+		return response;
 	}
 
 	@Override
@@ -96,5 +115,13 @@ public class EstadoService extends DataBaseTransactionService<Estado, Long>{
 			i++;
 		}
 		return results;
+	}
+
+	@Override
+	public Response validarDadosFromView(Estado objeto) {
+		errorsData = new ArrayList<ErrorsData>();
+		errorsData = ValidationRequiredField.validarCampoRequerido(objeto);
+		
+		return returnErrorOrNot();
 	}
 }

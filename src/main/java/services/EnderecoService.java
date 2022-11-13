@@ -1,77 +1,97 @@
 package services;
 
+import java.util.ArrayList;
+
 import config.Page;
 import dao.EnderecoDAO;
+import message.Response;
 import models.Endereco;
+import services.errors.ErrorsData;
+import services.errors.ValidationRequiredField;
 
 public class EnderecoService extends DataBaseTransactionService<Endereco, Long>{
 	
 	private EnderecoDAO dao;
 	
-	
+	private Response response = null;
 
 	public EnderecoService() {
 		dao = new EnderecoDAO(openEntityManager());
 	}
 
 	@Override
-	public void add(Endereco entity) {
+	public Response add(Endereco entity) {
 		try {
 			beginTransaction();
 			dao.add(entity);
 			commitTransaction();
+			response = getMessageResponse().message(entity, "Adicionado com êxito", false);
 		}
 		catch(Exception e) {
 			e.printStackTrace();
 			if(isActiveTransaction()) {
 				rollbackTransaction();
 			}
+			response = getMessageResponse().message(entity, e.getMessage(), true);
 		}finally {
 			closeEntityManager();
 		}
+		return response;
 	}
 
 	@Override
-	public Endereco update(Endereco entity) {
-		Endereco endereco = null;
+	public Response update(Endereco entity) {
 		try {
 			beginTransaction();
-			endereco = dao.update(entity);
+			dao.update(entity);
 			commitTransaction();
+			response = getMessageResponse().message(entity, "Alterado com êxito", false);
 		}
 		catch(Exception e) {
 			e.printStackTrace();
 			if(isActiveTransaction()) {
 				rollbackTransaction();
 			}
+			response = getMessageResponse().message(entity, e.getMessage(), true);
 		}finally {
 			closeEntityManager();
 		}
-		return endereco;
+		return response;
 	}
 
 	@Override
-	public void remove(Endereco entity) {
+	public Response remove(Endereco entity) {
 		try {
 			beginTransaction();
 			dao.remove(entity);
 			commitTransaction();
+			response = getMessageResponse().message(entity, "Removido com êxito", false);
 		}
 		catch(Exception e) {
 			e.printStackTrace();
 			if(isActiveTransaction()) {
 				rollbackTransaction();
 			}
+			response = getMessageResponse().message(entity, e.getMessage(), true);
 		}finally {
 			closeEntityManager();
 		}
+		return response;
 	}
 
 	@Override
-	public Endereco findById(Long id) {
-		Endereco endereco = new Endereco();
-		endereco = dao.searchById(id);
-		return endereco;
+	public Response findById(Long id) {
+		Endereco endereco = null;
+		try {
+			endereco = dao.searchById(id);
+			response = getMessageResponse().message(endereco, "Encontrado com êxito !", false);	
+		} catch (Exception e) {
+			e.printStackTrace();
+			response = getMessageResponse().message(endereco, e.getMessage(), true);	
+		} finally {
+			closeEntityManager();
+		}
+		return response;
 	}
 
 	@Override
@@ -82,5 +102,13 @@ public class EnderecoService extends DataBaseTransactionService<Endereco, Long>{
 	@Override
 	public Page<Endereco> listaPaginada(Integer page, Integer pageSize, String text) {
 		return dao.listaPaginada(page, pageSize, text);
+	}
+
+	@Override
+	public Response validarDadosFromView(Endereco objeto) {
+		errorsData = new ArrayList<ErrorsData>();
+		errorsData = ValidationRequiredField.validarCampoRequerido(objeto);
+		
+		return returnErrorOrNot();
 	}
 }

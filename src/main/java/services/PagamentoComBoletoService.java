@@ -31,8 +31,8 @@ public class PagamentoComBoletoService extends DataBaseTransactionService<Pagame
 			e.printStackTrace();
 			if(isActiveTransaction()) {
 				rollbackTransaction();
-				response = getMessageResponse().message(entity, e.getMessage(), true);
 			}
+			response = getMessageResponse().message(entity, e.getMessage(), true);
 		}finally {
 			closeEntityManager();
 		}
@@ -51,8 +51,8 @@ public class PagamentoComBoletoService extends DataBaseTransactionService<Pagame
 			e.printStackTrace();
 			if(isActiveTransaction()) {
 				rollbackTransaction();
-				response = getMessageResponse().message(entity, e.getMessage(), true);
 			}
+			response = getMessageResponse().message(entity, e.getMessage(), true);
 		}finally {
 			closeEntityManager();
 		}
@@ -63,8 +63,7 @@ public class PagamentoComBoletoService extends DataBaseTransactionService<Pagame
 	public Response remove(PagamentoComBoleto entity) {
 		try {
 			beginTransaction();
-			PagamentoComBoleto pagamentoBoleto = dao.searchById(entity.getId());
-			dao.remove(pagamentoBoleto);
+			dao.remove(entity);
 			commitTransaction();
 			
 			response = getMessageResponse().message(entity, "Removido com êxito", false);
@@ -73,8 +72,8 @@ public class PagamentoComBoletoService extends DataBaseTransactionService<Pagame
 			e.printStackTrace();
 			if(isActiveTransaction()) {
 				rollbackTransaction();
-				response = getMessageResponse().message(entity, e.getMessage(), true);
 			}
+			response = getMessageResponse().message(entity, e.getMessage(), true);
 		}finally {
 			closeEntityManager();
 		}

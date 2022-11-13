@@ -3,12 +3,10 @@ package models;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.Table;
 
 import models.enums.EstadoPagamento;
 
 @Entity
-@Table(name = "table_pagamento_com_boleto")
 @DiscriminatorValue("1")
 public class PagamentoComBoleto extends Pagamento{
 	private static final long serialVersionUID = 1L;

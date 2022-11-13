@@ -41,7 +41,7 @@ public class PagamentoComBoletoView extends JFrame {
 	private Long idPagamentoComBoleto = 0L;
 	
 	private PagamentoComBoletoService pagamentoBoletoService;
-	private PagamentoComBoleto pagamentoBoleto;
+	private PagamentoComBoleto pagamentoBoleto = null;
 	
 	private ModelResponse<PagamentoComBoleto> modelResponse = null;
 	private ModelResponse<ErrorsData> errors;
@@ -75,7 +75,6 @@ public class PagamentoComBoletoView extends JFrame {
 		
 		if(opcaoCadastro == Constantes.INCLUIR) {
 			btnSalvar.setText("Incluir");
-			
 		}
 		else if(opcaoCadastro == Constantes.ALTERAR) {
 			findById(pagamentoBoleto.getId());
@@ -123,30 +122,25 @@ public class PagamentoComBoletoView extends JFrame {
 			int i = 1;
 			setPagamentoBoletoFromView();
 			
+			errors = (ModelResponse<ErrorsData>) pagamentoBoletoService.validarDadosFromView(pagamentoBoleto);
+			
 			i = JOptionPane.showConfirmDialog(null, "Confirme os dados : "
 					+pagamentoBoleto.toString(),
 					"Confirmar", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 			
 			if(i == 0) {
-				errors = (ModelResponse<ErrorsData>) pagamentoBoletoService.validarDadosFromView(pagamentoBoleto);
+				if(errors.isError()) {
+					showErrorFromServidor();
+					JOptionPane.showMessageDialog(null, modelResponse.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
+				}
+				else {
+					modelResponse = (ModelResponse<PagamentoComBoleto>) pagamentoBoletoService.add(pagamentoBoleto);
+					pagamentoBoleto = modelResponse.getObject();
+					JOptionPane.showMessageDialog(null, modelResponse.getMessage(), "Adicionado", JOptionPane.INFORMATION_MESSAGE);
+				}
+				//pagamentoBoletoService.add(pagamentoBoleto);	
+				limpa();
 			}
-			
-			if(errors.isError()) {
-				showErrorFromServidor();
-				JOptionPane.showMessageDialog(null, modelResponse.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
-				
-			}
-			else {
-
-				modelResponse = (ModelResponse<PagamentoComBoleto>) pagamentoBoletoService.add(pagamentoBoleto);
-				pagamentoBoleto = modelResponse.getObject();
-				JOptionPane.showMessageDialog(null, modelResponse.getMessage(), "Adicionado", JOptionPane.INFORMATION_MESSAGE);
-			}
-			
-			//pagamentoBoletoService.add(pagamentoBoleto);	
-			limpa();
-
-						
 		}
 		
 		@SuppressWarnings("unchecked")
@@ -174,7 +168,7 @@ public class PagamentoComBoletoView extends JFrame {
 				JOptionPane.showMessageDialog(null, modelResponse.getMessage(), "Alterado", JOptionPane.INFORMATION_MESSAGE);
 			}
 			
-			pagamentoBoletoService.update(pagamentoBoleto);
+			//pagamentoBoletoService.update(pagamentoBoleto);
 			limpa();
 						
 		}
@@ -201,7 +195,7 @@ public class PagamentoComBoletoView extends JFrame {
 				JOptionPane.showMessageDialog(null, modelResponse.getMessage(), "Excluído", JOptionPane.INFORMATION_MESSAGE);
 			}
 			
-			pagamentoBoletoService.remove(pagamentoBoleto);
+			//pagamentoBoletoService.remove(pagamentoBoleto);
 			limpa();
 		}
 		
@@ -226,7 +220,7 @@ public class PagamentoComBoletoView extends JFrame {
 		
 		private void limpa() {
 			
-			idPagamentoComBoleto = 0l;
+			idPagamentoComBoleto = 0L;
 			txtDataPagamento.setText("");
 			txtDataVencimento.setText("");
 			comboBoxEstado.setSelectedIndex(-1);
@@ -237,7 +231,6 @@ public class PagamentoComBoletoView extends JFrame {
 			pagamentoBoleto.setEstado(comboBoxEstado.getSelectedIndex()+1);
 			pagamentoBoleto.setDataPagamento(txtDataPagamento.getText());
 			pagamentoBoleto.setDataVencimento(txtDataVencimento.getText());
-			
 		}
 		
 		private void getPagamentoBoletoFromDataBase() {
