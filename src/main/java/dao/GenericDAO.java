@@ -18,9 +18,9 @@ public class GenericDAO<T, ID extends Serializable>  {
 	@SuppressWarnings("unchecked")
 	public GenericDAO(EntityManager em) {
 		this.entityManager = em;
-		this.classe = (Class<T>)((ParameterizedType)this.getClass()
+		this.setClasse( (Class<T>)((ParameterizedType)this.getClass()
 				.getGenericSuperclass())
-				.getActualTypeArguments()[0];
+				.getActualTypeArguments()[0]);
 	}
 	
 	public void add(T entity) {
@@ -38,6 +38,12 @@ public class GenericDAO<T, ID extends Serializable>  {
 	public T searchById(ID id) {
 		return (T)getEntityManager().find(getClasse(), id);
 	}
+	
+	public void removeById(ID id) {
+        T entity = searchById(id);
+        getEntityManager()
+                .remove(entity);
+    }
 	
 	
 	public Page<T> listaPaginada(Integer page, Integer pageSize){

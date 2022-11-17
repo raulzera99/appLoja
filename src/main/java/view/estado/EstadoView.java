@@ -5,6 +5,8 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.persistence.EntityManager;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -14,8 +16,12 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import config.Constantes;
+import dao.EstadoDAO;
+import message.ModelResponse;
 import models.Estado;
+import persistence.DataBaseConnection;
 import services.EstadoService;
+import services.errors.ErrorsData;
 
 public class EstadoView extends JFrame {
 
@@ -27,11 +33,15 @@ public class EstadoView extends JFrame {
 	JButton btnSalvar = new JButton("Salvar");
 	JButton btnCancelar = new JButton("Cancelar");
 	JTextField txtNome;
+	JLabel lblNomeMessage;
 	
-	private Long idEstado = 0l;
+	private Long idEstado = 0L;
 	
 	private EstadoService estadoService;
 	private Estado estado;
+	
+	private ModelResponse<Estado> modelResponse = null;
+	private ModelResponse<ErrorsData> errors;
 	/**
 	 * Launch the application.
 	 */
@@ -102,62 +112,96 @@ public class EstadoView extends JFrame {
 			});
 		}
 		
+		@SuppressWarnings("unchecked")
 		public void add() {
 			estadoService = getEstadoService();
 			estado = getEstado();
-			
+			int i = 1;
 			setEstadoFromView();
 			
-			int i = JOptionPane.showConfirmDialog(null, "Confirme os dados : "
+			errors = (ModelResponse<ErrorsData>) estadoService.validarDadosFromView(estado);
+			
+			i = JOptionPane.showConfirmDialog(null, "Confirme os dados : "
 					+estado.toString(),
 					"Confirmar", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 			if(i == 0) {
-				estadoService.add(estado);	
-				dispose();
-				idEstado = 0L;
+				if(errors.isError()) {
+					showErrorFromServidor();
+					JOptionPane.showMessageDialog(null, modelResponse.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
+				}
+				else {
+					modelResponse = (ModelResponse<Estado>) estadoService.add(estado);
+					estado = modelResponse.getObject();
+					JOptionPane.showMessageDialog(null, modelResponse.getMessage(), "Adicionado", JOptionPane.INFORMATION_MESSAGE);
+				}
 				limpa();
 			}			
 		}
 		
+		@SuppressWarnings("unchecked")
 		public void update() {
 			estado = getEstado();
 			estadoService = getEstadoService();
-			
+			int i = 1;
 			estado.setId(idEstado);
 			setEstadoFromView();
 			
-			int i = JOptionPane.showConfirmDialog(null, "Confirme os dados : "
+			i = JOptionPane.showConfirmDialog(null, "Confirme os dados : "
 					+estado.toString(),
 					"Confirmar", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 			if(i == 0) {
-				estadoService.update(estado);
-				dispose();
-				idEstado = 0L;
-				limpa();
-			}			
-		}
-		
-		public void remove() {
-			estadoService = getEstadoService();
-			Estado estado = new Estado();
-			estado = estadoService.findById(idEstado);
+				modelResponse = (ModelResponse<Estado>) estadoService.update(estado);
+			}	
 			
-			int i = JOptionPane.showConfirmDialog(null, "Confirme os dados : "
-					+estado.toString(),
-					"Confirmar", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-			if(i == 0) {
-				estadoService.remove(estado);
-				dispose();
-				idEstado = 0L;
-				limpa();
-			}			
+			if(modelResponse.isError()) {
+				JOptionPane.showMessageDialog(null, modelResponse.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
+			}
+			else {
+				estado = modelResponse.getObject();
+				JOptionPane.showMessageDialog(null, modelResponse.getMessage(), "Alterado", JOptionPane.INFORMATION_MESSAGE);
+			}
+			
+			limpa();
 		}
 		
+		@SuppressWarnings("unchecked")
+		public void remove() {
+			int i = 1;
+			estadoService = getEstadoService();
+			setEstadoFromView();
+			
+			i = JOptionPane.showConfirmDialog(null, "Confirme os dados : "
+					+estado.toString(),
+					"Confirmar", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+			
+			if(i == 0) {
+				modelResponse = (ModelResponse<Estado>) estadoService.remove(estado);
+			}
+			
+			if(modelResponse.isError()) {
+				JOptionPane.showMessageDialog(null, modelResponse.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
+			}
+			else {
+				estado = modelResponse.getObject();
+				JOptionPane.showMessageDialog(null, modelResponse.getMessage(), "Excluído", JOptionPane.INFORMATION_MESSAGE);
+			}
+			
+			limpa();		
+		}
+		
+		@SuppressWarnings("unchecked")
 		public void findById(Long id) {
 			estadoService = getEstadoService();
 			estado = getEstado();
+			modelResponse = (ModelResponse<Estado>) estadoService.findById(estado.getId());
 			
-			estado = estadoService.findById(id);
+			if(modelResponse.isError()) {
+				JOptionPane.showMessageDialog(null, modelResponse.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
+			}
+			else {
+				estado = modelResponse.getObject();
+				JOptionPane.showMessageDialog(null, modelResponse.getMessage(), "Encontrado", JOptionPane.INFORMATION_MESSAGE);
+			}
 			
 			getEstadoFromDataBase();
 		}
@@ -170,14 +214,24 @@ public class EstadoView extends JFrame {
 		}
 		
 		private void setEstadoFromView() {
-			estado.setId(idEstado);
 			estado.setNome(txtNome.getText());			
 		}
 		
 		private void getEstadoFromDataBase() {
 			idEstado = estado.getId();
 			txtNome.setText(String.valueOf(estado.getNome()));
+		}
+		
+		private void showErrorFromServidor() {
+			for(ErrorsData erro : errors.getListObject()) {
+				if(erro.getNumeroCampo() == 1) {
+					lblNomeMessage.setVisible(true);
+					lblNomeMessage.setForeground(Color.red);
+					lblNomeMessage.setText(erro.getShowMensagemError());
+					lblNomeMessage.setBorder(BorderFactory.createLineBorder(Color.red, 2));
+				}
 			}
+		}
 		
 		private void initComponents() {
 			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -237,10 +291,15 @@ public class EstadoView extends JFrame {
 			txtNome.setColumns(10);
 			txtNome.setBounds(159, 26, 374, 19);
 			panel_1.add(txtNome);
+			
+			lblNomeMessage = new JLabel("");
+			lblNomeMessage.setBounds(169, 44, 353, 14);
+			panel_1.add(lblNomeMessage);
 		}
 		
 		public EstadoService getEstadoService() {
-			return new EstadoService();
+			EntityManager em = DataBaseConnection.getConnection().getEntityManager();
+			return new EstadoService(em, new EstadoDAO(em));
 		}
 		
 		public Estado getEstado() {

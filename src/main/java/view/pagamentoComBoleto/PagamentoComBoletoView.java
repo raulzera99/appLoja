@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.persistence.EntityManager;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -17,9 +18,11 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import config.Constantes;
+import dao.PagamentoComBoletoDAO;
 import message.ModelResponse;
 import models.PagamentoComBoleto;
 import models.enums.EstadoPagamento;
+import persistence.DataBaseConnection;
 import services.PagamentoComBoletoService;
 import services.errors.ErrorsData;
 
@@ -79,12 +82,10 @@ public class PagamentoComBoletoView extends JFrame {
 		else if(opcaoCadastro == Constantes.ALTERAR) {
 			findById(pagamentoBoleto.getId());
 			btnSalvar.setText("Alterar");
-		
 		}
 		else if(opcaoCadastro == Constantes.EXCLUIR) {
 			findById(pagamentoBoleto.getId());
 			btnSalvar.setText("Excluir");
-			
 		}
 		else if(opcaoCadastro == Constantes.CONSULTAR) {
 			findById(pagamentoBoleto.getId());
@@ -92,8 +93,6 @@ public class PagamentoComBoletoView extends JFrame {
 			btnCancelar.setBounds(225, 131, 114, 37);
 			btnCancelar.setText("Sair");
 		}
-		
-		
 	}
 	
 		private void eventhandler() {
@@ -138,7 +137,6 @@ public class PagamentoComBoletoView extends JFrame {
 					pagamentoBoleto = modelResponse.getObject();
 					JOptionPane.showMessageDialog(null, modelResponse.getMessage(), "Adicionado", JOptionPane.INFORMATION_MESSAGE);
 				}
-				//pagamentoBoletoService.add(pagamentoBoleto);	
 				limpa();
 			}
 		}
@@ -150,7 +148,6 @@ public class PagamentoComBoletoView extends JFrame {
 			int i = 1;
 			pagamentoBoleto.setId(idPagamentoComBoleto);
 			setPagamentoBoletoFromView();
-			
 			
 			i = JOptionPane.showConfirmDialog(null, "Confirme os dados : "
 					+pagamentoBoleto.toString(),
@@ -217,7 +214,6 @@ public class PagamentoComBoletoView extends JFrame {
 			getPagamentoBoletoFromDataBase();
 		}
 				
-		
 		private void limpa() {
 			
 			idPagamentoComBoleto = 0L;
@@ -227,7 +223,6 @@ public class PagamentoComBoletoView extends JFrame {
 		}
 		
 		private void setPagamentoBoletoFromView() {
-			pagamentoBoleto.setId(idPagamentoComBoleto);
 			pagamentoBoleto.setEstado(comboBoxEstado.getSelectedIndex()+1);
 			pagamentoBoleto.setDataPagamento(txtDataPagamento.getText());
 			pagamentoBoleto.setDataVencimento(txtDataVencimento.getText());
@@ -350,7 +345,8 @@ public class PagamentoComBoletoView extends JFrame {
 		}
 		
 		public PagamentoComBoletoService getPagamentoComBoletoService() {
-			return new PagamentoComBoletoService();
+			EntityManager em = DataBaseConnection.getConnection().getEntityManager();
+			return new PagamentoComBoletoService(em, new PagamentoComBoletoDAO(em));
 		}
 		
 		public PagamentoComBoleto getPagamentoComBoleto() {

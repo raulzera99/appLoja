@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Objects;
 
+import javax.persistence.EntityManager;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -15,7 +16,9 @@ import javax.swing.table.TableColumn;
 
 import config.Constantes;
 import config.Page;
+import dao.EstadoDAO;
 import models.Estado;
+import persistence.DataBaseConnection;
 import services.EstadoService;
 import view.table.RenderHeaderTable;
 import view.table.RenderTable;
@@ -194,7 +197,12 @@ public class TableEstadoPanel extends JPanel {
 	
 	private void listarEstado() {
 		estadoService = getEstadoService();
-		page = estadoService.listaPaginada(paginaAtual, tamanhoPagina);
+		if(txtSearch.equals("")) {
+			page = estadoService.listaPaginada(paginaAtual, tamanhoPagina);
+		}
+		else {
+			page = estadoService.listaPaginada(paginaAtual, tamanhoPagina, txtSearch.getText());
+		}
 		
 		if(paginaAtual == 1) {
 			btnPrimeiro.setEnabled(false);
@@ -282,7 +290,8 @@ public class TableEstadoPanel extends JPanel {
 	
 
 	public EstadoService getEstadoService() {
-		return new EstadoService();
+		EntityManager em = DataBaseConnection.getConnection().getEntityManager();
+		return new EstadoService(em, new EstadoDAO(em));
 	}
 
 	public void setEstadoService(EstadoService estadoService) {

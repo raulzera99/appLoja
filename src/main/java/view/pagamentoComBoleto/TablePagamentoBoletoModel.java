@@ -1,7 +1,6 @@
 package view.pagamentoComBoleto;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import models.PagamentoComBoleto;
@@ -62,10 +61,10 @@ public class TablePagamentoBoletoModel extends JTableModel<PagamentoComBoleto>{
 				return EstadoPagamento.class;
 			}
 			case 2:{
-				return Date.class;
+				return String.class;
 			}
 			case 3:{
-				return Date.class;
+				return String.class;
 			}
 			
 

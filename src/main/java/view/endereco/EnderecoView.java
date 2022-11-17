@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.persistence.EntityManager;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -14,7 +15,9 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import config.Constantes;
+import dao.EnderecoDAO;
 import models.Endereco;
+import persistence.DataBaseConnection;
 import services.EnderecoService;
 
 public class EnderecoView extends JFrame {
@@ -55,7 +58,7 @@ public class EnderecoView extends JFrame {
 	 */
 	public EnderecoView(Endereco endereco, Integer opcaoCadastro) {
 		setBackground(new Color(0, 0, 0));
-		setTitle("Pagamento com Boleto");
+		setTitle("Endereço");
 		initComponents();
 		eventhandler();
 		
@@ -170,7 +173,6 @@ public class EnderecoView extends JFrame {
 		}
 		
 		private void setEnderecoFromView() {
-			endereco.setId(idEndereco);
 			endereco.setNome(txtNome.getText());			
 		}
 		
@@ -240,7 +242,8 @@ public class EnderecoView extends JFrame {
 		}
 		
 		public EnderecoService getEnderecoService() {
-			return new EnderecoService();
+			EntityManager em = DataBaseConnection.getConnection().getEntityManager();
+			return new EnderecoService(em, new EnderecoDAO(em));
 		}
 		
 		public Endereco getEndereco() {

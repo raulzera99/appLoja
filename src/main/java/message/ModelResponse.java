@@ -13,6 +13,21 @@ public class ModelResponse<T> extends Response {
 	
 	private List<T> listObject = new ArrayList<T>();
 	
+	public ModelResponse() {
+	}
+
+	public ModelResponse(List<T> listObject, String message, boolean error) {
+		this.error = error;
+		this.message = message;
+		this.listObject = listObject;
+	}
+
+	public ModelResponse(String message, T object, boolean error) {
+		this.error = error;
+		this.message = message;
+		this.object = object;
+	}
+	
 	@Override
 	public String getMessage() {
 		return message;

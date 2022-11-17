@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Objects;
 
+import javax.persistence.EntityManager;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -15,7 +16,9 @@ import javax.swing.table.TableColumn;
 
 import config.Constantes;
 import config.Page;
+import dao.PagamentoComBoletoDAO;
 import models.PagamentoComBoleto;
+import persistence.DataBaseConnection;
 import services.PagamentoComBoletoService;
 import view.table.RenderHeaderTable;
 import view.table.RenderTable;
@@ -204,7 +207,7 @@ public class TablePagamentoBoletoPanel extends JPanel {
 	}
 	
 	private void listarPagamentoBoleto() {
-		pagamentoBoletoService = getPagamentoBoletoService();
+		pagamentoBoletoService = getPagamentoComBoletoService();
 		if(txtSearch.equals("")) {
 			page = pagamentoBoletoService.listaPaginada(paginaAtual, tamanhoPagina);
 		}
@@ -297,8 +300,9 @@ public class TablePagamentoBoletoPanel extends JPanel {
 	
 	
 
-	public PagamentoComBoletoService getPagamentoBoletoService() {
-		return new PagamentoComBoletoService();
+	public PagamentoComBoletoService getPagamentoComBoletoService() {
+		EntityManager em = DataBaseConnection.getConnection().getEntityManager();
+		return new PagamentoComBoletoService(em, new PagamentoComBoletoDAO(em));
 	}
 
 	public void setPagamentoBoletoService(PagamentoComBoletoService pagamentoBoletoService) {

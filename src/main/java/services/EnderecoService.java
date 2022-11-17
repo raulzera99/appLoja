@@ -2,6 +2,8 @@ package services;
 
 import java.util.ArrayList;
 
+import javax.persistence.EntityManager;
+
 import config.Page;
 import dao.EnderecoDAO;
 import message.Response;
@@ -15,8 +17,9 @@ public class EnderecoService extends DataBaseTransactionService<Endereco, Long>{
 	
 	private Response response = null;
 
-	public EnderecoService() {
-		dao = new EnderecoDAO(openEntityManager());
+	public EnderecoService(EntityManager em, EnderecoDAO dao) {
+		super(em, dao);
+		this.dao = dao;
 	}
 
 	@Override

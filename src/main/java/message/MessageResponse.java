@@ -13,11 +13,11 @@ public class MessageResponse<T> {
 		
 	}
 	
-	public ModelResponse<T> message(List<T> object, String message, boolean error){
+	public ModelResponse<T> message(List<T> objects, String message, boolean error){
 		ModelResponse<T> response = new ModelResponse<T>();
 		response.setError(error);
 		response.setMessage(message);
-		response.setListObject(object);
+		response.setListObject(objects);
 		
 		return response;
 		

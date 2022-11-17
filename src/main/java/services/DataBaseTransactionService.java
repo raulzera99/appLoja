@@ -1,5 +1,7 @@
 package services;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -7,18 +9,22 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import config.Page;
+import dao.GenericDAO;
 import message.MessageResponse;
 import message.ModelResponse;
 import message.Response;
 import persistence.DataBaseConnection;
 import services.errors.ErrorsData;
+import services.errors.ValidationRequiredField;
 
-public abstract class DataBaseTransactionService<T, ID> {
+public abstract class DataBaseTransactionService<T, ID extends Serializable> {
 	
 	@PersistenceContext(unitName = "apploja")
 	private EntityManager em;
 	
 	protected List<ErrorsData> errorsData;
+	
+	protected GenericDAO<T, ID> dao;
 	
 	protected Response response;
 	
@@ -26,6 +32,13 @@ public abstract class DataBaseTransactionService<T, ID> {
 	protected MessageResponse<T> messageResponse;
 	
 	protected ModelResponse<T> modelResponse;
+	
+	public DataBaseTransactionService() {};
+	
+	public DataBaseTransactionService(EntityManager em, GenericDAO<T, ID> dao ) {
+		this.em = em;
+		this.dao = dao;
+	};
 	
 	public EntityManager openEntityManager() {
 		if(Objects.isNull(em)) {
@@ -43,30 +56,105 @@ public abstract class DataBaseTransactionService<T, ID> {
 	}
 	
 	public boolean isActiveTransaction() {
-		return em.getTransaction().isActive();
+		return getEm().getTransaction().isActive();
 	}
 	
 	public void rollbackTransaction() {
-		em.getTransaction().rollback();
+		getEm().getTransaction().rollback();
 	}
 	
 	public void closeEntityManager() {
 		em.close();
 	}
 	
-	public abstract Response add(T entity);
+	public Response add(T entity) {
+		openEntityManager();
+		try {
+			beginTransaction();
+			getDao().add(entity);
+			commitTransaction();
+			//closeEntityManager();
+			this.response = getMessageResponse().message(entity, "Adicionado com êxito", false);
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			if(isActiveTransaction()) {
+				rollbackTransaction();
+			}
+			this.response = getMessageResponse().message(entity, e.getMessage(), true);
+		}finally {
+			closeEntityManager();
+		}
+		return this.response;
+	}
 	
-	public abstract Response update(T entity);
-	
-	public abstract Response remove(T entity);
-	
-	public abstract Response findById(ID id);
+	public Response update(T entity) {
+		openEntityManager();
+		try {
+			beginTransaction();
+			getDao().update(entity);
+			commitTransaction();
+			response = getMessageResponse().message(entity, "Alterado com êxito", false);
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			if(isActiveTransaction()) {
+				rollbackTransaction();
+			}
+			response = getMessageResponse().message(entity, e.getMessage(), true);
+		}finally {
+			closeEntityManager();
+		}
+		return response;
+	}
+
+	public Response remove(T entity) {
+		openEntityManager();
+		try {
+			beginTransaction();
+			getDao().remove(entity);
+			commitTransaction();
+			
+			response = getMessageResponse().message(entity, "Removido com êxito", false);
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			if(isActiveTransaction()) {
+				rollbackTransaction();
+			}
+			response = getMessageResponse().message(entity, e.getMessage(), true);
+		}finally {
+			closeEntityManager();
+		}
+		
+		return response;
+	}
+
+	public Response findById(ID id) {
+		openEntityManager();
+		T entity = null;
+		try {
+			entity = getDao().searchById(id);
+			response = getMessageResponse().message(entity, "Encontrado com êxito !", false);	
+		} catch (Exception e) {
+			e.printStackTrace();
+			response = getMessageResponse().message(entity, e.getMessage(), true);	
+		} finally {
+			closeEntityManager();
+		}
+		return response;
+	}
 	
 	public abstract Page<T> listaPaginada(Integer page, Integer pageSize);
 	
 	public abstract Page<T> listaPaginada(Integer page, Integer pageSize, String text);
 
-	public abstract Response validarDadosFromView(T objeto );
+	public Response validarDadosFromView(T objeto) {
+		errorsData = new ArrayList<ErrorsData>();
+		errorsData = ValidationRequiredField.validarCampoRequerido(objeto);
+		
+		return returnErrorOrNot();
+	}
 	
 	public Response getResponse() {
 		return response;
@@ -92,6 +180,22 @@ public abstract class DataBaseTransactionService<T, ID> {
 		this.modelResponse = modelResponse;
 	}
 	
+	public GenericDAO<T, ID> getDao() {
+		return dao;
+	}
+
+	public void setDao(GenericDAO<T, ID> dao) {
+		this.dao = dao;
+	}
+
+	public EntityManager getEm() {
+		return em;
+	}
+
+	public void setEm(EntityManager em) {
+		this.em = em;
+	}
+
 	public Response returnErrorOrNot() {
 		if(errorsData.size() > 0 ) {
 			response = getErrorData().message(errorsData, "",true);
