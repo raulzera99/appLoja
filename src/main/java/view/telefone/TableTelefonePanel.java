@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Objects;
 
+import javax.persistence.EntityManager;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -15,7 +16,9 @@ import javax.swing.table.TableColumn;
 
 import config.Constantes;
 import config.Page;
+import dao.TelefoneDAO;
 import models.Telefone;
+import persistence.DataBaseConnection;
 import services.TelefoneService;
 import view.table.RenderHeaderTable;
 import view.table.RenderTable;
@@ -54,7 +57,6 @@ public class TableTelefonePanel extends JPanel {
 	private static TableTelefonePanel TABLE_TELEFONE;
 
 	public TableTelefonePanel() {
-		//setVisible(true);
 		initComponents();
 		eventHandler();
 		initTable();
@@ -282,7 +284,8 @@ public class TableTelefonePanel extends JPanel {
 	
 
 	public TelefoneService getTelefoneService() {
-		return new TelefoneService();
+		EntityManager em = DataBaseConnection.getConnection().getEntityManager();
+		return new TelefoneService(em, new TelefoneDAO(em));
 	}
 
 	public void setTelefoneService(TelefoneService telefoneService) {

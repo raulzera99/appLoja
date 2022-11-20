@@ -21,7 +21,7 @@ public class Codigo implements Serializable{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
-	private Integer id;
+	private Long id;
 	
 	@Column(name = "numero")
 	private Integer numero;
@@ -29,5 +29,37 @@ public class Codigo implements Serializable{
 	@OneToOne(mappedBy = "codigo")
 	@JoinColumn(name="id_produto", referencedColumnName = "id")
 	private Produto produto;
+	
+	public Codigo() {}
+	
+	public Codigo(Integer numero, Produto produto) {
+		super();
+		this.numero = numero;
+		this.produto = produto;
+	}
 
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Integer getNumero() {
+		return numero;
+	}
+
+	public void setNumero(Integer numero) {
+		this.numero = numero;
+	}
+
+	public Produto getProduto() {
+		return produto;
+	}
+
+	public void setProduto(Produto produto) {
+		this.produto = produto;
+	}
+	
 }

@@ -24,7 +24,7 @@ public class Cliente implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
-	private Integer id;
+	private Long id;
 	@Column(name = "nome")
 	private String nome;
 	@Column(name = "email")
@@ -48,7 +48,7 @@ public class Cliente implements Serializable {
 	}
 
 
-	public Cliente(Integer id, String nome, String email, String cpfOuCnpj, Integer tipo, List<Endereco> enderecos,
+	public Cliente(Long id, String nome, String email, String cpfOuCnpj, Integer tipo, List<Endereco> enderecos,
 			List<Telefone> telefones, List<Pedido> pedidos) {
 		super();
 		this.id = id;
@@ -64,12 +64,12 @@ public class Cliente implements Serializable {
 
 
 	// Methods
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
+	public void setId(Long idCliente) {
+		this.id = idCliente;
 	}
 
 	public String getNome() {

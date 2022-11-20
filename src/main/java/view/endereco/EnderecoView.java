@@ -16,9 +16,11 @@ import javax.swing.border.EmptyBorder;
 
 import config.Constantes;
 import dao.EnderecoDAO;
+import message.ModelResponse;
 import models.Endereco;
 import persistence.DataBaseConnection;
 import services.EnderecoService;
+import services.errors.ErrorsData;
 
 public class EnderecoView extends JFrame {
 
@@ -29,12 +31,18 @@ public class EnderecoView extends JFrame {
 	private JPanel contentPane;
 	JButton btnSalvar = new JButton("Salvar");
 	JButton btnCancelar = new JButton("Cancelar");
-	JTextField txtNome;
+	JTextField txtNumero;
+	private JTextField txtBairro;
+	private JTextField txtCEP;
 	
 	private Long idEndereco = 0l;
 	
 	private EnderecoService enderecoService;
-	private Endereco endereco;
+	private Endereco endereco = null;
+	
+	private ModelResponse<Endereco> modelResponse = null;
+	private ModelResponse<ErrorsData> errors;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -92,8 +100,11 @@ public class EnderecoView extends JFrame {
 				public void actionPerformed(ActionEvent e) {
 					if(idEndereco == 0l) {
 						add();
-					}else {
+					}else if(btnSalvar.getText() == "Alterar"){
 						update();
+					}
+					else if(btnSalvar.getText() == "Excluir") {
+						remove();
 					}
 				}
 			});
@@ -105,85 +116,126 @@ public class EnderecoView extends JFrame {
 			});
 		}
 		
+		@SuppressWarnings("unchecked")
 		public void add() {
 			enderecoService = getEnderecoService();
 			endereco = getEndereco();
-			
+			int i = 1;
+
 			setEnderecoFromView();
 			
-			int i = JOptionPane.showConfirmDialog(null, "Confirme os dados : "
+			i = JOptionPane.showConfirmDialog(null, "Confirme os dados : "
 					+endereco.toString(),
 					"Confirmar", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 			if(i == 0) {
-				enderecoService.add(endereco);	
-				dispose();
-				idEndereco = 0L;
+				if(errors.isError()) {
+					showErrorFromServidor();
+					JOptionPane.showMessageDialog(null, modelResponse.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
+				}
+				else {
+					modelResponse = (ModelResponse<Endereco>) enderecoService.add(endereco);
+					endereco = modelResponse.getObject();
+					JOptionPane.showMessageDialog(null, modelResponse.getMessage(), "Adicionado", JOptionPane.INFORMATION_MESSAGE);
+				}
 				limpa();
 			}			
 		}
-		
+
+		@SuppressWarnings("unchecked")
 		public void update() {
 			endereco = getEndereco();
 			enderecoService = getEnderecoService();
-			
+			int i = 1;
 			endereco.setId(idEndereco);
 			setEnderecoFromView();
 			
-			int i = JOptionPane.showConfirmDialog(null, "Confirme os dados : "
+			i = JOptionPane.showConfirmDialog(null, "Confirme os dados : "
 					+endereco.toString(),
 					"Confirmar", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 			if(i == 0) {
-				enderecoService.update(endereco);
-				dispose();
-				idEndereco = 0L;
-				limpa();
-			}			
-		}
-		
-		public void remove() {
-			enderecoService = getEnderecoService();
-			Endereco endereco = new Endereco();
-			endereco = enderecoService.findById(idEndereco);
+				modelResponse = (ModelResponse<Endereco>) enderecoService.update(endereco);
+			}		
 			
-			int i = JOptionPane.showConfirmDialog(null, "Confirme os dados : "
-					+endereco.toString(),
-					"Confirmar", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-			if(i == 0) {
-				enderecoService.remove(endereco);
-				dispose();
-				idEndereco = 0L;
-				limpa();
-			}			
+			if(modelResponse.isError()) {
+				JOptionPane.showMessageDialog(null, modelResponse.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
+			}
+			else {
+				endereco = modelResponse.getObject();
+				JOptionPane.showMessageDialog(null, modelResponse.getMessage(), "Alterado", JOptionPane.INFORMATION_MESSAGE);
+			}
+			
+			limpa();
 		}
 		
+		@SuppressWarnings("unchecked")
+		public void remove() {
+			int i = 1;
+			enderecoService = getEnderecoService();
+			idEndereco = endereco.getId();
+			setEnderecoFromView();
+			
+			i = JOptionPane.showConfirmDialog(null, "Confirme os dados : "
+					+endereco.toString(),
+					"Confirmar", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+			
+			if(i == 0) {
+				modelResponse = (ModelResponse<Endereco>) enderecoService.remove(idEndereco);
+			}
+			
+			if(modelResponse.isError()) {
+				JOptionPane.showMessageDialog(null, modelResponse.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
+			}
+			else {
+				endereco = modelResponse.getObject();
+				JOptionPane.showMessageDialog(null, modelResponse.getMessage(), "Excluído", JOptionPane.INFORMATION_MESSAGE);
+			}
+			
+			limpa();
+		}
+		
+		@SuppressWarnings("unchecked")
 		public void findById(Long id) {
 			enderecoService = getEnderecoService();
 			endereco = getEndereco();
 			
-			endereco = enderecoService.findById(id);
+			modelResponse = (ModelResponse<Endereco>) enderecoService.findById(id);
 			
-			getEnderecoFromDataBase();
+			if(modelResponse.isError()) {
+				JOptionPane.showMessageDialog(null, modelResponse.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
+			}
+			else {
+				endereco = modelResponse.getObject();
+				getEnderecoFromDataBase();
+			}
 		}
 				
 		
 		private void limpa() {
 			
 			idEndereco = 0l;
-			txtNome.setText("");
+			txtNumero.setText("");
 		}
 		
 		private void setEnderecoFromView() {
-			endereco.setNome(txtNome.getText());			
+			endereco.setNumero(txtNumero.getText());		
+			endereco.setBairro(txtBairro.getText());
+			endereco.setCep(txtCEP.getText());
 		}
 		
 		private void getEnderecoFromDataBase() {
 			idEndereco = endereco.getId();
-			txtNome.setText(String.valueOf(endereco.getNome()));
-			}
+			txtNumero.setText(String.valueOf(endereco.getNumero()));
+			txtBairro.setText(String.valueOf(endereco.getBairro()));
+			txtCEP.setText(String.valueOf(endereco.getCep()));
+		}
+
+		private void showErrorFromServidor() {
+			
+		}
 		
 		private void initComponents() {
 			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			setBounds(100, 100, 571, 290);
+			setBounds(100, 100, 571, 383);
 			contentPane = new JPanel();
 			contentPane.setBackground(new Color(0, 0, 0));
 			contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -205,7 +257,7 @@ public class EnderecoView extends JFrame {
 			
 			JPanel panel_1 = new JPanel();
 			panel_1.setBackground(new Color(255, 255, 255));
-			panel_1.setBounds(0, 105, 555, 200);
+			panel_1.setBounds(0, 105, 555, 239);
 			contentPane.add(panel_1);
 			panel_1.setLayout(null);
 			
@@ -213,32 +265,54 @@ public class EnderecoView extends JFrame {
 			btnSalvar.setForeground(new Color(255, 255, 255));
 			btnSalvar.setBackground(new Color(211, 61, 48));
 			btnSalvar.setFont(new Font("Segoe UI", Font.ITALIC, 15));
-			btnSalvar.setBounds(119, 76, 114, 37);
+			btnSalvar.setBounds(120, 170, 114, 37);
 			panel_1.add(btnSalvar);
 			
 			
 			btnCancelar.setForeground(Color.WHITE);
 			btnCancelar.setFont(new Font("Segoe UI", Font.ITALIC, 15));
 			btnCancelar.setBackground(new Color(211, 61, 48));
-			btnCancelar.setBounds(318, 76, 114, 37);
+			btnCancelar.setBounds(315, 170, 114, 37);
 			panel_1.add(btnCancelar);
 			
-			JLabel lblNewLabel_1_1 = new JLabel("Nome: ");
+			JLabel lblNewLabel_1_1 = new JLabel("Número: ");
 			lblNewLabel_1_1.setFont(new Font("Segoe UI", Font.ITALIC, 15));
-			lblNewLabel_1_1.setBounds(10, 25, 151, 21);
+			lblNewLabel_1_1.setBounds(10, 25, 61, 21);
 			panel_1.add(lblNewLabel_1_1);
 			
 			JPanel panel_2 = new JPanel();
 			panel_2.setBackground(new Color(211, 61, 48));
-			panel_2.setBounds(0, 124, 555, 21);
+			panel_2.setBounds(0, 218, 555, 21);
 			panel_1.add(panel_2);
 			panel_2.setLayout(null);
 			
-			txtNome = new JTextField();
-			txtNome.setFont(new Font("Segoe UI", Font.ITALIC, 15));
-			txtNome.setColumns(10);
-			txtNome.setBounds(159, 26, 374, 19);
-			panel_1.add(txtNome);
+			txtNumero = new JTextField();
+			txtNumero.setFont(new Font("Segoe UI", Font.ITALIC, 15));
+			txtNumero.setColumns(10);
+			txtNumero.setBounds(81, 26, 448, 19);
+			panel_1.add(txtNumero);
+			
+			JLabel lblNewLabel_1_1_1 = new JLabel("Bairro: ");
+			lblNewLabel_1_1_1.setFont(new Font("Segoe UI", Font.ITALIC, 15));
+			lblNewLabel_1_1_1.setBounds(10, 57, 61, 21);
+			panel_1.add(lblNewLabel_1_1_1);
+			
+			txtBairro = new JTextField();
+			txtBairro.setFont(new Font("Segoe UI", Font.ITALIC, 15));
+			txtBairro.setColumns(10);
+			txtBairro.setBounds(81, 58, 448, 19);
+			panel_1.add(txtBairro);
+			
+			JLabel lblNewLabel_1_1_2 = new JLabel("CEP: ");
+			lblNewLabel_1_1_2.setFont(new Font("Segoe UI", Font.ITALIC, 15));
+			lblNewLabel_1_1_2.setBounds(10, 89, 64, 21);
+			panel_1.add(lblNewLabel_1_1_2);
+			
+			txtCEP = new JTextField();
+			txtCEP.setFont(new Font("Segoe UI", Font.ITALIC, 15));
+			txtCEP.setColumns(10);
+			txtCEP.setBounds(81, 90, 448, 19);
+			panel_1.add(txtCEP);
 		}
 		
 		public EnderecoService getEnderecoService() {

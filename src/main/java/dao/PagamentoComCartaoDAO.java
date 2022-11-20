@@ -26,7 +26,7 @@ public class PagamentoComCartaoDAO extends GenericDAO<PagamentoComCartao, Long>{
 		Double totalPaginas = Math.ceil(total.doubleValue() / pageSize.doubleValue());
 		TypedQuery<PagamentoComCartao> query = getEntityManager()
 				.createQuery("SELECT c FROM PagamentoComCartao c "
-						+ "WHERE c.estado_pagamento "
+						+ "WHERE c.estado "
 						+ "LIKE (CONCAT('%',:text,'%')) "
 						+ "OR c.numeroDeParcelas "
 						+ "LIKE (CONCAT('%',:text,'%')) ", PagamentoComCartao.class);

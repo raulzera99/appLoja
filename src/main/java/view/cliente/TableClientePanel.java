@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Objects;
 
+import javax.persistence.EntityManager;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -15,8 +16,10 @@ import javax.swing.table.TableColumn;
 
 import config.Constantes;
 import config.Page;
-import models.Estado;
-import services.EstadoService;
+import dao.ClienteDAO;
+import models.Cliente;
+import persistence.DataBaseConnection;
+import services.ClienteService;
 import view.table.RenderHeaderTable;
 import view.table.RenderTable;
 import javax.swing.JTextField;
@@ -25,9 +28,9 @@ import java.awt.event.KeyEvent;
 
 public class TableClientePanel extends JPanel {
 	private static final long serialVersionUID = -4694190107545197497L;
-	JTable tableEstado;
+	JTable tableCliente;
 	JScrollPane scrollPane = new JScrollPane();
-	JScrollPane scrollPaneTableEstado = new JScrollPane();
+	JScrollPane scrollPaneTableCliente = new JScrollPane();
 	JPanel panelButtons = new JPanel();
 	JPanel panelSearch = new JPanel();
 	JButton btnPrimeiro = new JButton("Primeiro");
@@ -42,16 +45,16 @@ public class TableClientePanel extends JPanel {
 	
 	
 	private TableClienteModel model;
-	private Page<Estado> page;
-	private EstadoService estadoService;
-	private Estado estado;
+	private Page<Cliente> page;
+	private ClienteService clienteService;
+	private Cliente cliente;
 	
 	private int linha = 0;
 	private int coluna = 0;
 	private int tamanhoPagina = 50;
 	private int paginaAtual = 0;
 	
-	private static TableClientePanel TABLE_ESTADO;
+	private static TableClientePanel TABLE_CLIENTE;
 
 	public TableClientePanel() {
 		//setVisible(true);
@@ -91,7 +94,7 @@ public class TableClientePanel extends JPanel {
 		});
 		btnAdicionar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				showEstadoFrame(Constantes.INCLUIR);
+				showClienteFrame(Constantes.INCLUIR);
 				initTable();
 			}
 
@@ -99,14 +102,14 @@ public class TableClientePanel extends JPanel {
 		btnAlterar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				getLinhaTabela();
-				showEstadoFrame(Constantes.ALTERAR);
+				showClienteFrame(Constantes.ALTERAR);
 				initTable();
 			}
 		});
 		btnRemover.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				getLinhaTabela();
-				showEstadoFrame(Constantes.EXCLUIR);
+				showClienteFrame(Constantes.EXCLUIR);
 				initTable();
 			}
 
@@ -115,7 +118,7 @@ public class TableClientePanel extends JPanel {
 		btnConsultar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				getLinhaTabela();
-				showEstadoFrame(Constantes.CONSULTAR);
+				showClienteFrame(Constantes.CONSULTAR);
 			}
 		});
 		
@@ -133,11 +136,11 @@ public class TableClientePanel extends JPanel {
 		scrollPane.setBounds(10, 64, 1065, 478);
 		add(scrollPane);
 		
-		scrollPane.setViewportView(scrollPaneTableEstado);
+		scrollPane.setViewportView(scrollPaneTableCliente);
 		
-		tableEstado = new JTable();
-		tableEstado.setFont(new Font("Tahoma", Font.PLAIN, 9));
-		scrollPaneTableEstado.setViewportView(tableEstado);
+		tableCliente = new JTable();
+		tableCliente.setFont(new Font("Tahoma", Font.PLAIN, 9));
+		scrollPaneTableCliente.setViewportView(tableCliente);
 		panelButtons.setBounds(11, 550, 1065, 79);
 		add(panelButtons);
 		panelButtons.setLayout(null);
@@ -186,15 +189,15 @@ public class TableClientePanel extends JPanel {
 	}
 	
 	public static TableClientePanel getInstance() {
-		if(Objects.isNull(TABLE_ESTADO)) {
-			TABLE_ESTADO = new TableClientePanel();
+		if(Objects.isNull(TABLE_CLIENTE)) {
+			TABLE_CLIENTE = new TableClientePanel();
 		}
-		return TABLE_ESTADO;
+		return TABLE_CLIENTE;
 	}
 	
-	private void listarEstado() {
-		estadoService = getEstadoService();
-		page = estadoService.listaPaginada(paginaAtual, tamanhoPagina);
+	private void listarCliente() {
+		clienteService = getClienteService();
+		page = clienteService.listaPaginada(paginaAtual, tamanhoPagina);
 		
 		if(paginaAtual == 1) {
 			btnPrimeiro.setEnabled(false);
@@ -223,50 +226,50 @@ public class TableClientePanel extends JPanel {
 	}
 	
 	private void initTable() {
-		listarEstado();
+		listarCliente();
 		
 		model = new TableClienteModel(page.getContent());
 		
 		model.fireTableDataChanged();
 		
-		tableEstado.setModel(model);
+		tableCliente.setModel(model);
 		
 		RenderHeaderTable renderHeader = new RenderHeaderTable();
 		
-		tableEstado.getTableHeader().setDefaultRenderer(renderHeader);
+		tableCliente.getTableHeader().setDefaultRenderer(renderHeader);
 		
 		RenderTable render = new RenderTable();
 		
 		for(int coluna = 0; coluna < model.getColumnCount(); coluna++) {
-			tableEstado.setDefaultRenderer(model.getColumnClass(coluna), render);
+			tableCliente.setDefaultRenderer(model.getColumnClass(coluna), render);
 		}
 		
-		TableColumn coluna = tableEstado.getColumnModel().getColumn(0);
+		TableColumn coluna = tableCliente.getColumnModel().getColumn(0);
 		coluna.setMinWidth(50);
 		coluna.setMaxWidth(60);
 		coluna.setPreferredWidth(55);
 		
 		for(int col = 1; col<model.getColumnCount();col++ ) {
-			coluna = tableEstado.getColumnModel().getColumn(col);
+			coluna = tableCliente.getColumnModel().getColumn(col);
 			coluna.setMinWidth(200);
 			coluna.setMaxWidth(350);
 			coluna.setPreferredWidth(325);
 		}
 	}
 	
-	private void showEstadoFrame(int opcaoCadastro) {
-		ClienteView view = new ClienteView(estado, opcaoCadastro);
+	private void showClienteFrame(int opcaoCadastro) {
+		ClienteView view = new ClienteView(cliente, opcaoCadastro);
 		view.setLocationRelativeTo(null);
 		view.setVisible(true);
 	}
 	
 	private void getLinhaTabela() {
-		estado = getEstado();
+		cliente = getCliente();
 		
-		if(tableEstado.getSelectedRow() != -1) {
-			linha = tableEstado.getSelectedRow();
-			setColuna(tableEstado.getSelectedColumn());
-			estado = model.getEstado(linha);
+		if(tableCliente.getSelectedRow() != -1) {
+			linha = tableCliente.getSelectedRow();
+			setColuna(tableCliente.getSelectedColumn());
+			cliente = model.getCliente(linha);
 			linha = -1;
 		}
 		else {
@@ -275,22 +278,21 @@ public class TableClientePanel extends JPanel {
 		
 	}
 
-	public Estado getEstado() {
-		return estado;
+	public Cliente getCliente() {
+		return cliente;
 	}
 	
-	
-
-	public EstadoService getEstadoService() {
-		return new EstadoService();
+	public ClienteService getClienteService() {
+		EntityManager em = DataBaseConnection.getConnection().getEntityManager();
+		return new ClienteService(em, new ClienteDAO(em));
 	}
 
-	public void setEstadoService(EstadoService estadoService) {
-		this.estadoService = estadoService;
+	public void setClienteService(ClienteService clienteService) {
+		this.clienteService = clienteService;
 	}
 
-	public void setEstado(Estado estado) {
-		this.estado = estado;
+	public void setCliente(Cliente cliente) {
+		this.cliente = cliente;
 	}
 
 	public int getLinha() {

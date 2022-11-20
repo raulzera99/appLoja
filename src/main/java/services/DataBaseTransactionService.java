@@ -73,7 +73,6 @@ public abstract class DataBaseTransactionService<T, ID extends Serializable> {
 			beginTransaction();
 			getDao().add(entity);
 			commitTransaction();
-			//closeEntityManager();
 			this.response = getMessageResponse().message(entity, "Adicionado com êxito", false);
 		}
 		catch(Exception e) {
@@ -108,11 +107,12 @@ public abstract class DataBaseTransactionService<T, ID extends Serializable> {
 		return response;
 	}
 
-	public Response remove(T entity) {
+	public Response remove(ID id) {
+		T entity = getDao().searchById(id);
 		openEntityManager();
 		try {
 			beginTransaction();
-			getDao().remove(entity);
+			getDao().removeById(id);
 			commitTransaction();
 			
 			response = getMessageResponse().message(entity, "Removido com êxito", false);
@@ -145,7 +145,9 @@ public abstract class DataBaseTransactionService<T, ID extends Serializable> {
 		return response;
 	}
 	
-	public abstract Page<T> listaPaginada(Integer page, Integer pageSize);
+	public Page<T> listaPaginada(Integer page, Integer pageSize){
+		return getDao().listaPaginada(page, pageSize);
+	}
 	
 	public abstract Page<T> listaPaginada(Integer page, Integer pageSize, String text);
 

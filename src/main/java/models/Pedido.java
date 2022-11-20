@@ -1,7 +1,6 @@
 package models;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,8 +15,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 
 @Entity
@@ -31,8 +28,8 @@ public class Pedido implements Serializable {
 	@Column(name = "id")
 	private Long id;
 	
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date instante;
+	@Column(name = "instante")
+	private String instante;
 		
 	@OneToOne(cascade=CascadeType.ALL)
 	@JoinColumn(name = "id_pagamento", referencedColumnName = "id")
@@ -51,7 +48,7 @@ public class Pedido implements Serializable {
 	
 	// Constructors
 	
-	public Pedido(Long id, Date instante, Cliente cliente, Endereco enderecoDeEntrega) {
+	public Pedido(Long id, String instante, Cliente cliente, Endereco enderecoDeEntrega) {
 		super();
 		this.id = id;
 		this.instante = instante;
@@ -62,7 +59,7 @@ public class Pedido implements Serializable {
 	public Pedido() {
 	}
 
-	public Pedido(Long id, Date instante) {
+	public Pedido(Long id, String instante) {
 		super();
 		this.id = id;
 		this.instante = instante;
@@ -79,11 +76,11 @@ public class Pedido implements Serializable {
 		this.id = id;
 	}
 	
-	public Date getInstante() {
+	public String getInstante() {
 		return instante;
 	}
 
-	public void setInstante(Date instante) {
+	public void setInstante(String instante) {
 		this.instante = instante;
 	}
 	

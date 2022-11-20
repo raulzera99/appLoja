@@ -3,38 +3,47 @@ package view.cliente;
 import java.util.ArrayList;
 import java.util.List;
 
-import models.Estado;
+import models.Cliente;
 import view.table.JTableModel;
 
-public class TableClienteModel extends JTableModel<Estado>{
+public class TableClienteModel extends JTableModel<Cliente>{
 	private static final long serialVersionUID = 2259690966041330349L;
-	private List<Estado> tabela;
+	private List<Cliente> tabela;
 	
-	private final String colunaEstado[] = {"Código", "Nome e sigla do estado"};
+	private final String colunaCliente[] = {"Código", "Nome", "Email", "Tipo", "CPF/CNPJ"};
 	
 	private final Integer tamanhoCampo[] = {};
 	
 	
 	public TableClienteModel() {
-		tabela = new ArrayList<Estado>();
-		this.coluna = colunaEstado;
+		tabela = new ArrayList<Cliente>();
+		this.coluna = colunaCliente;
 	}
 	
-	public TableClienteModel(List<Estado> tabela) {
+	public TableClienteModel(List<Cliente> tabela) {
 		super(tabela);
 		this.tabela = tabela;
-		this.coluna = colunaEstado;
+		this.coluna = colunaCliente;
 	}
 	
 	@Override
 	public Object getValueAt(int linha, int coluna) {
-		Estado estado = tabela.get(linha);
+		Cliente cliente = tabela.get(linha);
 		switch(coluna) {
 			case 0:{
-				return estado.getId();
+				return cliente.getId();
 			}
 			case 1:{
-				return estado.getNome();
+				return cliente.getNome();
+			}
+			case 2:{
+				return cliente.getEmail();
+			}
+			case 3:{
+				return cliente.getTipo().toString();
+			}
+			case 4:{
+				return cliente.getCpfOuCnpj();
 			}
 			default:
 				return null;
@@ -51,26 +60,36 @@ public class TableClienteModel extends JTableModel<Estado>{
 			case 1:{
 				return String.class;
 			}
+			case 2:{
+				return String.class;
+			}
+			case 3:{
+				return String.class;
+			}
+			case 4:{
+				return String.class;
+			}
+			
 			default:
 				return null;
 		}
 	}
 	
-	public Estado getEstado(int index) {
+	public Cliente getCliente(int index) {
 		return getTabela().get(index);
 	}
 	
-	public void salvarEstado(Estado estado) {
-		getTabela().add(estado);
+	public void salvarCliente(Cliente cliente) {
+		getTabela().add(cliente);
 		fireTableRowsInserted(getRowCount()-1, getColumnCount()-1);
 	}
 	
-	public void alterarEstado(Estado estado, int index) {
-		getTabela().set(index, estado);
+	public void alterarCliente(Cliente cliente, int index) {
+		getTabela().set(index, cliente);
 		fireTableRowsUpdated(index, index);
 	}
 	
-	public void removerEstado(int index) {
+	public void removerCliente(int index) {
 		getTabela().remove(index);
 		fireTableRowsDeleted(index, index);
 	}
@@ -80,11 +99,11 @@ public class TableClienteModel extends JTableModel<Estado>{
 		fireTableDataChanged();
 	}
 
-	public List<Estado> getTabela() {
+	public List<Cliente> getTabela() {
 		return tabela;
 	}
 
-	public void setTabela(List<Estado> tabela) {
+	public void setTabela(List<Cliente> tabela) {
 		this.tabela = tabela;
 	}
 

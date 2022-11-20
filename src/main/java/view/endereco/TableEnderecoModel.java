@@ -10,7 +10,7 @@ public class TableEnderecoModel extends JTableModel<Endereco>{
 	private static final long serialVersionUID = 2259690966041330349L;
 	private List<Endereco> tabela;
 	
-	private final String colunaEndereco[] = {"Código", "Nome e sigla do endereco"};
+	private final String colunaEndereco[] = {"Código", "Numero", "Bairro", "CEP"};
 	
 	private final Integer tamanhoCampo[] = {};
 	
@@ -34,7 +34,13 @@ public class TableEnderecoModel extends JTableModel<Endereco>{
 				return endereco.getId();
 			}
 			case 1:{
-				return endereco.getNome();
+				return endereco.getNumero();
+			}
+			case 2:{
+				return endereco.getBairro();
+			}
+			case 3:{
+				return endereco.getCep();
 			}
 			default:
 				return null;
@@ -49,6 +55,12 @@ public class TableEnderecoModel extends JTableModel<Endereco>{
 				return Long.class;
 			}
 			case 1:{
+				return String.class;
+			}
+			case 2:{
+				return String.class;
+			}
+			case 3:{
 				return String.class;
 			}
 			default:

@@ -5,6 +5,8 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.persistence.EntityManager;
+import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -16,26 +18,32 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import config.Constantes;
+import dao.PagamentoComCartaoDAO;
+import message.ModelResponse;
 import models.PagamentoComCartao;
 import models.enums.EstadoPagamento;
+import persistence.DataBaseConnection;
 import services.PagamentoComCartaoService;
+import services.errors.ErrorsData;
 
 public class PagamentoComCartaoView extends JFrame {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -2933295863195236029L;
 	private JPanel contentPane;
 	JButton btnSalvar = new JButton("Salvar");
 	JButton btnCancelar = new JButton("Cancelar");
 	JComboBox<String> comboBoxEstado;
 	JTextField txtNumeroDeParcelas;
+	JLabel lblMessageEstado;
+	JLabel lblMessageNum;
 	
 	private Long idPagamentoComCartao = 0l;
 	
 	private PagamentoComCartaoService pagamentoCartaoService;
 	private PagamentoComCartao pagamentoCartao;
+	
+	private ModelResponse<PagamentoComCartao> modelResponse = null;
+	private ModelResponse<ErrorsData> errors;
 	/**
 	 * Launch the application.
 	 */
@@ -91,10 +99,13 @@ public class PagamentoComCartaoView extends JFrame {
 		
 			btnSalvar.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					if(idPagamentoComCartao == 0l) {
+					if(idPagamentoComCartao == 0L) {
 						add();
-					}else {
+					}else if(btnSalvar.getText() == "Alterar"){
 						update();
+					}
+					else if(btnSalvar.getText() == "Excluir") {
+						remove();
 					}
 				}
 			});
@@ -106,86 +117,137 @@ public class PagamentoComCartaoView extends JFrame {
 			});
 		}
 		
+		@SuppressWarnings("unchecked")
 		public void add() {
 			pagamentoCartaoService = getPagamentoComCartaoService();
 			pagamentoCartao = getPagamentoComCartao();
-			
+			int i = 1;
 			setPagamentoCartaoFromView();
-			int i = JOptionPane.showConfirmDialog(null, "Confirme os dados : "
+			
+			errors = (ModelResponse<ErrorsData>) pagamentoCartaoService.validarDadosFromView(pagamentoCartao);
+			
+			i = JOptionPane.showConfirmDialog(null, "Confirme os dados : "
 					+pagamentoCartao.toString(),
 					"Confirmar", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 			if(i == 0) {
-				pagamentoCartaoService.add(pagamentoCartao);	
-				dispose();
-				idPagamentoComCartao = 0L;
+				if(errors.isError()) {
+					showErrorFromServidor();
+					JOptionPane.showMessageDialog(null, modelResponse.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
+				}
+				else {
+					modelResponse = (ModelResponse<PagamentoComCartao>) pagamentoCartaoService.add(pagamentoCartao);
+					pagamentoCartao = modelResponse.getObject();
+					JOptionPane.showMessageDialog(null, modelResponse.getMessage(), "Adicionado", JOptionPane.INFORMATION_MESSAGE);
+				}
 				limpa();
 			}			
 			
 		}
 		
+
+		@SuppressWarnings("unchecked")
 		public void update() {
 			pagamentoCartao = getPagamentoComCartao();
 			pagamentoCartaoService = getPagamentoComCartaoService();
-			
+			int i = 1;
 			pagamentoCartao.setId(idPagamentoComCartao);
 			setPagamentoCartaoFromView();
 			
-			int i = JOptionPane.showConfirmDialog(null, "Confirme os dados : "
+			i = JOptionPane.showConfirmDialog(null, "Confirme os dados : "
 					+pagamentoCartao.toString(),
 					"Confirmar", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 			if(i == 0) {
-				pagamentoCartaoService.update(pagamentoCartao);
-				dispose();
-				idPagamentoComCartao = 0L;
-				limpa();
+				modelResponse = (ModelResponse<PagamentoComCartao>) pagamentoCartaoService.update(pagamentoCartao);
 			}
+			
+			if(modelResponse.isError()) {
+				JOptionPane.showMessageDialog(null, modelResponse.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
+			}
+			else {
+				pagamentoCartao = modelResponse.getObject();
+				JOptionPane.showMessageDialog(null, modelResponse.getMessage(), "Alterado", JOptionPane.INFORMATION_MESSAGE);
+			}
+			
+			limpa();
 			
 		}
 		
+		@SuppressWarnings("unchecked")
 		public void remove() {
+			int i = 1;
 			pagamentoCartaoService = getPagamentoComCartaoService();
-			PagamentoComCartao pagamento = new PagamentoComCartao();
-			pagamento = pagamentoCartaoService.findById(idPagamentoComCartao);
-			int i = JOptionPane.showConfirmDialog(null, "Confirme os dados : "
-					+pagamento.toString(),
+			idPagamentoComCartao = pagamentoCartao.getId();
+			setPagamentoCartaoFromView();
+			
+			i = JOptionPane.showConfirmDialog(null, "Confirme os dados : "
+					+pagamentoCartao.toString(),
 					"Confirmar", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 			if(i == 0) {
-				pagamentoCartaoService.remove(pagamento);
-				dispose();
-				idPagamentoComCartao = 0L;
-				limpa();
+				modelResponse = (ModelResponse<PagamentoComCartao>) pagamentoCartaoService.remove(idPagamentoComCartao);
 			}
+			
+			if(modelResponse.isError()) {
+				JOptionPane.showMessageDialog(null, modelResponse.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
+			}
+			else {
+				pagamentoCartao = modelResponse.getObject();
+				JOptionPane.showMessageDialog(null, modelResponse.getMessage(), "Excluído", JOptionPane.INFORMATION_MESSAGE);
+			}
+			
+			limpa();
 		}
 		
+		@SuppressWarnings("unchecked")
 		public void findById(Long id) {
 			pagamentoCartaoService = getPagamentoComCartaoService();
 			pagamentoCartao = getPagamentoComCartao();
 			
-			pagamentoCartao = pagamentoCartaoService.findById(id);
+			modelResponse = (ModelResponse<PagamentoComCartao>) pagamentoCartaoService.findById(idPagamentoComCartao);
 			
-			getPagamentoCartaoFromDataBase();
+			if(modelResponse.isError()) {
+				JOptionPane.showMessageDialog(null, modelResponse.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
+			}
+			else {
+				pagamentoCartao = modelResponse.getObject();
+				getPagamentoCartaoFromDataBase();
+			}
 		}
 				
 		
 		private void limpa() {
 			
-			idPagamentoComCartao = 0l;
+			idPagamentoComCartao = 0L;
 			txtNumeroDeParcelas.setText("");
 			comboBoxEstado.setSelectedIndex(-1);
 		}
 		
 		private void setPagamentoCartaoFromView() {
-			pagamentoCartao.setId(idPagamentoComCartao);
 			pagamentoCartao.setEstado(comboBoxEstado.getSelectedIndex()+1);
 			pagamentoCartao.setNumeroDeParcelas(Integer.parseInt(txtNumeroDeParcelas.getText()));
-			
 		}
 		
 		private void getPagamentoCartaoFromDataBase() {
 			idPagamentoComCartao = pagamentoCartao.getId();
 			comboBoxEstado.setSelectedIndex(pagamentoCartao.getEstado() - 1);
 			txtNumeroDeParcelas.setText(String.valueOf(pagamentoCartao.getNumeroDeParcelas()));
+		}
+		
+		private void showErrorFromServidor() {
+			for(ErrorsData erro : errors.getListObject()) {
+				if(erro.getNumeroCampo() == 1) {
+					lblMessageEstado.setVisible(true);
+					lblMessageEstado.setForeground(Color.red);
+					lblMessageEstado.setText(erro.getShowMensagemError());
+					comboBoxEstado.setBorder(BorderFactory.createLineBorder(Color.red, 2));
+				}
+				if(erro.getNumeroCampo() == 2) {
+					lblMessageNum.setVisible(true);
+					lblMessageNum.setForeground(Color.red);
+					lblMessageNum.setText(erro.getShowMensagemError());
+					txtNumeroDeParcelas.setBorder(BorderFactory.createLineBorder(Color.red, 2));
+				}
 			}
+		}
 		
 		private void initComponents() {
 			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -256,15 +318,23 @@ public class PagamentoComCartaoView extends JFrame {
 			comboBoxEstado.setBounds(159, 27, 374, 19);
 			panel_1.add(comboBoxEstado);
 			
+			lblMessageEstado = new JLabel("");
+			lblMessageEstado.setBounds(159, 45, 374, 14);
+			panel_1.add(lblMessageEstado);
+			
+			lblMessageNum = new JLabel("");
+			lblMessageNum.setBounds(159, 70, 374, 14);
+			panel_1.add(lblMessageNum);
+			
 		}
 		
 		public PagamentoComCartaoService getPagamentoComCartaoService() {
-			return new PagamentoComCartaoService();
+			EntityManager em = DataBaseConnection.getConnection().getEntityManager();
+			return new PagamentoComCartaoService(em, new PagamentoComCartaoDAO(em));
 		}
 		
 		public PagamentoComCartao getPagamentoComCartao() {
 			return new PagamentoComCartao();
 		}
-	
 
 }

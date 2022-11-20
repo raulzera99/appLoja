@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Objects;
 
+import javax.persistence.EntityManager;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -15,7 +16,9 @@ import javax.swing.table.TableColumn;
 
 import config.Constantes;
 import config.Page;
+import dao.EnderecoDAO;
 import models.Endereco;
+import persistence.DataBaseConnection;
 import services.EnderecoService;
 import view.table.RenderHeaderTable;
 import view.table.RenderTable;
@@ -282,7 +285,8 @@ public class TableEnderecoPanel extends JPanel {
 	
 
 	public EnderecoService getEnderecoService() {
-		return new EnderecoService();
+		EntityManager em = DataBaseConnection.getConnection().getEntityManager();
+		return new EnderecoService(em, new EnderecoDAO(em));
 	}
 
 	public void setEnderecoService(EnderecoService enderecoService) {

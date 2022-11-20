@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Objects;
 
+import javax.persistence.EntityManager;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -15,7 +16,9 @@ import javax.swing.table.TableColumn;
 
 import config.Constantes;
 import config.Page;
+import dao.CidadeDAO;
 import models.Cidade;
+import persistence.DataBaseConnection;
 import services.CidadeService;
 import view.table.RenderHeaderTable;
 import view.table.RenderTable;
@@ -282,7 +285,8 @@ public class TableCidadePanel extends JPanel {
 	
 
 	public CidadeService getCidadeService() {
-		return new CidadeService();
+		EntityManager em = DataBaseConnection.getConnection().getEntityManager();
+		return new CidadeService(em, new CidadeDAO(em));
 	}
 
 	public void setCidadeService(CidadeService cidadeService) {

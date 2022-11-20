@@ -37,6 +37,40 @@
         <artifactId>mysql-connector-java</artifactId>
         <version>8.0.28</version>
     </dependency>
+    <dependency>
+   		<groupId>com.github.jiconfont</groupId>
+    	<artifactId>jiconfont-swing</artifactId>
+    	<version>1.0.0</version>
+	</dependency>
+	<!-- https://mvnrepository.com/artifact/net.sf.jasperreports/jasperreports -->
+	<dependency>
+	    <groupId>net.sf.jasperreports</groupId>
+	    <artifactId>jasperreports</artifactId>
+	    <version>6.20.0</version>
+	    <exclusions>
+	    	<exclusion>
+	    		<groupId>com.itextpdf</groupId>
+	    		<artifactId>itextpdf</artifactId>
+	    	</exclusion>
+	    </exclusions>
+	</dependency>
+
+	<!-- https://mvnrepository.com/artifact/com.itextpdf/itextpdf -->
+	<dependency>
+	    <groupId>com.itextpdf</groupId>
+	    <artifactId>itextpdf</artifactId>
+	    <version>5.5.13</version>
+	</dependency>
+	
+	<!--
+  	<dependency>
+  		<groupId>org.rxtx</groupId>
+  		<artifactId>rxtx</artifactId>
+  		<version>1.0</version>
+  		<systemPath>${pom.basedir}/src/main/resources/lib/RXTXcomm.jar</systemPath>
+  		<scope>system</scope>
+  	</dependency>
+  	-->
 
   </dependencies>
 </project>

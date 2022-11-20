@@ -5,6 +5,8 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.persistence.EntityManager;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -14,24 +16,30 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import config.Constantes;
+import dao.TelefoneDAO;
+import message.ModelResponse;
 import models.Telefone;
+import persistence.DataBaseConnection;
 import services.TelefoneService;
+import services.errors.ErrorsData;
 
 public class TelefoneView extends JFrame {
-
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = -2933295863195236029L;
 	private JPanel contentPane;
 	JButton btnSalvar = new JButton("Salvar");
 	JButton btnCancelar = new JButton("Cancelar");
-	JTextField txtNome;
+	JTextField txtNumero;
+	JLabel lblMessageNum;
 	
-	private Long idTelefone = 0l;
+	private Long idTelefone = 0L;
 	
 	private TelefoneService telefoneService;
-	private Telefone telefone;
+	private Telefone telefone = null;
+
+	private ModelResponse<Telefone> modelResponse = null;
+	private ModelResponse<ErrorsData> errors;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -87,10 +95,13 @@ public class TelefoneView extends JFrame {
 		
 			btnSalvar.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					if(idTelefone == 0l) {
+					if(idTelefone == 0L) {
 						add();
-					}else {
+					}else if(btnSalvar.getText() == "Alterar"){
 						update();
+					}
+					else if(btnSalvar.getText() == "Excluir") {
+						remove();
 					}
 				}
 			});
@@ -101,83 +112,125 @@ public class TelefoneView extends JFrame {
 				}
 			});
 		}
-		
+		@SuppressWarnings("unchecked")
 		public void add() {
 			telefoneService = getTelefoneService();
 			telefone = getTelefone();
-			
+			int i = 1;
 			setTelefoneFromView();
 			
-			int i = JOptionPane.showConfirmDialog(null, "Confirme os dados : "
+			errors = (ModelResponse<ErrorsData>) telefoneService.validarDadosFromView(telefone);
+			
+			i = JOptionPane.showConfirmDialog(null, "Confirme os dados : "
 					+telefone.toString(),
 					"Confirmar", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 			if(i == 0) {
-				telefoneService.add(telefone);	
-				dispose();
-				idTelefone = 0L;
+				if(errors.isError()) {
+					showErrorFromServidor();
+					JOptionPane.showMessageDialog(null, modelResponse.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
+				}
+				else {
+					modelResponse = (ModelResponse<Telefone>) telefoneService.add(telefone);
+					telefone = modelResponse.getObject();
+					JOptionPane.showMessageDialog(null, modelResponse.getMessage(), "Adicionado", JOptionPane.INFORMATION_MESSAGE);
+				}
 				limpa();
 			}			
 		}
 		
+		@SuppressWarnings("unchecked")
 		public void update() {
-			telefone = getTelefone();
 			telefoneService = getTelefoneService();
-			
+			telefone = getTelefone();
+			int i = 1;
 			telefone.setId(idTelefone);
 			setTelefoneFromView();
 			
-			int i = JOptionPane.showConfirmDialog(null, "Confirme os dados : "
+			i = JOptionPane.showConfirmDialog(null, "Confirme os dados : "
 					+telefone.toString(),
 					"Confirmar", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 			if(i == 0) {
-				telefoneService.update(telefone);
-				dispose();
-				idTelefone = 0L;
-				limpa();
-			}			
-		}
-		
-		public void remove() {
-			telefoneService = getTelefoneService();
-			Telefone telefone = new Telefone();
-			telefone = telefoneService.findById(idTelefone);
+				modelResponse = (ModelResponse<Telefone>) telefoneService.update(telefone);
+			}	
 			
-			int i = JOptionPane.showConfirmDialog(null, "Confirme os dados : "
-					+telefone.toString(),
-					"Confirmar", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-			if(i == 0) {
-				telefoneService.remove(telefone);
-				dispose();
-				idTelefone = 0L;
-				limpa();
-			}			
+			if(modelResponse.isError()) {
+				JOptionPane.showMessageDialog(null, modelResponse.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
+			}
+			else {
+				telefone = modelResponse.getObject();
+				JOptionPane.showMessageDialog(null, modelResponse.getMessage(), "Alterado", JOptionPane.INFORMATION_MESSAGE);
+			}
+			
+			limpa();
 		}
 		
+		@SuppressWarnings("unchecked")
+		public void remove() {
+			int i = 1;
+			telefoneService = getTelefoneService();
+			idTelefone = telefone.getId();
+			setTelefoneFromView();
+			
+			i = JOptionPane.showConfirmDialog(null, "Confirme os dados : "
+					+telefone.toString(),
+					"Confirmar", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+			
+			if(i == 0) {
+				modelResponse = (ModelResponse<Telefone>) telefoneService.remove(idTelefone);
+			}
+			
+			if(modelResponse.isError()) {
+				JOptionPane.showMessageDialog(null, modelResponse.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
+			}
+			else {
+				telefone = modelResponse.getObject();
+				JOptionPane.showMessageDialog(null, modelResponse.getMessage(), "Excluído", JOptionPane.INFORMATION_MESSAGE);
+			}
+			
+			limpa();		
+		}
+		
+		@SuppressWarnings("unchecked")
 		public void findById(Long id) {
 			telefoneService = getTelefoneService();
 			telefone = getTelefone();
+			modelResponse = (ModelResponse<Telefone>) telefoneService.findById(id);
 			
-			telefone = telefoneService.findById(id);
+			if(modelResponse.isError()) {
+				JOptionPane.showMessageDialog(null, modelResponse.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
+			}
+			else {
+				telefone = modelResponse.getObject();
+				getTelefoneFromDataBase();
+			}
 			
-			getTelefoneFromDataBase();
 		}
 				
+		private void showErrorFromServidor() {
+			for(ErrorsData erro : errors.getListObject()) {
+				if(erro.getNumeroCampo() == 1) {
+					lblMessageNum.setVisible(true);
+					lblMessageNum.setForeground(Color.red);
+					lblMessageNum.setText(erro.getShowMensagemError());
+					txtNumero.setBorder(BorderFactory.createLineBorder(Color.red, 2));
+				}
+			}
+		}
 		
 		private void limpa() {
 			
 			idTelefone = 0l;
-			txtNome.setText("");
+			txtNumero.setText("");
 		}
 		
 		private void setTelefoneFromView() {
-			telefone.setId(idTelefone);
-			telefone.setNome(txtNome.getText());			
+			telefone.setNumero(txtNumero.getText());			
 		}
 		
 		private void getTelefoneFromDataBase() {
 			idTelefone = telefone.getId();
-			txtNome.setText(String.valueOf(telefone.getNome()));
-			}
+			txtNumero.setText(String.valueOf(telefone.getNumero()));
+		}
 		
 		private void initComponents() {
 			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -203,7 +256,7 @@ public class TelefoneView extends JFrame {
 			
 			JPanel panel_1 = new JPanel();
 			panel_1.setBackground(new Color(255, 255, 255));
-			panel_1.setBounds(0, 105, 555, 200);
+			panel_1.setBounds(0, 105, 555, 146);
 			contentPane.add(panel_1);
 			panel_1.setLayout(null);
 			
@@ -221,10 +274,10 @@ public class TelefoneView extends JFrame {
 			btnCancelar.setBounds(318, 76, 114, 37);
 			panel_1.add(btnCancelar);
 			
-			JLabel lblNewLabel_1_1 = new JLabel("Nome: ");
-			lblNewLabel_1_1.setFont(new Font("Segoe UI", Font.ITALIC, 15));
-			lblNewLabel_1_1.setBounds(10, 25, 151, 21);
-			panel_1.add(lblNewLabel_1_1);
+			JLabel lblNum = new JLabel("Número: ");
+			lblNum.setFont(new Font("Segoe UI", Font.ITALIC, 15));
+			lblNum.setBounds(10, 25, 59, 21);
+			panel_1.add(lblNum);
 			
 			JPanel panel_2 = new JPanel();
 			panel_2.setBackground(new Color(211, 61, 48));
@@ -232,15 +285,21 @@ public class TelefoneView extends JFrame {
 			panel_1.add(panel_2);
 			panel_2.setLayout(null);
 			
-			txtNome = new JTextField();
-			txtNome.setFont(new Font("Segoe UI", Font.ITALIC, 15));
-			txtNome.setColumns(10);
-			txtNome.setBounds(159, 26, 374, 19);
-			panel_1.add(txtNome);
+			txtNumero = new JTextField();
+			txtNumero.setFont(new Font("Segoe UI", Font.ITALIC, 15));
+			txtNumero.setColumns(10);
+			txtNumero.setBounds(79, 26, 454, 19);
+			panel_1.add(txtNumero);
+			
+			lblMessageNum = new JLabel("");
+			lblMessageNum.setBounds(79, 45, 454, 14);
+			panel_1.add(lblMessageNum);
 		}
 		
 		public TelefoneService getTelefoneService() {
-			return new TelefoneService();
+			EntityManager em = DataBaseConnection.getConnection().getEntityManager();
+			return new TelefoneService(em, new TelefoneDAO(em));
+			
 		}
 		
 		public Telefone getTelefone() {

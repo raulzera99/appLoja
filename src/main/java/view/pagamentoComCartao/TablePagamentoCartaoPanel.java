@@ -4,24 +4,27 @@ import java.awt.Font;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.Objects;
 
+import javax.persistence.EntityManager;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.table.TableColumn;
 
 import config.Constantes;
 import config.Page;
+import dao.PagamentoComCartaoDAO;
 import models.PagamentoComCartao;
+import persistence.DataBaseConnection;
 import services.PagamentoComCartaoService;
 import view.table.RenderHeaderTable;
 import view.table.RenderTable;
-import javax.swing.JTextField;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 
 public class TablePagamentoCartaoPanel extends JPanel {
 	private static final long serialVersionUID = -4594190107545197497L;
@@ -282,7 +285,8 @@ public class TablePagamentoCartaoPanel extends JPanel {
 	
 
 	public PagamentoComCartaoService getPagamentoCartaoService() {
-		return new PagamentoComCartaoService();
+		EntityManager em = DataBaseConnection.getConnection().getEntityManager();
+		return new PagamentoComCartaoService(em, new PagamentoComCartaoDAO(em));
 	}
 
 	public void setPagamentoCartaoService(PagamentoComCartaoService pagamentoCartaoService) {

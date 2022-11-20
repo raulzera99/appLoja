@@ -101,8 +101,11 @@ public class PagamentoComBoletoView extends JFrame {
 				public void actionPerformed(ActionEvent e) {
 					if(idPagamentoComBoleto == 0L) {
 						add();
-					}else {
+					}else if(btnSalvar.getText() == "Alterar"){
 						update();
+					}
+					else if(btnSalvar.getText() == "Excluir") {
+						remove();
 					}
 				}
 			});
@@ -165,7 +168,6 @@ public class PagamentoComBoletoView extends JFrame {
 				JOptionPane.showMessageDialog(null, modelResponse.getMessage(), "Alterado", JOptionPane.INFORMATION_MESSAGE);
 			}
 			
-			//pagamentoBoletoService.update(pagamentoBoleto);
 			limpa();
 						
 		}
@@ -174,6 +176,7 @@ public class PagamentoComBoletoView extends JFrame {
 		public void remove() {
 			int i = 1;
 			pagamentoBoletoService = getPagamentoComBoletoService();
+			idPagamentoComBoleto = pagamentoBoleto.getId();
 			setPagamentoBoletoFromView();
 			
 			i = JOptionPane.showConfirmDialog(null, "Confirme os dados : "
@@ -181,7 +184,7 @@ public class PagamentoComBoletoView extends JFrame {
 					"Confirmar", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 			
 			if(i == 0) {
-				modelResponse = (ModelResponse<PagamentoComBoleto>) pagamentoBoletoService.remove(pagamentoBoleto);
+				modelResponse = (ModelResponse<PagamentoComBoleto>) pagamentoBoletoService.remove(idPagamentoComBoleto);
 			}
 			
 			if(modelResponse.isError()) {
@@ -192,7 +195,6 @@ public class PagamentoComBoletoView extends JFrame {
 				JOptionPane.showMessageDialog(null, modelResponse.getMessage(), "Excluído", JOptionPane.INFORMATION_MESSAGE);
 			}
 			
-			//pagamentoBoletoService.remove(pagamentoBoleto);
 			limpa();
 		}
 		
@@ -200,18 +202,16 @@ public class PagamentoComBoletoView extends JFrame {
 		public void findById(Long id) {
 			pagamentoBoletoService = getPagamentoComBoletoService();
 			pagamentoBoleto = getPagamentoComBoleto();
-			
-			modelResponse = (ModelResponse<PagamentoComBoleto>) pagamentoBoletoService.findById(pagamentoBoleto.getId());
+
+			modelResponse = (ModelResponse<PagamentoComBoleto>) pagamentoBoletoService.findById(id);
 			
 			if(modelResponse.isError()) {
 				JOptionPane.showMessageDialog(null, modelResponse.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
 			}
 			else {
 				pagamentoBoleto = modelResponse.getObject();
-				JOptionPane.showMessageDialog(null, modelResponse.getMessage(), "Encontrado", JOptionPane.INFORMATION_MESSAGE);
+				getPagamentoBoletoFromDataBase();
 			}
-			
-			getPagamentoBoletoFromDataBase();
 		}
 				
 		private void limpa() {

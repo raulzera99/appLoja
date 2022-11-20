@@ -41,8 +41,7 @@ public class GenericDAO<T, ID extends Serializable>  {
 	
 	public void removeById(ID id) {
         T entity = searchById(id);
-        getEntityManager()
-                .remove(entity);
+        getEntityManager().remove(entity);
     }
 	
 	

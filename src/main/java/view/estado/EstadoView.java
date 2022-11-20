@@ -24,10 +24,6 @@ import services.EstadoService;
 import services.errors.ErrorsData;
 
 public class EstadoView extends JFrame {
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -2933295863195236029L;
 	private JPanel contentPane;
 	JButton btnSalvar = new JButton("Salvar");
@@ -38,7 +34,7 @@ public class EstadoView extends JFrame {
 	private Long idEstado = 0L;
 	
 	private EstadoService estadoService;
-	private Estado estado;
+	private Estado estado = null;
 	
 	private ModelResponse<Estado> modelResponse = null;
 	private ModelResponse<ErrorsData> errors;
@@ -99,8 +95,11 @@ public class EstadoView extends JFrame {
 				public void actionPerformed(ActionEvent e) {
 					if(idEstado == 0l) {
 						add();
-					}else {
+					}else if(btnSalvar.getText() == "Alterar"){
 						update();
+					}
+					else if(btnSalvar.getText() == "Excluir") {
+						remove();
 					}
 				}
 			});
@@ -168,6 +167,7 @@ public class EstadoView extends JFrame {
 		public void remove() {
 			int i = 1;
 			estadoService = getEstadoService();
+			idEstado = estado.getId();
 			setEstadoFromView();
 			
 			i = JOptionPane.showConfirmDialog(null, "Confirme os dados : "
@@ -175,7 +175,7 @@ public class EstadoView extends JFrame {
 					"Confirmar", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 			
 			if(i == 0) {
-				modelResponse = (ModelResponse<Estado>) estadoService.remove(estado);
+				modelResponse = (ModelResponse<Estado>) estadoService.remove(idEstado);
 			}
 			
 			if(modelResponse.isError()) {
@@ -193,17 +193,16 @@ public class EstadoView extends JFrame {
 		public void findById(Long id) {
 			estadoService = getEstadoService();
 			estado = getEstado();
-			modelResponse = (ModelResponse<Estado>) estadoService.findById(estado.getId());
+			modelResponse = (ModelResponse<Estado>) estadoService.findById(id);
 			
 			if(modelResponse.isError()) {
 				JOptionPane.showMessageDialog(null, modelResponse.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
 			}
 			else {
 				estado = modelResponse.getObject();
-				JOptionPane.showMessageDialog(null, modelResponse.getMessage(), "Encontrado", JOptionPane.INFORMATION_MESSAGE);
+				getEstadoFromDataBase();
 			}
 			
-			getEstadoFromDataBase();
 		}
 				
 		
@@ -305,4 +304,14 @@ public class EstadoView extends JFrame {
 		public Estado getEstado() {
 			return new Estado();
 		}
+
+		public ModelResponse<Estado> getModelResponse() {
+			return modelResponse;
+		}
+
+		public void setModelResponse(ModelResponse<Estado> modelResponse) {
+			this.modelResponse = modelResponse;
+		}
+		
+		
 }
