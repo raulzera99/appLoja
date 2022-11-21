@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -114,6 +116,38 @@ public class ProdutoView extends JFrame {
 			btnCancelar.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					dispose();
+				}
+			});
+			
+			txtNome.addFocusListener(new FocusAdapter() {
+				@Override
+				public void focusLost(FocusEvent e) {
+					txtNome.setBorder(null);
+					lblMessageNome.setVisible(false);
+				}
+			});
+			
+			txtPreco.addFocusListener(new FocusAdapter() {
+				@Override
+				public void focusLost(FocusEvent e) {
+					txtPreco.setBorder(null);
+					lblMessagePreco.setVisible(false);
+				}
+			});
+			
+			txtPreco.addFocusListener(new FocusAdapter() {
+				@Override
+				public void focusLost(FocusEvent e) {
+					txtPreco.setBorder(null);
+					lblMessagePreco.setVisible(false);
+				}
+			});
+			
+			txtCategoria.addFocusListener(new FocusAdapter() {
+				@Override
+				public void focusLost(FocusEvent e) {
+					txtCategoria.setBorder(null);
+					lblMessageCategoria.setVisible(false);
 				}
 			});
 		}

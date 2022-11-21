@@ -4,7 +4,9 @@ import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
+import jakarta.validation.constraints.NotNull;
 import models.enums.EstadoPagamento;
+import services.errors.CampoRequerido;
 
 @Entity
 @DiscriminatorValue("1")
@@ -12,10 +14,13 @@ public class PagamentoComBoleto extends Pagamento{
 	private static final long serialVersionUID = 1L;
 
 	//Attributes
-	
+	@CampoRequerido(valor = 2, mensagem = "A data de vencimento deve ser informada")
+	@NotNull(message = "A data de vencimento deve ser informada")	
 	@Column(name = "data_vencimento")
 	private String dataVencimento;
 	
+	@CampoRequerido(valor = 3, mensagem = "A data de pagamento deve ser informada")
+	@NotNull(message = "A data de pagamento deve ser informada")	
 	@Column(name = "data_pagamento")
 	private String dataPagamento;	
 	

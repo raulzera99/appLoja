@@ -2,7 +2,6 @@ package models;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-
 import java.util.List;
 
 import javax.persistence.Column;
@@ -13,7 +12,11 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
+//import jakarta.validation.constraints.Pattern;
 import models.enums.TipoCliente;
+import services.errors.CampoRequerido;
 
 @Entity
 @Table(name="table_cliente")
@@ -25,14 +28,26 @@ public class Cliente implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private Long id;
+	
+	@CampoRequerido(valor = 1, mensagem = "O nome deve ser informado")
+	@NotNull(message = "O nome deve ser informado")
 	@Column(name = "nome")
 	private String nome;
+	
+	@CampoRequerido(valor = 2, mensagem = "O e-mail deve ser informado")
+	@Email(message = "Email inválido")
 	@Column(name = "email")
 	private String email;
-	@Column(name = "cpfOuCnpj")
-	private String cpfOuCnpj;
+	
+	@CampoRequerido(valor = 3, mensagem = "O tipo de cliente deve ser selecionado")
 	@Column(name = "tipo")
 	private Integer tipo;
+	
+	@CampoRequerido(valor = 4, mensagem = "O CPF ou CNPJ deve ser informado")
+	@NotNull(message = "O CPF ou CNPJ deve ser informado")
+	//@Pattern(regexp = "")
+	@Column(name = "cpfOuCnpj")
+	private String cpfOuCnpj;
 
 	@OneToMany(mappedBy = "cliente")
 	public List<Endereco> enderecos = new ArrayList<Endereco>();
@@ -47,7 +62,6 @@ public class Cliente implements Serializable {
 	public Cliente() {
 	}
 
-
 	public Cliente(Long id, String nome, String email, String cpfOuCnpj, Integer tipo, List<Endereco> enderecos,
 			List<Telefone> telefones, List<Pedido> pedidos) {
 		super();
@@ -60,8 +74,6 @@ public class Cliente implements Serializable {
 		this.telefones = telefones;
 		this.pedidos = pedidos;
 	}
-
-
 
 	// Methods
 	public Long getId() {

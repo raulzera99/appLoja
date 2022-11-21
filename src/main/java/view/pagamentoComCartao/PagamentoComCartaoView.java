@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 import javax.persistence.EntityManager;
 import javax.swing.BorderFactory;
@@ -113,6 +115,20 @@ public class PagamentoComCartaoView extends JFrame {
 			btnCancelar.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					dispose();
+				}
+			});
+			comboBoxEstado.addFocusListener(new FocusAdapter() {
+				@Override
+				public void focusLost(FocusEvent e) {
+					comboBoxEstado.setBorder(null);
+					lblMessageEstado.setVisible(false);
+				}
+			});
+			txtNumeroDeParcelas.addFocusListener(new FocusAdapter() {
+				@Override
+				public void focusLost(FocusEvent e) {
+					txtNumeroDeParcelas.setBorder(null);
+					lblMessageNum.setVisible(false);
 				}
 			});
 		}

@@ -61,7 +61,4 @@ public class ModelResponse<T> extends Response {
 	public void setMessage(String message) {
 		this.message = message;
 	}
-	
-	
-	
 }

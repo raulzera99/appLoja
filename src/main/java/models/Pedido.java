@@ -16,6 +16,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import jakarta.validation.constraints.NotNull;
+import services.errors.CampoRequerido;
+
 
 @Entity
 @Table(name="table_pedido")
@@ -28,9 +31,11 @@ public class Pedido implements Serializable {
 	@Column(name = "id")
 	private Long id;
 	
+	@CampoRequerido(valor = 1, mensagem = "O instante do pedido deve ser informado")
+	@NotNull(message = "O instante do pedido deve ser informado")	
 	@Column(name = "instante")
 	private String instante;
-		
+	
 	@OneToOne(cascade=CascadeType.ALL)
 	@JoinColumn(name = "id_pagamento", referencedColumnName = "id")
 	private Pagamento pagamento;

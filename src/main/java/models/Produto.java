@@ -19,6 +19,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import jakarta.validation.constraints.NotNull;
+import services.errors.CampoRequerido;
+
 @Entity
 @Table(name="table_produto")
 public class Produto implements Serializable {
@@ -29,9 +32,13 @@ public class Produto implements Serializable {
 	@Column(name = "id")
 	private Long id;
 	
+	@CampoRequerido(valor = 1, mensagem = "O nome do produto deve ser informado")
+	@NotNull(message = "O nome do produto deve ser informado")	
 	@Column(name = "nome")
 	private String nome;
 	
+	@CampoRequerido(valor = 2, mensagem = "O preço do produto deve ser informado")
+	@NotNull(message = "O preço do produto deve ser informado")	
 	@Column(name = "preco")
 	private double preco;
 	
@@ -47,9 +54,6 @@ public class Produto implements Serializable {
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_codigo", referencedColumnName = "id")
 	private Codigo codigo;
-	
-	
-	
 	
 	//Constructors
 	

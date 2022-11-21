@@ -12,12 +12,17 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import jakarta.validation.constraints.NotNull;
+import services.errors.CampoRequerido;
+
 @Entity
 @Table(name="table_telefone")
 public class Telefone implements Serializable{
 	private static final long serialVersionUID = 2139428886156390986L;
 	
 	//Attributes
+	@CampoRequerido(valor = 1, mensagem = "O número do telefone deve ser informado")
+	@NotNull(message = "O número do telefone deve ser informado")	
 	@Column(name = "numero")
 	private String numero;
 	

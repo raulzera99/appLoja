@@ -14,22 +14,51 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import view.categoria.TableCategoriaPanel;
+import view.cidade.TableCidadePanel;
+import view.cliente.TableClientePanel;
+import view.codigo.TableCodigoPanel;
+import view.endereco.TableEnderecoPanel;
 import view.estado.TableEstadoPanel;
 import view.pagamentoComBoleto.TablePagamentoBoletoPanel;
 import view.pagamentoComCartao.TablePagamentoCartaoPanel;
+import view.pedido.TablePedidoPanel;
+import view.produto.TableProdutoPanel;
+import view.telefone.TableTelefonePanel;
 
 public class MainView extends JFrame {
 	private static final long serialVersionUID = 2435012607684752695L;
 	
 	JPanel contentPane;
+	TableCategoriaPanel tableCategoriaPanel = TableCategoriaPanel.getInstance();
+	TableCidadePanel tableCidadePanel = TableCidadePanel.getInstance();
+	TableClientePanel tableClientePanel = TableClientePanel.getInstance();
+	TableCodigoPanel tableCodigoPanel = TableCodigoPanel.getInstance();
+	TableEnderecoPanel tableEnderecoPanel = TableEnderecoPanel.getInstance();
+	TableEstadoPanel tableEstadoPanel = TableEstadoPanel.getInstance();
 	TablePagamentoBoletoPanel tablePagamentoBoletoPanel = TablePagamentoBoletoPanel.getInstance();
 	TablePagamentoCartaoPanel tablePagamentoCartaoPanel = TablePagamentoCartaoPanel.getInstance();
-	TableEstadoPanel tableEstadoPanel = TableEstadoPanel.getInstance();
+	TablePedidoPanel tablePedidoPanel = TablePedidoPanel.getInstance();
+	TableProdutoPanel tableProdutoPanel = TableProdutoPanel.getInstance();
+	TableTelefonePanel tableTelefonePanel = TableTelefonePanel.getInstance();
+	
+	JLabel lblTitle;
 	JPanel topBar;
-	JMenuItem mntm_pagamentoCartao = new JMenuItem("Cartão");
-	JMenuItem mntm_pagamentoBoleto = new JMenuItem("Boleto");
-	JMenuItem mn_Estado = new JMenuItem("Estado");
-
+	JPanel botBar;
+	JMenuBar menu;
+	JMenu mn_Menu;
+	JMenuItem mn_Categoria;
+	JMenuItem mn_Cidade;
+	JMenuItem mn_Cliente;
+	JMenuItem mn_Codigo;
+	JMenuItem mn_Endereco;	
+	JMenuItem mn_Estado;
+	JMenu mn_pagamento;
+	JMenuItem mntm_pagamentoCartao;
+	JMenuItem mntm_pagamentoBoleto;
+	JMenuItem mn_Pedido;
+	JMenuItem mn_Produto;
+	JMenuItem mn_Telefone;
 	/**
 	 * Launch the application.
 	 */
@@ -54,10 +83,45 @@ public class MainView extends JFrame {
 	}
 	
 	private void eventHandler() {
-		mntm_pagamentoCartao.addActionListener(new ActionListener() {
+		mn_Categoria.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setVisiblePanels(false);
-				tablePagamentoCartaoPanel.setVisible(true);
+				tableCategoriaPanel.setVisible(true);
+			}
+		});
+		
+		mn_Cidade.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setVisiblePanels(false);
+				tableCidadePanel.setVisible(true);
+			}
+		});
+		
+		mn_Cliente.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setVisiblePanels(false);
+				tableClientePanel.setVisible(true);
+			}
+		});
+		
+		mn_Codigo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setVisiblePanels(false);
+				tableCodigoPanel.setVisible(true);
+			}
+		});
+		
+		mn_Endereco.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setVisiblePanels(false);
+				tableEnderecoPanel.setVisible(true);
+			}
+		});
+		
+		mn_Estado.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setVisiblePanels(false);
+				tableEstadoPanel.setVisible(true);
 			}
 		});
 		
@@ -68,18 +132,48 @@ public class MainView extends JFrame {
 			}
 		});
 		
-		mn_Estado.addActionListener(new ActionListener() {
+		mntm_pagamentoCartao.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setVisiblePanels(false);
-				tableEstadoPanel.setVisible(true);
+				tablePagamentoCartaoPanel.setVisible(true);
 			}
 		});
+		
+		mn_Pedido.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setVisiblePanels(false);
+				tablePedidoPanel.setVisible(true);
+			}
+		});
+		
+		mn_Produto.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setVisiblePanels(false);
+				tableProdutoPanel.setVisible(true);
+			}
+		});
+		
+		mn_Telefone.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setVisiblePanels(false);
+				tableTelefonePanel.setVisible(true);
+			}
+		});
+		
 	}
 	
 	private void setVisiblePanels(boolean b) {
+		tableCategoriaPanel.setVisible(b);
+		tableCidadePanel.setVisible(b);
+		tableClientePanel.setVisible(b);
+		tableCodigoPanel.setVisible(b);
+		tableEnderecoPanel.setVisible(b);
+		tableEstadoPanel.setVisible(b);
 		tablePagamentoBoletoPanel.setVisible(b);
 		tablePagamentoCartaoPanel.setVisible(b);
-		tableEstadoPanel.setVisible(b);
+		tablePedidoPanel.setVisible(b);
+		tableProdutoPanel.setVisible(b);
+		tableTelefonePanel.setVisible(b);
 		
 	}
 
@@ -95,98 +189,124 @@ public class MainView extends JFrame {
 		contentPane.setLayout(null);
 		setVisiblePanels(false);
 		
+		getContentPane().add(tableCategoriaPanel);
+		tableCategoriaPanel.setBounds(getBounds());
+		
+		getContentPane().add(tableCidadePanel);
+		tableCidadePanel.setBounds(10, 130, 1079, 645);
+		
+		getContentPane().add(tableClientePanel);
+		tableClientePanel.setBounds(10, 130, 1079, 645);
+		
+		getContentPane().add(tableCodigoPanel);
+		tableCodigoPanel.setBounds(10, 130, 1079, 645);
+		
+		getContentPane().add(tableEnderecoPanel);
+		tableEnderecoPanel.setBounds(10, 130, 1079, 645);
+		
+		getContentPane().add(tableEstadoPanel);
+		tableEstadoPanel.setBounds(10, 130, 1079, 645);
+		
 		getContentPane().add(tablePagamentoBoletoPanel);
 		tablePagamentoBoletoPanel.setBounds(10, 130, 1079, 645);
 		
 		getContentPane().add(tablePagamentoCartaoPanel);
 		tablePagamentoBoletoPanel.setBounds(10, 130, 1079, 645);
 
-		getContentPane().add(tableEstadoPanel);
-		tableEstadoPanel.setBounds(10, 130, 1079, 645);
+		getContentPane().add(tablePedidoPanel);
+		tablePedidoPanel.setBounds(10, 130, 1079, 645);
 		
-		JPanel topBar = new JPanel();
+		getContentPane().add(tableProdutoPanel);
+		tableProdutoPanel.setBounds(10, 130, 1079, 645);
+		
+		getContentPane().add(tableTelefonePanel);
+		tableTelefonePanel.setBounds(10, 130, 1079, 645);
+		
+		topBar = new JPanel();
 		topBar.setBackground(new Color(245, 41, 5));
 		topBar.setBounds(0, 0, 1101, 119);
 		contentPane.add(topBar);
 		topBar.setLayout(null);
 		
-		JMenuBar menu = new JMenuBar();
+		menu = new JMenuBar();
 		menu.setBackground(new Color(245, 41, 5));
 		menu.setBounds(0, 0, 101, 22);
 		topBar.add(menu);
 		
-		JMenu mn_Menu = new JMenu("Menu");
+		mn_Menu = new JMenu("Menu");
 		mn_Menu.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 20));
 		mn_Menu.setForeground(new Color(255, 255, 255));
 		mn_Menu.setBackground(new Color(245, 41, 5));
 		menu.add(mn_Menu);
 		
-		JMenu mn_pagamento = new JMenu("Pagamento");
+		mn_pagamento = new JMenu("Pagamento");
 		mn_pagamento.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 15));
 		mn_pagamento.setForeground(new Color(0, 0, 0));
 		mn_pagamento.setBackground(new Color(245, 41, 5));
 		mn_Menu.add(mn_pagamento);
 		
-		
-		
+		mntm_pagamentoBoleto = new JMenuItem("Boleto");
 		mntm_pagamentoBoleto.setForeground(new Color(255, 255, 255));
 		mntm_pagamentoBoleto.setBackground(new Color(245, 41, 5));
 		mn_pagamento.add(mntm_pagamentoBoleto);
 		
-		
-		
+		mntm_pagamentoCartao = new JMenuItem("Cartão");
 		mntm_pagamentoCartao.setForeground(new Color(255, 255, 255));
 		mntm_pagamentoCartao.setBackground(new Color(245, 41, 5));
 		mn_pagamento.add(mntm_pagamentoCartao);
 		
-		
-		
-		mn_Menu.add(mn_Estado);
+		mn_Estado = new JMenuItem("Estado");
 		mn_Estado.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 15));
 		mn_Estado.setBackground(new Color(245, 41, 5));
+		mn_Menu.add(mn_Estado);
 		
-		JMenuItem mn_Cidade = new JMenuItem("Cidade");
+		mn_Cidade = new JMenuItem("Cidade");
 		mn_Cidade.setBackground(new Color(245, 41, 5));
 		mn_Cidade.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 15));
 		mn_Menu.add(mn_Cidade);
 		
-		JMenuItem mn_Endereco = new JMenuItem("Endereço");
+		mn_Endereco = new JMenuItem("Endereço");
 		mn_Endereco.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 15));
 		mn_Endereco.setBackground(new Color(245, 41, 5));
 		mn_Menu.add(mn_Endereco);
 		
-		JMenuItem mn_Cliente = new JMenuItem("Cliente");
+		mn_Cliente = new JMenuItem("Cliente");
 		mn_Cliente.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 15));
 		mn_Cliente.setBackground(new Color(245, 41, 5));
 		mn_Menu.add(mn_Cliente);
 		
-		JMenuItem mn_Telefone = new JMenuItem("Telefone");
+		mn_Telefone = new JMenuItem("Telefone");
 		mn_Telefone.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 15));
 		mn_Telefone.setBackground(new Color(245, 41, 5));
 		mn_Menu.add(mn_Telefone);
 		
-		JMenuItem mn_Pedido = new JMenuItem("Pedido");
+		mn_Pedido = new JMenuItem("Pedido");
 		mn_Pedido.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 15));
 		mn_Pedido.setBackground(new Color(245, 41, 5));
 		mn_Menu.add(mn_Pedido);
 		
-		JMenuItem mn_Produto = new JMenuItem("Produto");
+		mn_Produto = new JMenuItem("Produto");
 		mn_Produto.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 15));
 		mn_Produto.setBackground(new Color(245, 41, 5));
 		mn_Menu.add(mn_Produto);
 		
-		JMenuItem mn_Codigo = new JMenuItem("Código");
+		mn_Codigo = new JMenuItem("Código");
 		mn_Codigo.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 15));
 		mn_Codigo.setBackground(new Color(245, 41, 5));
 		mn_Menu.add(mn_Codigo);
 		
-		JLabel lblNewLabel = new JLabel("Controle de Loja");
-		lblNewLabel.setForeground(new Color(255, 255, 255));
-		lblNewLabel.setFont(new Font("Segoe UI", Font.ITALIC, 50));
-		lblNewLabel.setBounds(153, 30, 464, 79);
-		topBar.add(lblNewLabel);
+		mn_Categoria = new JMenuItem("Categoria");
+		mn_Categoria.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 15));
+		mn_Categoria.setBackground(new Color(245, 41, 5));
+		mn_Menu.add(mn_Categoria);
 		
-		JPanel botBar = new JPanel();
+		lblTitle = new JLabel("Controle de Loja");
+		lblTitle.setForeground(new Color(255, 255, 255));
+		lblTitle.setFont(new Font("Segoe UI", Font.ITALIC, 50));
+		lblTitle.setBounds(153, 30, 464, 79);
+		topBar.add(lblTitle);
+		
+		botBar = new JPanel();
 		botBar.setBackground(new Color(245, 41, 5));
 		botBar.setBounds(0, 785, 1101, 26);
 		contentPane.add(botBar);

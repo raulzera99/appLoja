@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 import javax.persistence.EntityManager;
 import javax.swing.JButton;
@@ -32,10 +34,13 @@ public class EnderecoView extends JFrame {
 	JButton btnSalvar = new JButton("Salvar");
 	JButton btnCancelar = new JButton("Cancelar");
 	JTextField txtNumero;
+	JLabel lblMessageNum;
 	private JTextField txtBairro;
+	JLabel lblMessageBairro;
 	private JTextField txtCEP;
+	JLabel lblMessageCEP;
 	
-	private Long idEndereco = 0l;
+	private Long idEndereco = 0L;
 	
 	private EnderecoService enderecoService;
 	private Endereco endereco = null;
@@ -112,6 +117,30 @@ public class EnderecoView extends JFrame {
 			btnCancelar.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					dispose();
+				}
+			});
+			
+			txtNumero.addFocusListener(new FocusAdapter() {
+				@Override
+				public void focusLost(FocusEvent e) {
+					txtNumero.setBorder(null);
+					lblMessageNum.setVisible(false);
+				}
+			});
+			
+			txtBairro.addFocusListener(new FocusAdapter() {
+				@Override
+				public void focusLost(FocusEvent e) {
+					txtBairro.setBorder(null);
+					lblMessageBairro.setVisible(false);
+				}
+			});
+			
+			txtCEP.addFocusListener(new FocusAdapter() {
+				@Override
+				public void focusLost(FocusEvent e) {
+					txtCEP.setBorder(null);
+					lblMessageCEP.setVisible(false);
 				}
 			});
 		}
@@ -313,6 +342,18 @@ public class EnderecoView extends JFrame {
 			txtCEP.setColumns(10);
 			txtCEP.setBounds(81, 90, 448, 19);
 			panel_1.add(txtCEP);
+			
+			lblMessageNum = new JLabel("");
+			lblMessageNum.setBounds(81, 45, 448, 14);
+			panel_1.add(lblMessageNum);
+			
+			JLabel lblMessageBairro = new JLabel("");
+			lblMessageBairro.setBounds(81, 76, 448, 14);
+			panel_1.add(lblMessageBairro);
+			
+			JLabel lblMessageCEP = new JLabel("");
+			lblMessageCEP.setBounds(81, 110, 448, 14);
+			panel_1.add(lblMessageCEP);
 		}
 		
 		public EnderecoService getEnderecoService() {

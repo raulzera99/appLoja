@@ -15,7 +15,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import jakarta.validation.constraints.NotNull;
 import models.enums.EstadoPagamento;
+import services.errors.CampoRequerido;
 
 @Entity
 @Table(name="table_pagamento")
@@ -31,6 +33,8 @@ public class Pagamento implements Serializable {
 	@Column(name = "id")
 	private Long id;
 	
+	@CampoRequerido(valor = 1, mensagem = "O estado do pagamento deve ser selecionado")
+	@NotNull(message = "O estado do pagamento deve ser selecionado")
 	@Column(name = "estado_pagamento")
 	private Integer estado;
 

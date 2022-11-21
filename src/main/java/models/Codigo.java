@@ -11,6 +11,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import jakarta.validation.constraints.NotNull;
+import services.errors.CampoRequerido;
+
 
 @Entity
 @Table(name="table_codigo")
@@ -23,6 +26,8 @@ public class Codigo implements Serializable{
 	@Column(name = "id")
 	private Long id;
 	
+	@CampoRequerido(valor = 1, mensagem = "O numero de série do código deve ser informado")
+	@NotNull(message = "O número de série do código deve ser informado")	
 	@Column(name = "numero")
 	private Integer numero;
 	

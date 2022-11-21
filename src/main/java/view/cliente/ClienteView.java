@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 import javax.persistence.EntityManager;
 import javax.swing.BorderFactory;
@@ -123,6 +125,38 @@ public class ClienteView extends JFrame {
 			btnCancelar.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					dispose();
+				}
+			});
+			
+			txtNome.addFocusListener(new FocusAdapter() {
+				@Override
+				public void focusLost(FocusEvent e) {
+					txtNome.setBorder(null);
+					lblMessageNome.setVisible(false);
+				}
+			});
+			
+			txtEmail.addFocusListener(new FocusAdapter() {
+				@Override
+				public void focusLost(FocusEvent e) {
+					txtEmail.setBorder(null);
+					lblMessageEmail.setVisible(false);
+				}
+			});
+			
+			txtCpfOuCnpj.addFocusListener(new FocusAdapter() {
+				@Override
+				public void focusLost(FocusEvent e) {
+					txtCpfOuCnpj.setBorder(null);
+					lblMessageCpfOuCnpj.setVisible(false);
+				}
+			});
+			
+			cbTipoCliente.addFocusListener(new FocusAdapter() {
+				@Override
+				public void focusLost(FocusEvent e) {
+					cbTipoCliente.setBorder(null);
+					lblMessageTipoCliente.setVisible(false);
 				}
 			});
 		}

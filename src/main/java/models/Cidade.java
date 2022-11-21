@@ -16,6 +16,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import jakarta.validation.constraints.NotNull;
+import services.errors.CampoRequerido;
+
 
 @Entity
 @Table(name="table_cidade")
@@ -28,6 +31,8 @@ public class Cidade implements Serializable{
 	@Column(name = "id")
 	private Long id;
 	
+	@CampoRequerido(valor = 1, mensagem = "O nome deve ser informado")
+	@NotNull(message = "O nome deve ser informado")
 	@Column(name = "nome")
 	private String nome;
 	

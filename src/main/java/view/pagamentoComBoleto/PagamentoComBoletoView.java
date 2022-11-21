@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 import javax.persistence.EntityManager;
 import javax.swing.BorderFactory;
@@ -28,9 +30,6 @@ import services.errors.ErrorsData;
 
 public class PagamentoComBoletoView extends JFrame {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -2933295863195236029L;
 	private JPanel contentPane;
 	JButton btnSalvar = new JButton("Salvar");
@@ -40,6 +39,7 @@ public class PagamentoComBoletoView extends JFrame {
 	JComboBox<String> comboBoxEstado;
 	JLabel lblMessageDataVencimento;
 	JLabel lblMessageDataPagamento;
+	JLabel lblMessageEstado;
 	
 	private Long idPagamentoComBoleto = 0L;
 	
@@ -113,6 +113,30 @@ public class PagamentoComBoletoView extends JFrame {
 			btnCancelar.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					dispose();
+				}
+			});
+			
+			comboBoxEstado.addFocusListener(new FocusAdapter() {
+				@Override
+				public void focusLost(FocusEvent e) {
+					comboBoxEstado.setBorder(null);
+					lblMessageEstado.setVisible(false);
+				}
+			});
+			
+			txtDataPagamento.addFocusListener(new FocusAdapter() {
+				@Override
+				public void focusLost(FocusEvent e) {
+					txtDataPagamento.setBorder(null);
+					lblMessageDataPagamento.setVisible(false);
+				}
+			});
+			
+			txtDataVencimento.addFocusListener(new FocusAdapter() {
+				@Override
+				public void focusLost(FocusEvent e) {
+					txtDataVencimento.setBorder(null);
+					lblMessageDataVencimento.setVisible(false);
 				}
 			});
 		}
@@ -340,8 +364,12 @@ public class PagamentoComBoletoView extends JFrame {
 			panel_1.add(lblMessageDataVencimento);
 			
 			lblMessageDataPagamento = new JLabel("");
-			lblMessageDataPagamento.setBounds(159, 100, 374, 14);
+			lblMessageDataPagamento.setBounds(159, 106, 374, 14);
 			panel_1.add(lblMessageDataPagamento);
+			
+			lblMessageEstado = new JLabel("");
+			lblMessageEstado.setBounds(159, 44, 374, 14);
+			panel_1.add(lblMessageEstado);
 		}
 		
 		public PagamentoComBoletoService getPagamentoComBoletoService() {

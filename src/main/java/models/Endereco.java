@@ -16,6 +16,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import jakarta.validation.constraints.NotNull;
+import services.errors.CampoRequerido;
+
 @Entity
 @Table(name="table_endereco")
 public class Endereco implements Serializable{
@@ -26,12 +29,18 @@ public class Endereco implements Serializable{
 	@Column(name = "id")
 	private Long id;
 
+	@CampoRequerido(valor = 1, mensagem = "O número da casa deve ser informado")
+	@NotNull(message = "O número da casa deve ser informado")
 	@Column(name = "numero")
 	private String numero;
 	
+	@CampoRequerido(valor = 2, mensagem = "O bairro do endereço deve ser informado")
+	@NotNull(message = "O bairro do endereço deve ser informado")
 	@Column(name = "bairro")
 	private String bairro;
 	
+	@CampoRequerido(valor = 3, mensagem = "O CEP do endereço deve ser informado")
+	@NotNull(message = "O CEP do endereço deve ser informado")
 	@Column(name = "cep")
 	private String cep; 
 	

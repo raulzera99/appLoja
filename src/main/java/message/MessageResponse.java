@@ -10,7 +10,6 @@ public class MessageResponse<T> {
 		response.setObject(object);
 		
 		return response;
-		
 	}
 	
 	public ModelResponse<T> message(List<T> objects, String message, boolean error){
@@ -20,6 +19,5 @@ public class MessageResponse<T> {
 		response.setListObject(objects);
 		
 		return response;
-		
 	}
 }

@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 
 import javax.persistence.EntityManager;
 import javax.swing.BorderFactory;
@@ -29,9 +31,6 @@ import services.errors.ErrorsData;
 
 public class CidadeView extends JFrame {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -2933295863195236029L;
 	private JPanel contentPane;
 	JButton btnSalvar = new JButton("Salvar");
@@ -120,6 +119,22 @@ public class CidadeView extends JFrame {
 			btnCancelar.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					dispose();
+				}
+			});
+			
+			txtNome.addFocusListener(new FocusAdapter() {
+				@Override
+				public void focusLost(FocusEvent e) {
+					txtNome.setBorder(null);
+					lblMessageNome.setVisible(false);
+				}
+			});
+			
+			cbEstado.addFocusListener(new FocusAdapter() {
+				@Override
+				public void focusLost(FocusEvent e) {
+					cbEstado.setBorder(null);
+					lblMessageEstado.setVisible(false);
 				}
 			});
 		}

@@ -13,6 +13,9 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import jakarta.validation.constraints.NotNull;
+import services.errors.CampoRequerido;
+
 @Entity
 @Table(name="table_estado")
 public class Estado implements Serializable{
@@ -24,6 +27,8 @@ public class Estado implements Serializable{
 	@Column(name = "id")
 	private Long id;
 	
+	@CampoRequerido(valor = 1, mensagem = "O nome junto da sigla do estado deve ser informado")
+	@NotNull(message = "O nome junto da sigla do estado deve ser informado")	
 	@Column(name = "nome")
 	private String nome;
 	
