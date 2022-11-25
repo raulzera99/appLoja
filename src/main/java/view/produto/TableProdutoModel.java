@@ -40,7 +40,7 @@ public class TableProdutoModel extends JTableModel<Produto>{
 				return produto.getPreco();
 			}
 			case 3:{
-				return produto.getCategorias().toString();
+				return produto.getCategoria().getNome();
 			}
 			default:
 				return null;

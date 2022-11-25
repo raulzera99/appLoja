@@ -6,11 +6,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.swing.BorderFactory;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -19,10 +20,16 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import config.Constantes;
+import dao.CategoriaDAO;
+import dao.CodigoDAO;
 import dao.ProdutoDAO;
 import message.ModelResponse;
+import models.Categoria;
+import models.Codigo;
 import models.Produto;
 import persistence.DataBaseConnection;
+import services.CategoriaService;
+import services.CodigoService;
 import services.ProdutoService;
 import services.errors.ErrorsData;
 
@@ -40,17 +47,23 @@ public class ProdutoView extends JFrame {
 	JTextField txtPreco;
 	JLabel lblPreco;
 	JLabel lblMessagePreco;
-	JTextField txtCategoria;
+	JComboBox<String> cbCategoria;
 	JLabel lblCategoria;
 	JLabel lblMessageCategoria;
+	private JComboBox<String> cbCodigoSerial;
+	private JLabel lblCdigoSerial;
+	private JLabel lblMessageCodigoSerial;
 	
 	private Long idProduto = 0L;
 	
 	private ProdutoService produtoService;
 	private Produto produto = null;
+	private Categoria categoria = null;
+	private Codigo codigo = null ;
 	
 	private ModelResponse<Produto> modelResponse = null;
 	private ModelResponse<ErrorsData> errors;
+	
 	
 	/**
 	 * Launch the application.
@@ -122,7 +135,7 @@ public class ProdutoView extends JFrame {
 			txtNome.addFocusListener(new FocusAdapter() {
 				@Override
 				public void focusLost(FocusEvent e) {
-					txtNome.setBorder(null);
+					txtNome.setBorder(BorderFactory.createLineBorder(Color.black, 1));
 					lblMessageNome.setVisible(false);
 				}
 			});
@@ -130,7 +143,7 @@ public class ProdutoView extends JFrame {
 			txtPreco.addFocusListener(new FocusAdapter() {
 				@Override
 				public void focusLost(FocusEvent e) {
-					txtPreco.setBorder(null);
+					txtPreco.setBorder(BorderFactory.createLineBorder(Color.black, 1));
 					lblMessagePreco.setVisible(false);
 				}
 			});
@@ -138,15 +151,15 @@ public class ProdutoView extends JFrame {
 			txtPreco.addFocusListener(new FocusAdapter() {
 				@Override
 				public void focusLost(FocusEvent e) {
-					txtPreco.setBorder(null);
+					txtPreco.setBorder(BorderFactory.createLineBorder(Color.black, 1));
 					lblMessagePreco.setVisible(false);
 				}
 			});
 			
-			txtCategoria.addFocusListener(new FocusAdapter() {
+			cbCategoria.addFocusListener(new FocusAdapter() {
 				@Override
 				public void focusLost(FocusEvent e) {
-					txtCategoria.setBorder(null);
+					cbCategoria.setBorder(BorderFactory.createLineBorder(Color.black, 1));
 					lblMessageCategoria.setVisible(false);
 				}
 			});
@@ -255,25 +268,34 @@ public class ProdutoView extends JFrame {
 			
 			idProduto = 0L;
 			txtNome.setText("");
+			txtPreco.setText("");
+			cbCategoria.setSelectedIndex(-1);
+			cbCodigoSerial.setSelectedIndex(-1);
 		}
 		
-		@SuppressWarnings("null")
+		@SuppressWarnings({ "null", "unchecked" })
 		private void setProdutoFromView() {
 			produto.setNome(txtNome.getText());
-			produto.setPreco(Integer.valueOf(txtPreco.getText()));
-			List<String> categoria = null;
-			String arr[] = txtCategoria.getText().split(",");
-			for (String i : arr) {
-				categoria.add(i);
-			}
-			//produto.setCategorias(categoria);
+			produto.setPreco(Double.valueOf(txtPreco.getText()));
+			
+			ModelResponse<Categoria> mrCategoria = new ModelResponse<Categoria>();
+			mrCategoria = (ModelResponse<Categoria>) getCategoriaService()
+					.findByName(cbCategoria.getItemAt(cbCategoria.getSelectedIndex()));
+			categoria = mrCategoria.getObject();
+			produto.setCategoria(categoria);
+			
+			ModelResponse<Codigo> mrCodigo = new ModelResponse<Codigo>();
+			mrCodigo = (ModelResponse<Codigo>) getCodigoService()
+					.findByName(cbCodigoSerial.getItemAt(cbCodigoSerial.getSelectedIndex()));
+			codigo = mrCodigo.getObject();
+			produto.setCodigo(codigo);
 		}
 		
 		private void getProdutoFromDataBase() {
 			idProduto = produto.getId();
 			txtNome.setText(produto.getNome());
 			txtPreco.setText(String.valueOf(produto.getPreco()));
-			txtCategoria.setText(produto.getCategorias().toString());
+			cbCategoria.setSelectedItem(produto.getCategoria());;
 		}
 		
 		private void showErrorFromServidor() {
@@ -294,7 +316,7 @@ public class ProdutoView extends JFrame {
 					lblMessageCategoria.setVisible(true);
 					lblMessageCategoria.setForeground(Color.red);
 					lblMessageCategoria.setText(erro.getShowMensagemError());
-					txtCategoria.setBorder(BorderFactory.createLineBorder(Color.red, 2));
+					cbCategoria.setBorder(BorderFactory.createLineBorder(Color.red, 2));
 				}
 			}
 		}
@@ -377,14 +399,26 @@ public class ProdutoView extends JFrame {
 			
 			lblCategoria = new JLabel("Categoria : ");
 			lblCategoria.setFont(new Font("Segoe UI", Font.ITALIC, 15));
-			lblCategoria.setBounds(10, 85, 78, 21);
+			lblCategoria.setBounds(10, 85, 74, 21);
 			panel_1.add(lblCategoria);
 			
-			txtCategoria = new JTextField();
-			txtCategoria.setFont(new Font("Segoe UI", Font.ITALIC, 15));
-			txtCategoria.setColumns(10);
-			txtCategoria.setBounds(98, 86, 435, 19);
-			panel_1.add(txtCategoria);
+			cbCategoria = new JComboBox<String>();
+			cbCategoria.setModel(new DefaultComboBoxModel<String>(getCategoriaService().stringListAllCategorias()));
+			cbCategoria.setBounds(82, 86, 451, 19);
+			panel_1.add(cbCategoria);
+			
+			cbCodigoSerial = new JComboBox<String>();
+			cbCodigoSerial.setBounds(102, 118, 431, 19);
+			panel_1.add(cbCodigoSerial);
+			
+			lblCdigoSerial = new JLabel("Código serial:");
+			lblCdigoSerial.setFont(new Font("Segoe UI", Font.ITALIC, 15));
+			lblCdigoSerial.setBounds(10, 117, 91, 21);
+			panel_1.add(lblCdigoSerial);
+			
+			lblMessageCodigoSerial = new JLabel("");
+			lblMessageCodigoSerial.setBounds(102, 138, 431, 14);
+			panel_1.add(lblMessageCodigoSerial);
 			
 			JPanel panel_2 = new JPanel();
 			panel_2.setBounds(0, 352, 555, 21);
@@ -401,5 +435,22 @@ public class ProdutoView extends JFrame {
 		
 		public Produto getProduto() {
 			return new Produto();
+		}
+		
+		public CategoriaService getCategoriaService() {
+			EntityManager em = DataBaseConnection.getConnection().getEntityManager();
+			return new CategoriaService(em, new CategoriaDAO(em));
+		}
+		
+		public Categoria getCategoria() {
+			return new Categoria();
+		}
+		public CodigoService getCodigoService() {
+			EntityManager em = DataBaseConnection.getConnection().getEntityManager();
+			return new CodigoService(em, new CodigoDAO(em));
+		}
+		
+		public Codigo getCodigo() {
+			return new Codigo();
 		}
 }

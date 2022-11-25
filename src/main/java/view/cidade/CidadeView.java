@@ -21,6 +21,7 @@ import javax.swing.border.EmptyBorder;
 
 import config.Constantes;
 import dao.CidadeDAO;
+import dao.EstadoDAO;
 import message.ModelResponse;
 import models.Cidade;
 import models.Estado;
@@ -41,10 +42,8 @@ public class CidadeView extends JFrame {
 	JLabel lblMessageEstado;
 	
 	private Long idCidade = 0L;
-	private Long idEstado = 0L;
 	
 	private CidadeService cidadeService;
-	private EstadoService estadoService;
 	private Cidade cidade = null;
 	private Estado estado = null;
 	
@@ -125,7 +124,7 @@ public class CidadeView extends JFrame {
 			txtNome.addFocusListener(new FocusAdapter() {
 				@Override
 				public void focusLost(FocusEvent e) {
-					txtNome.setBorder(null);
+					txtNome.setBorder(BorderFactory.createLineBorder(Color.black, 1));
 					lblMessageNome.setVisible(false);
 				}
 			});
@@ -133,7 +132,7 @@ public class CidadeView extends JFrame {
 			cbEstado.addFocusListener(new FocusAdapter() {
 				@Override
 				public void focusLost(FocusEvent e) {
-					cbEstado.setBorder(null);
+					cbEstado.setBorder(BorderFactory.createLineBorder(Color.black, 1));
 					lblMessageEstado.setVisible(false);
 				}
 			});
@@ -241,24 +240,25 @@ public class CidadeView extends JFrame {
 		private void limpa() {
 			
 			idCidade = 0L;
-			idEstado = 0L;
+
 			txtNome.setText("");
+			cbEstado.setSelectedIndex(-1);
 		}
 		
 		@SuppressWarnings("unchecked")
 		private void setCidadeFromView() {
-			cidade.setNome(txtNome.getText());	
+			cidade.setNome(txtNome.getText());
 			ModelResponse<Estado> mr = new ModelResponse<Estado>();
-			mr = (ModelResponse<Estado>) estadoService.findById(idEstado);
+			mr = (ModelResponse<Estado>) getEstadoService()
+					.findByName(cbEstado.getItemAt(cbEstado.getSelectedIndex()));
 			estado = mr.getObject();
 			cidade.setEstado(estado);
 		}
 		
 		private void getCidadeFromDataBase() {
 			idCidade = cidade.getId();
-			idEstado = cidade.getEstado().getId();
-			txtNome.setText(String.valueOf(cidade.getNome()));
-			cbEstado.setSelectedItem(estado);
+			txtNome.setText(cidade.getNome());
+			cbEstado.setSelectedItem(cidade.getEstado());
 		}
 		
 		private void showErrorFromServidor() {
@@ -343,7 +343,7 @@ public class CidadeView extends JFrame {
 			panel_1.add(lblEstado);
 			
 			cbEstado = new JComboBox<String>();
-			cbEstado.setModel(new DefaultComboBoxModel <String>(estadoService.listAllEstados()));
+			cbEstado.setModel(new DefaultComboBoxModel <String>(getEstadoService().stringListAllEstados()));
 			cbEstado.setBounds(159, 55, 374, 22);
 			panel_1.add(cbEstado);
 			
@@ -363,5 +363,14 @@ public class CidadeView extends JFrame {
 		
 		public Cidade getCidade() {
 			return new Cidade();
+		}
+		
+		public EstadoService getEstadoService() {
+			EntityManager em = DataBaseConnection.getConnection().getEntityManager();
+			return new EstadoService(em, new EstadoDAO(em));
+		}
+		
+		public Estado getEstado() {
+			return new Estado();
 		}
 }

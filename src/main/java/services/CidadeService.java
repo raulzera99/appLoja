@@ -1,6 +1,8 @@
 package services;
 
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 
 import config.Page;
@@ -27,4 +29,14 @@ public class CidadeService extends DataBaseTransactionService<Cidade, Long>{
 		return dao.listaPaginada(page, pageSize, text);
 	}
 
+	public String[] stringListAllCidades() {
+		List<Cidade> cidades = dao.listAll();
+		String[] results = new String[cidades.size()];
+		int i = 0;
+		for (Cidade x : cidades) {
+			results[i] = x.getNome();
+			i++;
+		}
+		return results;
+	}
 }

@@ -1,5 +1,7 @@
 package services;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 
 import config.Page;
@@ -23,5 +25,16 @@ public class CategoriaService extends DataBaseTransactionService<Categoria, Long
 	@Override
 	public Page<Categoria> listaPaginada(Integer page, Integer pageSize, String text) {
 		return dao.listaPaginada(page, pageSize, text);
+	}
+
+	public String[] stringListAllCategorias() {
+		List<Categoria> categorias = dao.listAll();
+		String[] results = new String[categorias.size()];
+		int i = 0;
+		for (Categoria x : categorias) {
+			results[i] = x.getNome();
+			i++;
+		}
+		return results;
 	}
 }

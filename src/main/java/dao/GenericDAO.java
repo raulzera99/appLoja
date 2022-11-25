@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
+import javax.validation.constraints.NotNull;
 
 import config.Page;
 
@@ -37,6 +38,13 @@ public class GenericDAO<T, ID extends Serializable>  {
 	
 	public T searchById(ID id) {
 		return (T)getEntityManager().find(getClasse(), id);
+	}
+	
+	public T searchByName(@NotNull String name) {
+		TypedQuery<T> query = getEntityManager().createQuery("SELECT u FROM "+getClasse().getSimpleName()+" u where u.nome=:name", getClasse());
+	    query.setParameter("name", name);
+	    T entity = query.getSingleResult();
+		return entity; 
 	}
 	
 	public void removeById(ID id) {

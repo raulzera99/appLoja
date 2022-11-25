@@ -26,9 +26,6 @@ import services.errors.ErrorsData;
 
 public class CategoriaView extends JFrame {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -2933295863195236029L;
 	private JPanel contentPane;
 	JButton btnSalvar = new JButton("Salvar");
@@ -90,8 +87,6 @@ public class CategoriaView extends JFrame {
 			btnCancelar.setBounds(225, 131, 114, 37);
 			btnCancelar.setText("Sair");
 		}
-		
-		
 	}
 	
 		private void eventhandler() {
@@ -118,7 +113,7 @@ public class CategoriaView extends JFrame {
 			txtNome.addFocusListener(new FocusAdapter() {
 				@Override
 				public void focusLost(FocusEvent e) {
-					txtNome.setBorder(null);
+					txtNome.setBorder(BorderFactory.createLineBorder(Color.black, 1));
 					lblMessageNome.setVisible(false);
 				}
 			});

@@ -9,7 +9,9 @@ import java.awt.event.FocusEvent;
 
 import javax.persistence.EntityManager;
 import javax.swing.BorderFactory;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -18,10 +20,13 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import config.Constantes;
+import dao.ClienteDAO;
 import dao.TelefoneDAO;
 import message.ModelResponse;
+import models.Cliente;
 import models.Telefone;
 import persistence.DataBaseConnection;
+import services.ClienteService;
 import services.TelefoneService;
 import services.errors.ErrorsData;
 
@@ -33,11 +38,14 @@ public class TelefoneView extends JFrame {
 	JButton btnCancelar = new JButton("Cancelar");
 	JTextField txtNumero;
 	JLabel lblMessageNum;
+	JComboBox<String> cbCliente;
+	JLabel lblMessageCliente;
 	
 	private Long idTelefone = 0L;
 	
 	private TelefoneService telefoneService;
 	private Telefone telefone = null;
+	private Cliente cliente = null;
 
 	private ModelResponse<Telefone> modelResponse = null;
 	private ModelResponse<ErrorsData> errors;
@@ -117,7 +125,7 @@ public class TelefoneView extends JFrame {
 			txtNumero.addFocusListener(new FocusAdapter() {
 				@Override
 				public void focusLost(FocusEvent e) {
-					txtNumero.setBorder(null);
+					txtNumero.setBorder(BorderFactory.createLineBorder(Color.black, 1));
 					lblMessageNum.setVisible(false);
 				}
 			});
@@ -224,6 +232,12 @@ public class TelefoneView extends JFrame {
 					lblMessageNum.setText(erro.getShowMensagemError());
 					txtNumero.setBorder(BorderFactory.createLineBorder(Color.red, 2));
 				}
+				if(erro.getNumeroCampo() == 5) {
+					lblMessageCliente.setVisible(true);
+					lblMessageCliente.setForeground(Color.red);
+					lblMessageCliente.setText(erro.getShowMensagemError());
+					cbCliente.setBorder(BorderFactory.createLineBorder(Color.red, 2));
+				}
 			}
 		}
 		
@@ -233,18 +247,27 @@ public class TelefoneView extends JFrame {
 			txtNumero.setText("");
 		}
 		
+		@SuppressWarnings("unchecked")
 		private void setTelefoneFromView() {
-			telefone.setNumero(txtNumero.getText());			
+			telefone.setNumero(txtNumero.getText());	
+			
+
+			ModelResponse<Cliente> mrCliente = new ModelResponse<Cliente>();
+			mrCliente = (ModelResponse<Cliente>) getClienteService()
+					.findByName(cbCliente.getItemAt(cbCliente.getSelectedIndex()));
+			cliente = mrCliente.getObject();
+			telefone.setCliente(cliente);
 		}
 		
 		private void getTelefoneFromDataBase() {
 			idTelefone = telefone.getId();
 			txtNumero.setText(String.valueOf(telefone.getNumero()));
+			cbCliente.setSelectedItem(telefone.getCliente());
 		}
 		
 		private void initComponents() {
 			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			setBounds(100, 100, 571, 290);
+			setBounds(100, 100, 571, 324);
 			contentPane = new JPanel();
 			contentPane.setBackground(new Color(0, 0, 0));
 			contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -266,7 +289,7 @@ public class TelefoneView extends JFrame {
 			
 			JPanel panel_1 = new JPanel();
 			panel_1.setBackground(new Color(255, 255, 255));
-			panel_1.setBounds(0, 105, 555, 146);
+			panel_1.setBounds(0, 105, 555, 158);
 			contentPane.add(panel_1);
 			panel_1.setLayout(null);
 			
@@ -274,14 +297,14 @@ public class TelefoneView extends JFrame {
 			btnSalvar.setForeground(new Color(255, 255, 255));
 			btnSalvar.setBackground(new Color(211, 61, 48));
 			btnSalvar.setFont(new Font("Segoe UI", Font.ITALIC, 15));
-			btnSalvar.setBounds(119, 76, 114, 37);
+			btnSalvar.setBounds(119, 110, 114, 37);
 			panel_1.add(btnSalvar);
 			
 			
 			btnCancelar.setForeground(Color.WHITE);
 			btnCancelar.setFont(new Font("Segoe UI", Font.ITALIC, 15));
 			btnCancelar.setBackground(new Color(211, 61, 48));
-			btnCancelar.setBounds(318, 76, 114, 37);
+			btnCancelar.setBounds(318, 110, 114, 37);
 			panel_1.add(btnCancelar);
 			
 			JLabel lblNum = new JLabel("Número: ");
@@ -289,11 +312,19 @@ public class TelefoneView extends JFrame {
 			lblNum.setBounds(10, 25, 59, 21);
 			panel_1.add(lblNum);
 			
-			JPanel panel_2 = new JPanel();
-			panel_2.setBackground(new Color(211, 61, 48));
-			panel_2.setBounds(0, 124, 555, 21);
-			panel_1.add(panel_2);
-			panel_2.setLayout(null);
+			JLabel lblNewLabel_1_1_2_1_1 = new JLabel("Cliente:");
+			lblNewLabel_1_1_2_1_1.setFont(new Font("Segoe UI", Font.ITALIC, 15));
+			lblNewLabel_1_1_2_1_1.setBounds(10, 57, 61, 21);
+			panel_1.add(lblNewLabel_1_1_2_1_1);
+			
+			cbCliente = new JComboBox<String>();
+			cbCliente.setModel(new DefaultComboBoxModel <String>(getClienteService().stringListAllClientes()));
+			cbCliente.setBounds(81, 59, 452, 22);
+			panel_1.add(cbCliente);
+			
+			lblMessageCliente = new JLabel("");
+			lblMessageCliente.setBounds(81, 81, 448, 14);
+			panel_1.add(lblMessageCliente);
 			
 			txtNumero = new JTextField();
 			txtNumero.setFont(new Font("Segoe UI", Font.ITALIC, 15));
@@ -304,6 +335,12 @@ public class TelefoneView extends JFrame {
 			lblMessageNum = new JLabel("");
 			lblMessageNum.setBounds(79, 45, 454, 14);
 			panel_1.add(lblMessageNum);
+			
+			JPanel panel_2 = new JPanel();
+			panel_2.setBounds(0, 264, 555, 21);
+			contentPane.add(panel_2);
+			panel_2.setBackground(new Color(211, 61, 48));
+			panel_2.setLayout(null);
 		}
 		
 		public TelefoneService getTelefoneService() {
@@ -314,5 +351,14 @@ public class TelefoneView extends JFrame {
 		
 		public Telefone getTelefone() {
 			return new Telefone();
+		}
+		
+		public ClienteService getClienteService() {
+			EntityManager em = DataBaseConnection.getConnection().getEntityManager();
+			return new ClienteService(em, new ClienteDAO(em));
+		}
+
+		public Cliente getCliente() {
+			return new Cliente();
 		}
 }

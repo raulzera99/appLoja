@@ -29,7 +29,7 @@ public class Codigo implements Serializable{
 	@CampoRequerido(valor = 1, mensagem = "O numero de série do código deve ser informado")
 	@NotNull(message = "O número de série do código deve ser informado")	
 	@Column(name = "numero")
-	private Integer numero;
+	private String numero;
 	
 	@OneToOne(mappedBy = "codigo")
 	@JoinColumn(name="id_produto", referencedColumnName = "id")
@@ -37,7 +37,7 @@ public class Codigo implements Serializable{
 	
 	public Codigo() {}
 	
-	public Codigo(Integer numero, Produto produto) {
+	public Codigo(String numero, Produto produto) {
 		super();
 		this.numero = numero;
 		this.produto = produto;
@@ -51,11 +51,11 @@ public class Codigo implements Serializable{
 		this.id = id;
 	}
 
-	public Integer getNumero() {
+	public String getNumero() {
 		return numero;
 	}
 
-	public void setNumero(Integer numero) {
+	public void setNumero(String numero) {
 		this.numero = numero;
 	}
 

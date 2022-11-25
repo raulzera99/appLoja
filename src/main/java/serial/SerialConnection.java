@@ -20,31 +20,42 @@ import gnu.io.UnsupportedCommOperationException;
 public class SerialConnection implements SerialPortEventListener {
 
 	private SerialPort serialPort;
-	private CommPortIdentifier identifierPort;
+	private CommPortIdentifier identificadorPorta;
 	private CommPort commPort;
-	private List<String> ports;
-	private BufferedReader read;
-	private OutputStream write;
+    private List<String> portas;
+	
+	
+	private BufferedReader leitura;
+	private OutputStream escrita;
 
-	private boolean isPortOpen = false;
+	private boolean portOpen = false;
 	private int baudRate = 0;
 	private int dataBits = 0;
-	private int parity = 0;
+	private int paridade = 0;
 	private int stopBits = 0;
 
 	public SerialConnection() {
 		this.baudRate = 9600;
 		this.dataBits = SerialPort.DATABITS_8;
-		this.parity = SerialPort.PARITY_NONE;
+		this.paridade = SerialPort.PARITY_NONE;
 		this.stopBits = SerialPort.STOPBITS_1;
-
 	}
 
-	public SerialConnection(int baudRate, int dataBits, int parity, int stopBits) {
+	public SerialConnection(int baudRate, int dataBits, int paridade, int stopBits) {
 		this.baudRate = baudRate;
 		this.dataBits = dataBits;
-		this.parity = parity;
+		this.paridade = paridade;
 		this.stopBits = stopBits;
+	}
+
+	
+
+	public int getBaudRate() {
+		return baudRate;
+	}
+
+	public void setBaudRate(int baudRate) {
+		this.baudRate = baudRate;
 	}
 
 	public SerialPort getSerialPort() {
@@ -55,12 +66,12 @@ public class SerialConnection implements SerialPortEventListener {
 		this.serialPort = serialPort;
 	}
 
-	public CommPortIdentifier getIdentifierPort() {
-		return identifierPort;
+	public CommPortIdentifier getIdentificadorPorta() {
+		return identificadorPorta;
 	}
 
-	public void setIdentifierPort(CommPortIdentifier identifierPort) {
-		this.identifierPort = identifierPort;
+	public void setIdentificadorPorta(CommPortIdentifier identificadorPorta) {
+		this.identificadorPorta = identificadorPorta;
 	}
 
 	public CommPort getCommPort() {
@@ -71,118 +82,52 @@ public class SerialConnection implements SerialPortEventListener {
 		this.commPort = commPort;
 	}
 
-	public BufferedReader getRead() {
-		return read;
-	}
-
-	public void setRead(BufferedReader read) {
-		this.read = read;
-	}
-
-	public OutputStream getWrite() {
-		return write;
-	}
-
-	public void setWrite(OutputStream write) {
-		this.write = write;
-	}
-
-	public boolean isPortOpen() {
-		return isPortOpen;
-	}
-
-	public void setPortOpen(boolean isPortOpen) {
-		this.isPortOpen = isPortOpen;
-	}
-
-	public int getBaudRate() {
-		return baudRate;
-	}
-
-	public void setBaudRate(int baudRate) {
-		this.baudRate = baudRate;
-	}
-
-	public int getDataBits() {
-		return dataBits;
-	}
-
-	public void setDataBits(int dataBits) {
-		this.dataBits = dataBits;
-	}
-
-	public int getParity() {
-		return parity;
-	}
-
-	public void setParity(int parity) {
-		this.parity = parity;
-	}
-
-	public int getStopBits() {
-		return stopBits;
-	}
-
-	public void setStopBits(int stopBits) {
-		this.stopBits = stopBits;
-	}
-
-	public List<String> findPorts() {
-		ports = new ArrayList<String>();
-		Enumeration<?> portList = CommPortIdentifier.getPortIdentifiers();	
-		while(portList.hasMoreElements()) {
-			identifierPort = (CommPortIdentifier) portList.nextElement();
-			if(identifierPort.getPortType() == CommPortIdentifier.PORT_SERIAL) {
-				ports.add(identifierPort.getName());
+	public List<String> findPortas() {
+		
+		portas = new ArrayList<String>();
+		Enumeration<?> portList = CommPortIdentifier.getPortIdentifiers(); 
+		while (portList.hasMoreElements()) {
+			identificadorPorta = (CommPortIdentifier) portList.nextElement();
+			if (identificadorPorta.getPortType() == CommPortIdentifier.PORT_SERIAL) {
+			   portas.add(identificadorPorta.getName());	
 			}
 		}
-		
-		return ports;
+		return portas;
 	}
 	
-	private boolean exist(String port) {
-		try {
-			identifierPort = CommPortIdentifier.getPortIdentifier(port);
-		}catch(NoSuchPortException e) {
-			e.printStackTrace();
-			return false;
-		}
-		return true;
-	}
 	
-	public void close() {
-		if(serialPort != null) {
-			serialPort.removeEventListener();
-			serialPort.close();
-		}
-	}
+	
 
-	public boolean openConnection(String port) {
-		if(exist(port)) {
+	public boolean openConnection(String porta) {
+		System.out.println("tentando abrir a porta ");
+		if (!existe(porta)) {
 			return false;
 		}
-		if(isPortOpen = true) {
-			isPortOpen = false;
+		if (portOpen==true) {
+			portOpen = false;
 			close();
 		}
-		else {
+		if (portOpen == false ) {
 			try {
-				identifierPort = CommPortIdentifier.getPortIdentifier(port);
-				if(identifierPort.isCurrentlyOwned()) {
-					isPortOpen = true;
-					return isPortOpen;
+				identificadorPorta = CommPortIdentifier.getPortIdentifier(porta);
+				if ( identificadorPorta.isCurrentlyOwned()) {
+					portOpen = true;
+					return portOpen;
 				}
-				if(isPortOpen == false) {
-					commPort = identifierPort.open("", 2000);
+				if (portOpen==false) {
+					System.out.println("abrindo a porta ");
+					commPort = identificadorPorta.open("",2000);
 					serialPort = (SerialPort) commPort;
-					serialPort.setSerialPortParams(baudRate, dataBits, stopBits, parity);
+					serialPort.setSerialPortParams(baudRate,dataBits,stopBits,paridade);
 					serialPort.setFlowControlMode(SerialPort.FLOWCONTROL_NONE);
-					read = new BufferedReader(new InputStreamReader(serialPort.getInputStream()));
-					write = serialPort.getOutputStream();
+					leitura = new BufferedReader(new InputStreamReader(serialPort.getInputStream()));
+					escrita = serialPort.getOutputStream();
 					serialPort.addEventListener(this);
 					serialPort.notifyOnDataAvailable(true);
-					isPortOpen = true;
+					portOpen = true;
+					System.out.println("porta aberta "+portOpen);
 				}
+				
 			}catch(PortInUseException e) {
 				e.printStackTrace();
 			}catch(UnsupportedCommOperationException e) {
@@ -193,30 +138,63 @@ public class SerialConnection implements SerialPortEventListener {
 				e.printStackTrace();
 			}
 		}
-		return isPortOpen;
+		return portOpen;
 	}
 
-	public void sendData(String data) {
+	private void close() {
+		if ( serialPort != null) {
+			serialPort.removeEventListener();
+			serialPort.close();
+		}
+	}
+
+	private boolean existe(String porta) {
 		try {
-			if(isPortOpen) {
-				write.write(data.getBytes());
-				write.flush();
+			identificadorPorta = CommPortIdentifier.getPortIdentifier(porta);
+		} catch(NoSuchPortException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+
+	public void sendData(String palavra) {
+        System.out.println("tentado enviar mensagem >>>>>>>>>"+palavra +" " + portOpen);
+		try {
+			if (portOpen) {
+				System.out.println("escrevendo na serial >>>>>>");
+				escrita.write(palavra.getBytes());
+				escrita.flush();
 			}
-		}catch(IOException e) {
+			
+		} catch(IOException e) {
 			e.printStackTrace();
 		}
+		
+		
 	}
-
+	
 	@Override
 	public void serialEvent(SerialPortEvent event) {
-		if(event.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
+
+		if (event.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
+			
 			try {
-				int result = read.read();
-				System.out.println(" recebendo dados " + result);
-			}
-			catch(IOException e) {
+				int resultado = leitura.read();
+				System.out.println(" recebendo dados "+resultado);
+			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			
 		}
+		
 	}
+
 }
+
+
+
+
+
+
+

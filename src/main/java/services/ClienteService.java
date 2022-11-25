@@ -1,6 +1,8 @@
 package services;
 
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 
 import config.Page;
@@ -24,6 +26,17 @@ public class ClienteService extends DataBaseTransactionService<Cliente, Long>{
 	@Override
 	public Page<Cliente> listaPaginada(Integer page, Integer pageSize, String text) {
 		return dao.listaPaginada(page, pageSize, text);
+	}
+
+	public String[] stringListAllClientes() {
+		List<Cliente> clientes = dao.listAll();
+		String[] results = new String[clientes.size()];
+		int i = 0;
+		for (Cliente x : clientes) {
+			results[i] = x.getNome();
+			i++;
+		}
+		return results;
 	}
 
 }

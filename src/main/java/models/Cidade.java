@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -39,7 +38,7 @@ public class Cidade implements Serializable{
 	@OneToMany(mappedBy = "cidade", fetch = FetchType.EAGER)
 	private List<Endereco> enderecos = new ArrayList<Endereco>();
 	
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne
 	@JoinColumn(name="id_estado", referencedColumnName = "id")
 	private Estado estado;
 
@@ -117,7 +116,7 @@ public class Cidade implements Serializable{
 
 	@Override
 	public String toString() {
-		return "Cidade [id=" + id + ", nome=" + nome + ", estado=" + estado + "]";
+		return "Cidade [id=" + id + ", nome=" + nome + ", estado=" + estado.getNome() + "]";
 	}
 	
 	

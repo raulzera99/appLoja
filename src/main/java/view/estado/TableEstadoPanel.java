@@ -57,7 +57,6 @@ public class TableEstadoPanel extends JPanel {
 	private static TableEstadoPanel TABLE_ESTADO;
 
 	public TableEstadoPanel() {
-		//setVisible(true);
 		initComponents();
 		eventHandler();
 		initTable();
@@ -119,6 +118,7 @@ public class TableEstadoPanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				getLinhaTabela();
 				showEstadoFrame(Constantes.CONSULTAR);
+				initTable();
 			}
 		});
 		

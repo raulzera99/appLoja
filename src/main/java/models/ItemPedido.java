@@ -2,7 +2,6 @@ package models;
 
 import java.io.Serializable;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -22,11 +21,11 @@ public class ItemPedido implements Serializable{
 	@Column(name = "id")
 	private Long id;
 	
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne
 	@JoinColumn(name = "id_produto", referencedColumnName = "id")
 	private Produto produto;
 	
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne
 	@JoinColumn(name = "id_pedido", referencedColumnName = "id")
 	private Pedido pedido;
 	
@@ -43,6 +42,38 @@ public class ItemPedido implements Serializable{
 		super();
 		this.desconto = desconto;
 		this.quantidade = quantidade;
+		this.preco = preco;
+	}
+	
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Produto getProduto() {
+		return produto;
+	}
+
+	public void setProduto(Produto produto) {
+		this.produto = produto;
+	}
+
+	public Pedido getPedido() {
+		return pedido;
+	}
+
+	public void setPedido(Pedido pedido) {
+		this.pedido = pedido;
+	}
+
+	public void setDesconto(double desconto) {
+		this.desconto = desconto;
+	}
+
+	public void setPreco(double preco) {
 		this.preco = preco;
 	}
 

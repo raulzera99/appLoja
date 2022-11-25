@@ -131,7 +131,7 @@ public class ClienteView extends JFrame {
 			txtNome.addFocusListener(new FocusAdapter() {
 				@Override
 				public void focusLost(FocusEvent e) {
-					txtNome.setBorder(null);
+					txtNome.setBorder(BorderFactory.createLineBorder(Color.black, 1));
 					lblMessageNome.setVisible(false);
 				}
 			});
@@ -139,7 +139,7 @@ public class ClienteView extends JFrame {
 			txtEmail.addFocusListener(new FocusAdapter() {
 				@Override
 				public void focusLost(FocusEvent e) {
-					txtEmail.setBorder(null);
+					txtEmail.setBorder(BorderFactory.createLineBorder(Color.black, 1));
 					lblMessageEmail.setVisible(false);
 				}
 			});
@@ -147,7 +147,7 @@ public class ClienteView extends JFrame {
 			txtCpfOuCnpj.addFocusListener(new FocusAdapter() {
 				@Override
 				public void focusLost(FocusEvent e) {
-					txtCpfOuCnpj.setBorder(null);
+					txtCpfOuCnpj.setBorder(BorderFactory.createLineBorder(Color.black, 1));
 					lblMessageCpfOuCnpj.setVisible(false);
 				}
 			});
@@ -155,7 +155,7 @@ public class ClienteView extends JFrame {
 			cbTipoCliente.addFocusListener(new FocusAdapter() {
 				@Override
 				public void focusLost(FocusEvent e) {
-					cbTipoCliente.setBorder(null);
+					cbTipoCliente.setBorder(BorderFactory.createLineBorder(Color.black, 1));
 					lblMessageTipoCliente.setVisible(false);
 				}
 			});

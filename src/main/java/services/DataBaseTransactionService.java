@@ -145,6 +145,35 @@ public abstract class DataBaseTransactionService<T, ID extends Serializable> {
 		return response;
 	}
 	
+	public Response findByName(String name) {
+		openEntityManager();
+		T entity = null;
+		try {
+			entity = getDao().searchByName(name);
+			response = getMessageResponse().message(entity, "Encontrado com êxito !", false);	
+		} catch (Exception e) {
+			e.printStackTrace();
+			response = getMessageResponse().message(entity, e.getMessage(), true);	
+		} finally {
+			closeEntityManager();
+		}
+		return response;
+	}
+	
+	public List<T> getListAll() {
+		
+		openEntityManager();
+		List<T> entity = null;
+		try {
+			entity = getDao().listAll();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			closeEntityManager();
+		}
+		return entity;
+	}
+	
 	public Page<T> listaPaginada(Integer page, Integer pageSize){
 		return getDao().listaPaginada(page, pageSize);
 	}

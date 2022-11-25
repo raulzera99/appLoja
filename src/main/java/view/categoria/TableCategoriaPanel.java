@@ -282,8 +282,6 @@ public class TableCategoriaPanel extends JPanel {
 		return categoria;
 	}
 	
-	
-
 	public CategoriaService getCategoriaService() {
 		EntityManager em = DataBaseConnection.getConnection().getEntityManager();
 		return new CategoriaService(em, new CategoriaDAO(em));

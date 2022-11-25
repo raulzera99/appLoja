@@ -1,20 +1,16 @@
 package models;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -42,16 +38,14 @@ public class Produto implements Serializable {
 	@Column(name = "preco")
 	private double preco;
 	
-	@ManyToMany(cascade = CascadeType.ALL)
-	@JoinTable(name="table_produto_categoria",
-	joinColumns = @JoinColumn(name="id_produto"),
-	inverseJoinColumns= @JoinColumn(name = "id_categoria"))
-	private List<Categoria> categorias = new ArrayList<Categoria>();
+	@ManyToOne
+	@JoinColumn(name = "id_categoria", referencedColumnName = "id")
+	private Categoria categoria;
 	
 	@OneToMany(mappedBy="produto")
 	private Set<ItemPedido> itens = new HashSet<ItemPedido>();
 	
-	@OneToOne(cascade = CascadeType.ALL)
+	@OneToOne
 	@JoinColumn(name = "id_codigo", referencedColumnName = "id")
 	private Codigo codigo;
 	
@@ -95,12 +89,12 @@ public class Produto implements Serializable {
 		this.preco = preco;
 	}
 	
-	public List<Categoria> getCategorias() {
-		return categorias;
+	public Categoria getCategoria() {
+		return categoria;
 	}
 
-	public void setCategorias(List<Categoria> categorias) {
-		this.categorias = categorias;
+	public void setCategoria(Categoria categoria) {
+		this.categoria = categoria;
 	}
 
 	public Set<ItemPedido> getItens() {
@@ -110,6 +104,16 @@ public class Produto implements Serializable {
 	public void setItens(Set<ItemPedido> itens) {
 		this.itens = itens;
 	}
+	
+	
+	public Codigo getCodigo() {
+		return codigo;
+	}
+
+	public void setCodigo(Codigo codigo) {
+		this.codigo = codigo;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

@@ -119,7 +119,7 @@ public class PagamentoComBoletoView extends JFrame {
 			comboBoxEstado.addFocusListener(new FocusAdapter() {
 				@Override
 				public void focusLost(FocusEvent e) {
-					comboBoxEstado.setBorder(null);
+					comboBoxEstado.setBorder(BorderFactory.createLineBorder(Color.black, 1));
 					lblMessageEstado.setVisible(false);
 				}
 			});
@@ -127,7 +127,7 @@ public class PagamentoComBoletoView extends JFrame {
 			txtDataPagamento.addFocusListener(new FocusAdapter() {
 				@Override
 				public void focusLost(FocusEvent e) {
-					txtDataPagamento.setBorder(null);
+					txtDataPagamento.setBorder(BorderFactory.createLineBorder(Color.black, 1));
 					lblMessageDataPagamento.setVisible(false);
 				}
 			});
@@ -135,7 +135,7 @@ public class PagamentoComBoletoView extends JFrame {
 			txtDataVencimento.addFocusListener(new FocusAdapter() {
 				@Override
 				public void focusLost(FocusEvent e) {
-					txtDataVencimento.setBorder(null);
+					txtDataVencimento.setBorder(BorderFactory.createLineBorder(Color.black, 1));
 					lblMessageDataVencimento.setVisible(false);
 				}
 			});
@@ -266,12 +266,13 @@ public class PagamentoComBoletoView extends JFrame {
 					lblMessageDataVencimento.setVisible(true);
 					lblMessageDataVencimento.setForeground(Color.red);
 					lblMessageDataVencimento.setText(erro.getShowMensagemError());
-					lblMessageDataVencimento.setBorder(BorderFactory.createLineBorder(Color.red, 2));
+					txtDataVencimento.setBorder(BorderFactory.createLineBorder(Color.red, 2));
 				}
 				if(erro.getNumeroCampo() == 2) {
 					lblMessageDataPagamento.setVisible(true);
 					lblMessageDataPagamento.setForeground(Color.red);
 					lblMessageDataPagamento.setText(erro.getShowMensagemError());
+					txtDataPagamento.setBorder(BorderFactory.createLineBorder(Color.red, 2));
 				}
 			}
 		}

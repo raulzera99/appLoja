@@ -116,7 +116,7 @@ public class CodigoView extends JFrame {
 			txtNumero.addFocusListener(new FocusAdapter() {
 				@Override
 				public void focusLost(FocusEvent e) {
-					txtNumero.setBorder(null);
+					txtNumero.setBorder(BorderFactory.createLineBorder(Color.black, 1));
 					lblMessageNumero.setVisible(false);
 				}
 			});
@@ -228,12 +228,12 @@ public class CodigoView extends JFrame {
 		}
 		
 		private void setCodigoFromView() {
-			codigo.setNumero(Integer.valueOf(txtNumero.getText()));	
+			codigo.setNumero(txtNumero.getText());	
 		}
 		
 		private void getCodigoFromDataBase() {
 			idCodigo = codigo.getId();
-			txtNumero.setText(String.valueOf(codigo.getNumero()));
+			txtNumero.setText(codigo.getNumero());
 		}
 		
 		private void showErrorFromServidor() {

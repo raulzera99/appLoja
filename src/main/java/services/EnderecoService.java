@@ -1,6 +1,8 @@
 package services;
 
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 
 import config.Page;
@@ -24,6 +26,17 @@ public class EnderecoService extends DataBaseTransactionService<Endereco, Long>{
 	@Override
 	public Page<Endereco> listaPaginada(Integer page, Integer pageSize, String text) {
 		return dao.listaPaginada(page, pageSize, text);
+	}
+
+	public String[] stringListAllEnderecos() {
+		List<Endereco> enderecos = dao.listAll();
+		String[] results = new String[enderecos.size()];
+		int i = 0;
+		for (Endereco x : enderecos) {
+			results[i] = x.getCep();
+			i++;
+		}
+		return results;
 	}
 
 }

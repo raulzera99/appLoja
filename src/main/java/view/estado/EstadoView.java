@@ -84,7 +84,7 @@ public class EstadoView extends JFrame {
 		else if(opcaoCadastro == Constantes.CONSULTAR) {
 			findById(estado.getId());
 			btnSalvar.setVisible(false);
-			btnCancelar.setBounds(225, 131, 114, 37);
+			btnCancelar.setBounds(225, 75, 114, 37);
 			btnCancelar.setText("Sair");
 		}
 		
@@ -115,7 +115,7 @@ public class EstadoView extends JFrame {
 			txtNome.addFocusListener(new FocusAdapter() {
 				@Override
 				public void focusLost(FocusEvent e) {
-					txtNome.setBorder(null);
+					txtNome.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
 					lblNomeMessage.setVisible(false);
 				}
 			});
@@ -237,7 +237,7 @@ public class EstadoView extends JFrame {
 					lblNomeMessage.setVisible(true);
 					lblNomeMessage.setForeground(Color.red);
 					lblNomeMessage.setText(erro.getShowMensagemError());
-					lblNomeMessage.setBorder(BorderFactory.createLineBorder(Color.red, 2));
+					txtNome.setBorder(BorderFactory.createLineBorder(Color.red, 2));
 				}
 			}
 		}

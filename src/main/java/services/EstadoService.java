@@ -28,7 +28,8 @@ public class EstadoService extends DataBaseTransactionService<Estado, Long>{
 		return dao.listaPaginada(page, pageSize, text);
 	}
 	
-	public String[] listAllEstados() {
+	
+	public String[] stringListAllEstados() {
 		List<Estado> estados = dao.listAll();
 		String[] results = new String[estados.size()];
 		int i = 0;

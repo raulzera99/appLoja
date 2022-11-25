@@ -120,14 +120,14 @@ public class PagamentoComCartaoView extends JFrame {
 			comboBoxEstado.addFocusListener(new FocusAdapter() {
 				@Override
 				public void focusLost(FocusEvent e) {
-					comboBoxEstado.setBorder(null);
+					comboBoxEstado.setBorder(BorderFactory.createLineBorder(Color.black, 1));
 					lblMessageEstado.setVisible(false);
 				}
 			});
 			txtNumeroDeParcelas.addFocusListener(new FocusAdapter() {
 				@Override
 				public void focusLost(FocusEvent e) {
-					txtNumeroDeParcelas.setBorder(null);
+					txtNumeroDeParcelas.setBorder(BorderFactory.createLineBorder(Color.black, 1));
 					lblMessageNum.setVisible(false);
 				}
 			});

@@ -32,7 +32,7 @@ public class Categoria implements Serializable{
 	@Column(name = "nome")
 	private String nome;
 	
-	@ManyToMany(cascade = CascadeType.ALL, mappedBy = "categorias")
+	@ManyToMany(cascade = CascadeType.ALL, mappedBy = "categoria")
 	private List<Produto> produtos = new ArrayList<Produto>();
 	
 	//Constructors
