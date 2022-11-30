@@ -1,6 +1,7 @@
 package models;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -12,8 +13,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import jakarta.validation.constraints.NotNull;
 import services.errors.CampoRequerido;
@@ -30,14 +32,23 @@ public class Pedido implements Serializable {
 	@Column(name = "id")
 	private Long id;
 	
-	@CampoRequerido(valor = 1, mensagem = "O instante do pedido deve ser informado")
-	@NotNull(message = "O instante do pedido deve ser informado")	
-	@Column(name = "instante")
-	private String instante;
 	
-	@OneToOne
-	@JoinColumn(name = "id_pagamento", referencedColumnName = "id")
-	private Pagamento pagamento;
+	@NotNull(message = "O instante do pedido deve ser informado")	
+	@Temporal(TemporalType.TIME)
+	@Column(name = "instante")
+	private Date instante;
+	
+	@NotNull(message = "A data do pedido deve ser informada")	
+	@Temporal(TemporalType.DATE)
+	@Column(name = "data")
+	private Date data;
+	
+	@CampoRequerido(valor = 1, mensagem = "A descrição do pedido deve ser informada")
+	@Column(name = "descricao")
+	private String descricao;
+	
+	@OneToMany(mappedBy = "pedido")
+	private Set<Pagamento> pagamentos = new HashSet<Pagamento>();
 	
 	@ManyToOne
 	@JoinColumn(name="id_cliente", referencedColumnName = "id")
@@ -52,7 +63,7 @@ public class Pedido implements Serializable {
 	
 	// Constructors
 	
-	public Pedido(Long id, String instante, Cliente cliente, Endereco enderecoDeEntrega) {
+	public Pedido(Long id, Date instante, Cliente cliente, Endereco enderecoDeEntrega) {
 		super();
 		this.id = id;
 		this.instante = instante;
@@ -63,7 +74,7 @@ public class Pedido implements Serializable {
 	public Pedido() {
 	}
 
-	public Pedido(Long id, String instante) {
+	public Pedido(Long id, Date instante) {
 		super();
 		this.id = id;
 		this.instante = instante;
@@ -80,20 +91,20 @@ public class Pedido implements Serializable {
 		this.id = id;
 	}
 	
-	public String getInstante() {
+	public Date getInstante() {
 		return instante;
 	}
 
-	public void setInstante(String instante) {
+	public void setInstante(Date instante) {
 		this.instante = instante;
 	}
 	
-	public Pagamento getPagamento() {
-		return pagamento;
+	public Set<Pagamento> getPagamentos() {
+		return pagamentos;
 	}
 
-	public void setPagamento(Pagamento pagamento) {
-		this.pagamento = pagamento;
+	public void setPagamentos(Set<Pagamento> pagamentos) {
+		this.pagamentos = pagamentos;
 	}
 
 	public Cliente getCliente() {
@@ -118,6 +129,23 @@ public class Pedido implements Serializable {
 
 	public void setItens(Set<ItemPedido> itens) {
 		this.itens = itens;
+	}
+
+	public String getDescricao() {
+		return descricao;
+	}
+
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
+	}
+
+	
+	public Date getData() {
+		return data;
+	}
+
+	public void setData(Date data) {
+		this.data = data;
 	}
 
 	@Override
@@ -153,7 +181,11 @@ public class Pedido implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Pedido [id=" + id + ", instante=" + instante + "]";
+		return "\nPedido [id=" + id + ", \ninstante=" + instante + ", \ndata=" + data + ", \ndescricao=" + descricao
+				+ ", \ncliente=" + cliente + ", \nenderecoDeEntrega=" + enderecoDeEntrega
+				+ "]";
 	}
+
+	
 
 }

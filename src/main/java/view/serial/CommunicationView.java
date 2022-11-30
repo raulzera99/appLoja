@@ -21,7 +21,7 @@ import java.awt.event.FocusEvent;
 import java.util.List;
 import javax.swing.JButton;
 
-public class Communication extends JFrame {
+public class CommunicationView extends JFrame {
 
 	private JPanel contentPane;
 
@@ -66,7 +66,7 @@ public class Communication extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Communication frame = new Communication();
+					CommunicationView frame = new CommunicationView();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -76,17 +76,17 @@ public class Communication extends JFrame {
 	}
 
 
-	public Communication() {
+	public CommunicationView() {
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 844, 483);
+		setBounds(100, 100, 344, 263);
 		contentPane = new JPanel();
 		contentPane.setLayout(null);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 	
 		lblPorta = new JLabel("Porta:");
-		lblPorta.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblPorta.setBounds(57, 31, 143, 14);
+		lblPorta.setHorizontalAlignment(SwingConstants.LEFT);
+		lblPorta.setBounds(22, 29, 54, 14);
 		contentPane.add(lblPorta);
 
 		cbPorta = new JComboBox<String>();
@@ -96,14 +96,14 @@ public class Communication extends JFrame {
 			}
 		
 		});
-		cbPorta.setBounds(210, 28, 218, 20);
+		cbPorta.setBounds(86, 26, 218, 20);
 		contentPane.add(cbPorta);
 		
 		leiaPortas();
 
 		lblNewLabel = new JLabel("Baud Rate:");
-		lblNewLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblNewLabel.setBounds(107, 62, 93, 14);
+		lblNewLabel.setHorizontalAlignment(SwingConstants.LEFT);
+		lblNewLabel.setBounds(22, 60, 65, 14);
 		contentPane.add(lblNewLabel);
 
 		cbBaudRate = new JComboBox<String>();
@@ -124,14 +124,14 @@ public class Communication extends JFrame {
 				selecionaBaudRate();
 			}
 		});
-		cbBaudRate.setBounds(210, 59, 218, 20);
+		cbBaudRate.setBounds(86, 57, 218, 20);
 		contentPane.add(cbBaudRate);
 
 		lerBaudRate();
 
 		lblDataBits = new JLabel("Data Bits:");
-		lblDataBits.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblDataBits.setBounds(107, 90, 93, 14);
+		lblDataBits.setHorizontalAlignment(SwingConstants.LEFT);
+		lblDataBits.setBounds(22, 91, 54, 14);
 		contentPane.add(lblDataBits);
 
 		cbDataBits = new JComboBox<String>();
@@ -150,29 +150,29 @@ public class Communication extends JFrame {
 				selecionaDataBits();
 			}
 		});
-		cbDataBits.setBounds(210, 87, 218, 20);
+		cbDataBits.setBounds(86, 88, 218, 20);
 		contentPane.add(cbDataBits);
 
 		lerDataBits();
 
 		lblParidade = new JLabel("Paridade:");
-		lblParidade.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblParidade.setBounds(107, 125, 93, 14);
+		lblParidade.setHorizontalAlignment(SwingConstants.LEFT);
+		lblParidade.setBounds(22, 123, 54, 14);
 		contentPane.add(lblParidade);
 
 		cbParidade = new JComboBox<String>();
-		cbParidade.setBounds(210, 122, 218, 20);
+		cbParidade.setBounds(86, 120, 218, 20);
 		contentPane.add(cbParidade);
 		
 		lerParidade();
 
 		cbStopBits = new JComboBox<String>();
-		cbStopBits.setBounds(210, 153, 218, 20);
+		cbStopBits.setBounds(86, 151, 218, 20);
 		contentPane.add(cbStopBits);
 
 		lblStopBits = new JLabel("Stop Bits:");
-		lblStopBits.setHorizontalAlignment(SwingConstants.RIGHT);
-		lblStopBits.setBounds(107, 156, 93, 14);
+		lblStopBits.setHorizontalAlignment(SwingConstants.LEFT);
+		lblStopBits.setBounds(22, 154, 54, 14);
 		contentPane.add(lblStopBits);
 		
 		lerStopBits();
@@ -182,10 +182,10 @@ public class Communication extends JFrame {
 		btnConectar = new JButton("Conectar");
 		btnConectar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				getConexao();
+				getConnection();
 			}
 		});
-		btnConectar.setBounds(210, 199, 91, 23);
+		btnConectar.setBounds(10, 190, 91, 23);
 		contentPane.add(btnConectar);
 		
 		btnProcessar = new JButton("Processar");
@@ -194,8 +194,17 @@ public class Communication extends JFrame {
 				leituraMicroControlador();
 			}
 		});
-		btnProcessar.setBounds(311, 199, 91, 23);
+		btnProcessar.setBounds(111, 190, 100, 23);
 		contentPane.add(btnProcessar);
+		
+		JButton btnFechar = new JButton("Fechar");
+		btnFechar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+			}
+		});
+		btnFechar.setBounds(221, 190, 97, 23);
+		contentPane.add(btnFechar);
 		
 		getLib();
 	}
@@ -218,16 +227,13 @@ public class Communication extends JFrame {
 		porta = cbPorta.getSelectedItem().toString();
 	}
 
-
 	protected void selecionaDataBits() {
 		this.intDataBits = Integer.parseInt(cbDataBits.getSelectedItem().toString());
 	}
 
-
 	protected void selecionaBaudRate() {
 		this.intBaudRate = Integer.parseInt(cbBaudRate.getSelectedItem().toString());
 	}
-
 
 	private void getLib() {
 		dir = System.getProperty("user.dir");
@@ -240,7 +246,6 @@ public class Communication extends JFrame {
 		}
 	}
 	
-	
 	private void lerPortas(List<String> portas) {
 		DefaultComboBoxModel<String> model = new DefaultComboBoxModel<String>();
 		cbPorta.removeAllItems();
@@ -249,7 +254,6 @@ public class Communication extends JFrame {
 		}
 		cbPorta.setModel(model);
 	}
-	
 	
 	private void lerBaudRate() {
 		DefaultComboBoxModel<String> model = new DefaultComboBoxModel<String>();
@@ -288,33 +292,30 @@ public class Communication extends JFrame {
 
 	}
 	
-	private void getConexao() {
+	private void getConnection() {
 		
 		portOpen = conexao.openConnection(porta);
 		
-		if (portOpen == false) {
-			JOptionPane.showMessageDialog(null, 
-					"Porta não Encontrada!!!!!!", 
-					 "Erro", JOptionPane.ERROR_MESSAGE);
+		if(portOpen == false) {
+			JOptionPane.showMessageDialog(null, "Erro: porta nao encontrada", "Erro", JOptionPane.ERROR_MESSAGE);
 			cbPorta.requestFocus();
 		}
 		
-		if (portOpen == true && conectado == false ) {
+		if(portOpen == true && conectado == false) {
 			btnConectar.repaint();
 			conectado = true;
 		}
+		
 	}
 
-	
 	private void leituraMicroControlador() {
 		
 		if (portOpen==true && conectado == true) {
-			String c="A";
-			Thread leituraLed = new Thread() {
+			//String c="A";
+			Thread leitura = new Thread() {
 				public void run() {
 				
 					while (true) {
-						conexao.sendData(c);
 						try {
 						 Thread.sleep(10000);
 						} catch(InterruptedException e) {
@@ -323,12 +324,10 @@ public class Communication extends JFrame {
 					}				
 				}
 			};
-			leituraLed.start();
+			leitura.start();
 		}
 		
 	}
-	
-	
 	
 	public String[] getBaudRate() {
 		return baudRate;
@@ -410,15 +409,11 @@ public class Communication extends JFrame {
 		this.intStopBits = intStopBits;
 	}
 
-
 	public int getIntPorta() {
 		return intPorta;
 	}
 
-
 	public void setIntPorta(int intPorta) {
 		this.intPorta = intPorta;
 	}
-
-	
 }

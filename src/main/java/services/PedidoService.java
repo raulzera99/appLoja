@@ -32,7 +32,7 @@ public class PedidoService extends DataBaseTransactionService<Pedido, Long>{
 		String[] results = new String[pedidos.size()];
 		int i = 0;
 		for (Pedido x : pedidos) {
-			results[i] = x.getInstante();
+			results[i] = x.getDescricao();
 			i++;
 		}
 		return results;

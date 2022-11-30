@@ -84,7 +84,7 @@ public class CategoriaView extends JFrame {
 		else if(opcaoCadastro == Constantes.CONSULTAR) {
 			findById(categoria.getId());
 			btnSalvar.setVisible(false);
-			btnCancelar.setBounds(225, 131, 114, 37);
+			btnCancelar.setBounds(225, 111, 114, 37);
 			btnCancelar.setText("Sair");
 		}
 	}

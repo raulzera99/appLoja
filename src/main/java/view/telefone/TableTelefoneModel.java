@@ -10,7 +10,7 @@ public class TableTelefoneModel extends JTableModel<Telefone>{
 	private static final long serialVersionUID = 2259690966041330349L;
 	private List<Telefone> tabela;
 	
-	private final String colunaTelefone[] = {"Código", "Número"};
+	private final String colunaTelefone[] = {"Código", "Número", "Nome do cliente"};
 	
 	private final Integer tamanhoCampo[] = {};
 	
@@ -36,6 +36,9 @@ public class TableTelefoneModel extends JTableModel<Telefone>{
 			case 1:{
 				return String.valueOf(telefone.getNumero());
 			}
+			case 2:{
+				return telefone.getCliente().getNome();
+			}
 			default:
 				return null;
 		}
@@ -49,6 +52,9 @@ public class TableTelefoneModel extends JTableModel<Telefone>{
 				return Long.class;
 			}
 			case 1:{
+				return String.class;
+			}
+			case 2:{
 				return String.class;
 			}
 			default:

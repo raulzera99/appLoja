@@ -10,7 +10,7 @@ public class TablePedidoModel extends JTableModel<Pedido>{
 	private static final long serialVersionUID = 2259690966041330349L;
 	private List<Pedido> tabela;
 	
-	private final String colunaPedido[] = {"Código", "Instante"};
+	private final String colunaPedido[] = {"Código", "Descrição", "Data", "Instante"};
 	
 	private final Integer tamanhoCampo[] = {};
 	
@@ -34,7 +34,13 @@ public class TablePedidoModel extends JTableModel<Pedido>{
 				return pedido.getId();
 			}
 			case 1:{
-				return pedido.getInstante();
+				return pedido.getDescricao();
+			}
+			case 2:{
+				return pedido.getData().toString();
+			}
+			case 3:{
+				return pedido.getInstante().toString();
 			}
 			
 			default:
@@ -53,6 +59,9 @@ public class TablePedidoModel extends JTableModel<Pedido>{
 				return String.class;
 			}
 			case 2:{
+				return String.class;
+			}
+			case 3:{
 				return String.class;
 			}
 			

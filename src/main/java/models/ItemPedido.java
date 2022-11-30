@@ -30,11 +30,11 @@ public class ItemPedido implements Serializable{
 	private Pedido pedido;
 	
 	@Column(name = "desconto")
-	private double desconto;
+	private Double desconto;
 	@Column(name = "quantidade")
 	private Integer quantidade;
 	@Column(name = "preco")
-	private double preco;
+	private Double preco;
 	
 	public ItemPedido() {}
 
@@ -67,14 +67,6 @@ public class ItemPedido implements Serializable{
 
 	public void setPedido(Pedido pedido) {
 		this.pedido = pedido;
-	}
-
-	public void setDesconto(double desconto) {
-		this.desconto = desconto;
-	}
-
-	public void setPreco(double preco) {
-		this.preco = preco;
 	}
 
 	public Double getDesconto() {
@@ -125,5 +117,13 @@ public class ItemPedido implements Serializable{
 			return false;
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return "ItemPedido [id=" + id + ", produto=" + produto + ", \npedido=" + pedido + ", \ndesconto=" + desconto
+				+ ", \nquantidade=" + quantidade + ", \npreco=" + preco + "]";
+	}
+	
+	
 	
 }

@@ -251,8 +251,8 @@ public class TableTelefonePanel extends JPanel {
 		for(int col = 1; col<model.getColumnCount();col++ ) {
 			coluna = tableTelefone.getColumnModel().getColumn(col);
 			coluna.setMinWidth(200);
-			coluna.setMaxWidth(350);
-			coluna.setPreferredWidth(325);
+			coluna.setMaxWidth(600);
+			coluna.setPreferredWidth(500);
 		}
 	}
 	

@@ -4,6 +4,9 @@ import java.awt.Font;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.util.List;
 import java.util.Objects;
 
 import javax.persistence.EntityManager;
@@ -12,19 +15,19 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.table.TableColumn;
 
 import config.Constantes;
 import config.Page;
 import dao.EstadoDAO;
 import models.Estado;
+import models.PrintJasperReports;
 import persistence.DataBaseConnection;
 import services.EstadoService;
+import services.JasperReportsService;
 import view.table.RenderHeaderTable;
 import view.table.RenderTable;
-import javax.swing.JTextField;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 
 public class TableEstadoPanel extends JPanel {
 	private static final long serialVersionUID = -4694190107545197497L;
@@ -41,8 +44,10 @@ public class TableEstadoPanel extends JPanel {
 	JButton btnAlterar = new JButton("Alterar");
 	JButton btnRemover = new JButton("Remover");
 	JButton btnConsultar = new JButton("Consultar");
+	JButton btnRelatorio = new JButton("Relatório");
+	JButton btnRelatorioPorLista = new JButton("Relatório por lista");
 	JTextField txtSearch = new JTextField();
-	
+
 	
 	private TableEstadoModel model;
 	private Page<Estado> page;
@@ -128,6 +133,33 @@ public class TableEstadoPanel extends JPanel {
 				initTable();
 			}
 		});
+		
+		btnRelatorio.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				PrintJasperReports relatorio = new PrintJasperReports();
+				JasperReportsService service = new JasperReportsService();
+				
+				relatorio.setFile("relatorio_estado");
+				service.gerarRelatorioPorSql(relatorio);
+			}
+		});
+		
+		btnRelatorioPorLista.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				PrintJasperReports relatorio = new PrintJasperReports();
+				JasperReportsService service = new JasperReportsService();
+				
+				estadoService = getEstadoService();
+				
+				List<Estado> listaCliente = estadoService.getListAll();
+				
+				relatorio.setFile("relatorio_estado_list");
+				relatorio.setCollection(listaCliente);
+				
+				service.gerarRelatorioPorLista(relatorio);
+				
+			}
+		});
 	}
 	
 	private void initComponents() {
@@ -146,19 +178,19 @@ public class TableEstadoPanel extends JPanel {
 		panelButtons.setLayout(null);
 		
 		
-		btnPrimeiro.setBounds(10, 11, 89, 23);
+		btnPrimeiro.setBounds(300, 11, 89, 23);
 		panelButtons.add(btnPrimeiro);
 		
 		
-		btnAnterior.setBounds(109, 11, 89, 23);
+		btnAnterior.setBounds(399, 11, 89, 23);
 		panelButtons.add(btnAnterior);
 		
 		
-		btnProximo.setBounds(208, 11, 89, 23);
+		btnProximo.setBounds(498, 11, 89, 23);
 		panelButtons.add(btnProximo);
 		
 		
-		btnUltimo.setBounds(307, 11, 89, 23);
+		btnUltimo.setBounds(597, 11, 89, 23);
 		panelButtons.add(btnUltimo);
 		
 		
@@ -177,6 +209,12 @@ public class TableEstadoPanel extends JPanel {
 		
 		btnConsultar.setBounds(346, 45, 89, 23);
 		panelButtons.add(btnConsultar);
+		
+		btnRelatorio.setBounds(460, 45, 89, 23);
+		panelButtons.add(btnRelatorio);
+		
+		btnRelatorioPorLista.setBounds(573, 0, 89, 23);
+		//panelButtons.add(btnRelatorioPorLista);
 		
 		
 		panelSearch.setBounds(10, 11, 1065, 42);
@@ -254,12 +292,12 @@ public class TableEstadoPanel extends JPanel {
 		coluna.setMaxWidth(60);
 		coluna.setPreferredWidth(55);
 		
-		for(int col = 1; col<model.getColumnCount();col++ ) {
-			coluna = tableEstado.getColumnModel().getColumn(col);
-			coluna.setMinWidth(200);
-			coluna.setMaxWidth(350);
-			coluna.setPreferredWidth(325);
-		}
+		
+		coluna = tableEstado.getColumnModel().getColumn(1);
+		coluna.setMinWidth(900);
+		coluna.setMaxWidth(1000);
+		coluna.setPreferredWidth(950);
+		
 	}
 	
 	private void showEstadoFrame(int opcaoCadastro) {

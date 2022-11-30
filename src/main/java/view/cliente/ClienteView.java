@@ -9,6 +9,7 @@ import java.awt.event.FocusEvent;
 
 import javax.persistence.EntityManager;
 import javax.swing.BorderFactory;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -44,7 +45,7 @@ public class ClienteView extends JFrame {
 	JTextField txtCpfOuCnpj;
 	JLabel lblCpfOuCnpj;
 	JLabel lblMessageCpfOuCnpj;	
-	JComboBox<TipoCliente> cbTipoCliente ;
+	JComboBox<String> cbTipoCliente ;
 	JLabel lblTipoCliente;
 	JLabel lblMessageTipoCliente;
 	
@@ -131,7 +132,7 @@ public class ClienteView extends JFrame {
 			txtNome.addFocusListener(new FocusAdapter() {
 				@Override
 				public void focusLost(FocusEvent e) {
-					txtNome.setBorder(BorderFactory.createLineBorder(Color.black, 1));
+					txtNome.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
 					lblMessageNome.setVisible(false);
 				}
 			});
@@ -139,7 +140,7 @@ public class ClienteView extends JFrame {
 			txtEmail.addFocusListener(new FocusAdapter() {
 				@Override
 				public void focusLost(FocusEvent e) {
-					txtEmail.setBorder(BorderFactory.createLineBorder(Color.black, 1));
+					txtEmail.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
 					lblMessageEmail.setVisible(false);
 				}
 			});
@@ -147,7 +148,7 @@ public class ClienteView extends JFrame {
 			txtCpfOuCnpj.addFocusListener(new FocusAdapter() {
 				@Override
 				public void focusLost(FocusEvent e) {
-					txtCpfOuCnpj.setBorder(BorderFactory.createLineBorder(Color.black, 1));
+					txtCpfOuCnpj.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
 					lblMessageCpfOuCnpj.setVisible(false);
 				}
 			});
@@ -155,7 +156,7 @@ public class ClienteView extends JFrame {
 			cbTipoCliente.addFocusListener(new FocusAdapter() {
 				@Override
 				public void focusLost(FocusEvent e) {
-					cbTipoCliente.setBorder(BorderFactory.createLineBorder(Color.black, 1));
+					cbTipoCliente.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
 					lblMessageTipoCliente.setVisible(false);
 				}
 			});
@@ -264,6 +265,9 @@ public class ClienteView extends JFrame {
 			
 			idCliente = 0L;
 			txtNome.setText("");
+			txtEmail.setText("");
+			txtCpfOuCnpj.setText("");
+			cbTipoCliente.setSelectedIndex(-1);
 		}
 		
 		private void setClienteFromView() {
@@ -391,7 +395,8 @@ public class ClienteView extends JFrame {
 			lblMessageTipoCliente.setBounds(82, 106, 451, 14);
 			panel_1.add(lblMessageTipoCliente);
 			
-			cbTipoCliente = new JComboBox<TipoCliente>();
+			cbTipoCliente = new JComboBox<String>();
+			cbTipoCliente.setModel(new DefaultComboBoxModel<String>(TipoCliente.enumsToStringArray()));
 			cbTipoCliente.setBounds(122, 85, 411, 22);
 			panel_1.add(cbTipoCliente);
 			

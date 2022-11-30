@@ -30,10 +30,6 @@ public class EnderecoDAO extends GenericDAO<Endereco, Long>{
 						+ "LIKE (CONCAT('%',:text,'%')) "
 						+ "OR c.cep "
 						+ "LIKE (CONCAT('%',:text,'%')) "
-						+ "OR c.complemento "
-						+ "LIKE (CONCAT('%',:text,'%')) "
-						+ "OR c.logradouro "
-						+ "LIKE (CONCAT('%',:text,'%')) "
 						+ "OR c.numero "
 						+ "LIKE (CONCAT('%',:text,'%')) "
 						, Endereco.class);

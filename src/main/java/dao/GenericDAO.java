@@ -40,10 +40,36 @@ public class GenericDAO<T, ID extends Serializable>  {
 		return (T)getEntityManager().find(getClasse(), id);
 	}
 	
-	public T searchByName(@NotNull String name) {
-		TypedQuery<T> query = getEntityManager().createQuery("SELECT u FROM "+getClasse().getSimpleName()+" u where u.nome=:name", getClasse());
-	    query.setParameter("name", name);
+	public T searchNameById(ID id) {
+		TypedQuery<T> query = getEntityManager().createQuery("SELECT u.nome FROM "+getClasse().getSimpleName()+" u where u.id=:id_entity", getClasse());
+	    query.setParameter("id_entity", id);
 	    T entity = query.getSingleResult();
+		return entity; 
+	}
+	
+	
+	public T searchByName(@NotNull String name) {
+		T entity = null;
+		if(getClasse().getSimpleName().equalsIgnoreCase("Endereco") ) {
+			TypedQuery<T> query = getEntityManager().createQuery("SELECT u FROM "+getClasse().getSimpleName()+" u where u.cep=:name", getClasse());
+			query.setParameter("name", name);
+			entity = query.getResultList().get(0);
+		}
+		else if(getClasse().getSimpleName().equalsIgnoreCase("Codigo")) {
+			TypedQuery<T> query = getEntityManager().createQuery("SELECT u FROM "+getClasse().getSimpleName()+" u where u.numero=:name", getClasse());
+			query.setParameter("name", name);
+			entity = query.getResultList().get(0);
+		}
+		else if(getClasse().getSimpleName().equalsIgnoreCase("Pedido")) {
+			TypedQuery<T> query = getEntityManager().createQuery("SELECT u FROM "+getClasse().getSimpleName()+" u where u.descricao=:name", getClasse());
+			query.setParameter("name", name);
+			entity = query.getResultList().get(0);
+		}
+		else {
+			TypedQuery<T> query = getEntityManager().createQuery("SELECT u FROM "+getClasse().getSimpleName()+" u where u.nome=:name", getClasse());
+			query.setParameter("name", name);
+			entity = query.getResultList().get(0);
+		}
 		return entity; 
 	}
 	

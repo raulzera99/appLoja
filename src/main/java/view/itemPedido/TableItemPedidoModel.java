@@ -10,7 +10,7 @@ public class TableItemPedidoModel extends JTableModel<ItemPedido>{
 	private static final long serialVersionUID = 2259690966041330349L;
 	private List<ItemPedido> tabela;
 	
-	private final String colunaItemPedido[] = {"Código","Desconto", "Quantidade", "Preço total", "Instante do pedido","Nome do produto"};
+	private final String colunaItemPedido[] = {"Código","Desconto", "Quantidade", "Preço total", "Descrição do pedido","Nome do produto"};
 	
 	private final Integer tamanhoCampo[] = {};
 	
@@ -43,7 +43,7 @@ public class TableItemPedidoModel extends JTableModel<ItemPedido>{
 				return itemPedido.getPreco();
 			}
 			case 4:{
-				return itemPedido.getPedido().getInstante();
+				return itemPedido.getPedido().getDescricao();
 			}
 			case 5:{
 				return itemPedido.getProduto().getNome();

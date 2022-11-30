@@ -17,8 +17,10 @@ import javax.swing.table.TableColumn;
 import config.Constantes;
 import config.Page;
 import dao.ProdutoDAO;
+import models.PrintJasperReports;
 import models.Produto;
 import persistence.DataBaseConnection;
+import services.JasperReportsService;
 import services.ProdutoService;
 import view.table.RenderHeaderTable;
 import view.table.RenderTable;
@@ -41,6 +43,7 @@ public class TableProdutoPanel extends JPanel {
 	JButton btnAlterar = new JButton("Alterar");
 	JButton btnRemover = new JButton("Remover");
 	JButton btnConsultar = new JButton("Consultar");
+	JButton btnRelatorio = new JButton("Relatório");
 	JTextField txtSearch = new JTextField();
 	
 	
@@ -122,6 +125,16 @@ public class TableProdutoPanel extends JPanel {
 			}
 		});
 		
+		btnRelatorio.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				PrintJasperReports relatorio = new PrintJasperReports();
+				JasperReportsService service = new JasperReportsService();
+				
+				relatorio.setFile("relatorio_produto");
+				service.gerarRelatorioPorSql(relatorio);
+			}
+		});
+		
 		txtSearch.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
@@ -145,20 +158,16 @@ public class TableProdutoPanel extends JPanel {
 		add(panelButtons);
 		panelButtons.setLayout(null);
 		
-		
-		btnPrimeiro.setBounds(10, 11, 89, 23);
+		btnPrimeiro.setBounds(300, 11, 89, 23);
 		panelButtons.add(btnPrimeiro);
 		
-		
-		btnAnterior.setBounds(109, 11, 89, 23);
+		btnAnterior.setBounds(399, 11, 89, 23);
 		panelButtons.add(btnAnterior);
 		
-		
-		btnProximo.setBounds(208, 11, 89, 23);
+		btnProximo.setBounds(498, 11, 89, 23);
 		panelButtons.add(btnProximo);
 		
-		
-		btnUltimo.setBounds(307, 11, 89, 23);
+		btnUltimo.setBounds(597, 11, 89, 23);
 		panelButtons.add(btnUltimo);
 		
 		
@@ -168,16 +177,14 @@ public class TableProdutoPanel extends JPanel {
 		btnAlterar.setBounds(119, 45, 89, 23);
 		panelButtons.add(btnAlterar);
 		
-		
-		
 		btnRemover.setBounds(233, 45, 89, 23);
 		panelButtons.add(btnRemover);
-		
-		
 		
 		btnConsultar.setBounds(346, 45, 89, 23);
 		panelButtons.add(btnConsultar);
 		
+		btnRelatorio.setBounds(460, 45, 89, 23);
+		panelButtons.add(btnRelatorio);
 		
 		panelSearch.setBounds(10, 11, 1065, 42);
 		add(panelSearch);

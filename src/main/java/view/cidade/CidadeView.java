@@ -124,7 +124,7 @@ public class CidadeView extends JFrame {
 			txtNome.addFocusListener(new FocusAdapter() {
 				@Override
 				public void focusLost(FocusEvent e) {
-					txtNome.setBorder(BorderFactory.createLineBorder(Color.black, 1));
+					txtNome.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
 					lblMessageNome.setVisible(false);
 				}
 			});
@@ -132,7 +132,7 @@ public class CidadeView extends JFrame {
 			cbEstado.addFocusListener(new FocusAdapter() {
 				@Override
 				public void focusLost(FocusEvent e) {
-					cbEstado.setBorder(BorderFactory.createLineBorder(Color.black, 1));
+					cbEstado.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
 					lblMessageEstado.setVisible(false);
 				}
 			});
@@ -258,7 +258,7 @@ public class CidadeView extends JFrame {
 		private void getCidadeFromDataBase() {
 			idCidade = cidade.getId();
 			txtNome.setText(cidade.getNome());
-			cbEstado.setSelectedItem(cidade.getEstado());
+			cbEstado.setSelectedItem(cidade.getEstado().getNome());
 		}
 		
 		private void showErrorFromServidor() {

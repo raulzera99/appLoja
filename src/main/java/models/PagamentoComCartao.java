@@ -39,8 +39,7 @@ public class PagamentoComCartao extends Pagamento{
 
 	@Override
 	public String toString() {
-		return "\nPagamentoComCartao \n[numeroDeParcelas = " + numeroDeParcelas + "\ngetId() = " + getId() + "\ngetEstado() = "
-				+ EstadoPagamento.toEnum(getEstado()).getDescricao() + "]";
+		return "\nPagamentoComCartao \n[numeroDeParcelas = " + numeroDeParcelas + pagamentoToString()+"]";
 	}
 	
 }

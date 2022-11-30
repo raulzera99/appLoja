@@ -4,13 +4,13 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+
 import net.sf.jasperreports.engine.JRParameter;
 
 public class PrintJasperReports {
 	private String file;
 	private Map<String, Object> params;
 	private Collection<?> collection;
-	
 	
 	public PrintJasperReports() {
 		this.params = new HashMap<String, Object>();

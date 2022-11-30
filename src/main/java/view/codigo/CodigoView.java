@@ -85,7 +85,7 @@ public class CodigoView extends JFrame {
 		else if(opcaoCadastro == Constantes.CONSULTAR) {
 			findById(codigo.getId());
 			btnSalvar.setVisible(false);
-			btnCancelar.setBounds(225, 131, 114, 37);
+			btnCancelar.setBounds(225, 80, 114, 37);
 			btnCancelar.setText("Sair");
 		}
 		
@@ -249,7 +249,7 @@ public class CodigoView extends JFrame {
 		
 		private void initComponents() {
 			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			setBounds(100, 100, 571, 332);
+			setBounds(100, 100, 571, 288);
 			contentPane = new JPanel();
 			contentPane.setBackground(new Color(0, 0, 0));
 			contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -271,32 +271,30 @@ public class CodigoView extends JFrame {
 			
 			JPanel panel_1 = new JPanel();
 			panel_1.setBackground(new Color(255, 255, 255));
-			panel_1.setBounds(0, 105, 555, 188);
+			panel_1.setBounds(0, 105, 555, 148);
 			contentPane.add(panel_1);
 			panel_1.setLayout(null);
-			
 			
 			btnSalvar.setForeground(new Color(255, 255, 255));
 			btnSalvar.setBackground(new Color(211, 61, 48));
 			btnSalvar.setFont(new Font("Segoe UI", Font.ITALIC, 15));
-			btnSalvar.setBounds(120, 109, 114, 37);
+			btnSalvar.setBounds(118, 67, 114, 37);
 			panel_1.add(btnSalvar);
-			
 			
 			btnCancelar.setForeground(Color.WHITE);
 			btnCancelar.setFont(new Font("Segoe UI", Font.ITALIC, 15));
 			btnCancelar.setBackground(new Color(211, 61, 48));
-			btnCancelar.setBounds(315, 109, 114, 37);
+			btnCancelar.setBounds(313, 67, 114, 37);
 			panel_1.add(btnCancelar);
 			
-			JLabel lblInstante = new JLabel("Instante : ");
-			lblInstante.setFont(new Font("Segoe UI", Font.ITALIC, 15));
-			lblInstante.setBounds(10, 21, 62, 21);
-			panel_1.add(lblInstante);
+			JLabel lblNumero = new JLabel("Número: ");
+			lblNumero.setFont(new Font("Segoe UI", Font.ITALIC, 15));
+			lblNumero.setBounds(10, 21, 74, 21);
+			panel_1.add(lblNumero);
 			
 			JPanel panel_2 = new JPanel();
 			panel_2.setBackground(new Color(211, 61, 48));
-			panel_2.setBounds(0, 168, 555, 21);
+			panel_2.setBounds(0, 126, 555, 21);
 			panel_1.add(panel_2);
 			panel_2.setLayout(null);
 			
@@ -307,7 +305,7 @@ public class CodigoView extends JFrame {
 			panel_1.add(txtNumero);
 			
 			lblMessageNumero = new JLabel("");
-			lblMessageNumero.setBounds(159, 42, 374, 14);
+			lblMessageNumero.setBounds(82, 42, 451, 14);
 			panel_1.add(lblMessageNumero);
 			
 		}

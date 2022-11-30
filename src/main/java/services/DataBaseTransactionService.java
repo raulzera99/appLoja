@@ -145,6 +145,21 @@ public abstract class DataBaseTransactionService<T, ID extends Serializable> {
 		return response;
 	}
 	
+	public Response findNameById(ID id) {
+		openEntityManager();
+		T entity = null;
+		try {
+			entity = getDao().searchNameById(id);
+			response = getMessageResponse().message(entity, "Encontrado com êxito !", false);	
+		} catch (Exception e) {
+			e.printStackTrace();
+			response = getMessageResponse().message(entity, e.getMessage(), true);	
+		} finally {
+			closeEntityManager();
+		}
+		return response;
+	}
+	
 	public Response findByName(String name) {
 		openEntityManager();
 		T entity = null;

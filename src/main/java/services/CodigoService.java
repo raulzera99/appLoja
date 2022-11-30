@@ -1,5 +1,7 @@
 package services;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 
 import config.Page;
@@ -23,6 +25,17 @@ public class CodigoService extends DataBaseTransactionService<Codigo, Long>{
 	@Override
 	public Page<Codigo> listaPaginada(Integer page, Integer pageSize, String text) {
 		return dao.listaPaginada(page, pageSize, text);
+	}
+
+	public String[] stringListAllCodigos() {
+		List<Codigo> codigos = dao.listAll();
+		String[] results = new String[codigos.size()];
+		int i = 0;
+		for (Codigo x : codigos) {
+			results[i] = x.getNumero();
+			i++;
+		}
+		return results;
 	}
 
 }

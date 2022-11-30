@@ -6,6 +6,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneId;
 
 import javax.persistence.EntityManager;
 import javax.swing.BorderFactory;
@@ -16,9 +21,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
 
 import config.Constantes;
 import dao.ClienteDAO;
@@ -33,6 +36,7 @@ import services.ClienteService;
 import services.EnderecoService;
 import services.PedidoService;
 import services.errors.ErrorsData;
+import javax.swing.JTextField;
 
 public class PedidoView extends JFrame {
 
@@ -43,8 +47,8 @@ public class PedidoView extends JFrame {
 	private JPanel contentPane;
 	JButton btnSalvar = new JButton("Salvar");
 	JButton btnCancelar = new JButton("Cancelar");
-	JTextArea textArea;
-	JLabel lblMessageInstante;
+	private JTextField txtDescricao;
+	JLabel lblMessageDescricao;
 	JComboBox<String> cbCliente;
 	JLabel lblMessageCliente;
 	JComboBox<String> cbEndereco;
@@ -59,6 +63,7 @@ public class PedidoView extends JFrame {
 	
 	private ModelResponse<Pedido> modelResponse = null;
 	private ModelResponse<ErrorsData> errors;
+	
 	
 //	public static void main(String[] args) {
 //		EventQueue.invokeLater(new Runnable() {
@@ -100,7 +105,7 @@ public class PedidoView extends JFrame {
 		else if(opcaoCadastro == Constantes.CONSULTAR) {
 			findById(pedido.getId());
 			btnSalvar.setVisible(false);
-			btnCancelar.setBounds(225, 131, 114, 37);
+			btnCancelar.setBounds(225, 105, 114, 37);
 			btnCancelar.setText("Sair");
 		}
 		
@@ -128,18 +133,18 @@ public class PedidoView extends JFrame {
 				}
 			});
 			
-			textArea.addFocusListener(new FocusAdapter() {
+			txtDescricao.addFocusListener(new FocusAdapter() {
 				@Override
 				public void focusLost(FocusEvent e) {
-					textArea.setBorder(BorderFactory.createLineBorder(Color.darkGray, 1));
-					lblMessageInstante.setVisible(false);
+					txtDescricao.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
+					lblMessageDescricao.setVisible(false);
 				}
 			});
 			
 			cbCliente.addFocusListener(new FocusAdapter() {
 				@Override
 				public void focusLost(FocusEvent e) {
-					cbCliente.setBorder(BorderFactory.createLineBorder(Color.black, 1));
+					cbCliente.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
 					lblMessageCliente.setVisible(false);
 				}
 			});
@@ -147,7 +152,7 @@ public class PedidoView extends JFrame {
 			cbEndereco.addFocusListener(new FocusAdapter() {
 				@Override
 				public void focusLost(FocusEvent e) {
-					cbEndereco.setBorder(BorderFactory.createLineBorder(Color.black, 1));
+					cbEndereco.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
 					lblMessageEndereco.setVisible(false);
 				}
 			});
@@ -255,14 +260,23 @@ public class PedidoView extends JFrame {
 		private void limpa() {
 			
 			idPedido = 0L;
-			textArea.setText("");
+			txtDescricao.setText("");
 			cbCliente.setSelectedIndex(-1);
 			cbEndereco.setSelectedIndex(-1);
 		}
 		
+		
+		
 		@SuppressWarnings("unchecked")
 		private void setPedidoFromView() {
-			pedido.setInstante(textArea.getText());	
+			try {
+				pedido.setInstante(new SimpleDateFormat("HH:mm:ss").parse(LocalTime.now(ZoneId.systemDefault()).minusHours(1).toString()));
+				pedido.setData(new SimpleDateFormat("yyyy-MM-dd").parse(LocalDate.now().toString()));
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}	
+			
+			pedido.setDescricao(txtDescricao.getText());
 			
 			ModelResponse<Cliente> mrCliente = new ModelResponse<Cliente>();
 			mrCliente = (ModelResponse<Cliente>) getClienteService()
@@ -276,12 +290,11 @@ public class PedidoView extends JFrame {
 			endereco = mrEndereco.getObject();
 			pedido.setEnderecoDeEntrega(endereco);
 			
-			
 		}
 		
 		private void getPedidoFromDataBase() {
 			idPedido = pedido.getId();
-			textArea.setText(pedido.getInstante());
+			txtDescricao.setText(pedido.getDescricao());
 			cbCliente.setSelectedItem(pedido.getCliente());
 			cbEndereco.setSelectedItem(pedido.getEnderecoDeEntrega());
 		}
@@ -289,10 +302,10 @@ public class PedidoView extends JFrame {
 		private void showErrorFromServidor() {
 			for(ErrorsData erro : errors.getListObject()) {
 				if(erro.getNumeroCampo() == 1) {
-					lblMessageInstante.setVisible(true);
-					lblMessageInstante.setForeground(Color.red);
-					lblMessageInstante.setText(erro.getShowMensagemError());
-					textArea.setBorder(BorderFactory.createLineBorder(Color.red, 2));
+					lblMessageDescricao.setVisible(true);
+					lblMessageDescricao.setForeground(Color.red);
+					lblMessageDescricao.setText(erro.getShowMensagemError());
+					txtDescricao.setBorder(BorderFactory.createLineBorder(Color.red, 2));
 				}
 				if(erro.getNumeroCampo() == 2) {
 					lblMessageCliente.setVisible(true);
@@ -311,7 +324,7 @@ public class PedidoView extends JFrame {
 		
 		private void initComponents() {
 			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			setBounds(100, 100, 571, 424);
+			setBounds(100, 100, 571, 365);
 			contentPane = new JPanel();
 			contentPane.setBackground(new Color(0, 0, 0));
 			contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -333,7 +346,7 @@ public class PedidoView extends JFrame {
 			
 			JPanel panel_1 = new JPanel();
 			panel_1.setBackground(new Color(255, 255, 255));
-			panel_1.setBounds(0, 105, 555, 258);
+			panel_1.setBounds(0, 105, 555, 201);
 			contentPane.add(panel_1);
 			panel_1.setLayout(null);
 			
@@ -341,48 +354,60 @@ public class PedidoView extends JFrame {
 			btnSalvar.setForeground(new Color(255, 255, 255));
 			btnSalvar.setBackground(new Color(211, 61, 48));
 			btnSalvar.setFont(new Font("Segoe UI", Font.ITALIC, 15));
-			btnSalvar.setBounds(118, 210, 114, 37);
+			btnSalvar.setBounds(117, 150, 114, 37);
 			panel_1.add(btnSalvar);
 			
 			
 			btnCancelar.setForeground(Color.WHITE);
 			btnCancelar.setFont(new Font("Segoe UI", Font.ITALIC, 15));
 			btnCancelar.setBackground(new Color(211, 61, 48));
-			btnCancelar.setBounds(313, 210, 114, 37);
+			btnCancelar.setBounds(312, 150, 114, 37);
 			panel_1.add(btnCancelar);
 			
-			JLabel lblInstante = new JLabel("Descrição do instante:");
-			lblInstante.setFont(new Font("Segoe UI", Font.ITALIC, 15));
-			lblInstante.setBounds(10, 21, 141, 21);
-			panel_1.add(lblInstante);
+			JLabel lblDescricao = new JLabel("Descrição:");
+			lblDescricao.setFont(new Font("Segoe UI", Font.ITALIC, 15));
+			lblDescricao.setBounds(10, 21, 74, 21);
+			panel_1.add(lblDescricao);
 			
-			lblMessageInstante = new JLabel("");
-			lblMessageInstante.setBounds(161, 60, 374, 14);
-			panel_1.add(lblMessageInstante);
-			
-			textArea = new JTextArea();
-			textArea.setRows(2);
-			textArea.setBorder(new LineBorder(Color.DARK_GRAY));
-			textArea.setBounds(161, 23, 374, 37);
-			panel_1.add(textArea);
+			lblMessageDescricao = new JLabel("");
+			lblMessageDescricao.setBounds(87, 43, 448, 14);
+			panel_1.add(lblMessageDescricao);
 			
 			JLabel lblCliente = new JLabel("Cliente:");
 			lblCliente.setFont(new Font("Segoe UI", Font.ITALIC, 15));
-			lblCliente.setBounds(10, 77, 54, 21);
+			lblCliente.setBounds(10, 60, 54, 21);
 			panel_1.add(lblCliente);
 			
 			cbCliente = new JComboBox<String>();
 			cbCliente.setModel(new DefaultComboBoxModel <String>(getClienteService().stringListAllClientes()));
-			cbCliente.setBounds(81, 123, 448, 22);
+			cbCliente.setBounds(87, 62, 448, 22);
 			panel_1.add(cbCliente);
+			
+			lblMessageCliente = new JLabel("");
+			lblMessageCliente.setBounds(87, 84, 448, 14);
+			panel_1.add(lblMessageCliente);
 			
 			cbEndereco = new JComboBox<String>();
 			cbEndereco.setModel(new DefaultComboBoxModel <String>(getEnderecoService().stringListAllEnderecos()));
-			cbEndereco.setBounds(81, 123, 448, 22);
+			cbEndereco.setBounds(87, 103, 448, 22);
 			panel_1.add(cbEndereco);
 			
+			lblMessageEndereco = new JLabel("");
+			lblMessageEndereco.setBounds(87, 125, 448, 14);
+			panel_1.add(lblMessageEndereco);
+			
+			JLabel lblEndereco = new JLabel("Endereço:");
+			lblEndereco.setFont(new Font("Segoe UI", Font.ITALIC, 15));
+			lblEndereco.setBounds(10, 101, 60, 21);
+			panel_1.add(lblEndereco);
+			
+			txtDescricao = new JTextField();
+			txtDescricao.setBounds(87, 24, 448, 20);
+			panel_1.add(txtDescricao);
+			txtDescricao.setColumns(10);
+			
 			JPanel panel_2 = new JPanel();
-			panel_2.setBounds(0, 364, 555, 21);
+			panel_2.setBounds(0, 306, 555, 21);
 			contentPane.add(panel_2);
 			panel_2.setBackground(new Color(211, 61, 48));
 			panel_2.setLayout(null);

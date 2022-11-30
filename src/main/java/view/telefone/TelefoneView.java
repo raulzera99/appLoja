@@ -94,7 +94,7 @@ public class TelefoneView extends JFrame {
 		else if(opcaoCadastro == Constantes.CONSULTAR) {
 			findById(telefone.getId());
 			btnSalvar.setVisible(false);
-			btnCancelar.setBounds(225, 131, 114, 37);
+			btnCancelar.setBounds(225, 111, 114, 37);
 			btnCancelar.setText("Sair");
 		}
 		
@@ -243,15 +243,13 @@ public class TelefoneView extends JFrame {
 		
 		private void limpa() {
 			
-			idTelefone = 0l;
+			idTelefone = 0L;
 			txtNumero.setText("");
 		}
 		
 		@SuppressWarnings("unchecked")
 		private void setTelefoneFromView() {
 			telefone.setNumero(txtNumero.getText());	
-			
-
 			ModelResponse<Cliente> mrCliente = new ModelResponse<Cliente>();
 			mrCliente = (ModelResponse<Cliente>) getClienteService()
 					.findByName(cbCliente.getItemAt(cbCliente.getSelectedIndex()));
@@ -262,7 +260,7 @@ public class TelefoneView extends JFrame {
 		private void getTelefoneFromDataBase() {
 			idTelefone = telefone.getId();
 			txtNumero.setText(String.valueOf(telefone.getNumero()));
-			cbCliente.setSelectedItem(telefone.getCliente());
+			cbCliente.setSelectedItem(telefone.getCliente().getNome());
 		}
 		
 		private void initComponents() {

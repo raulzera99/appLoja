@@ -11,7 +11,7 @@ public class TablePagamentoBoletoModel extends JTableModel<PagamentoComBoleto>{
 	private static final long serialVersionUID = 2259690966041330349L;
 	private List<PagamentoComBoleto> tabela;
 	
-	private final String colunaPagamentoBoleto[] = {"Código","Estado do pagamento", "Data de vencimento", "Data de pagamento"};
+	private final String colunaPagamentoBoleto[] = {"Código","Estado do pagamento", "Data de vencimento", "Data de pagamento", "Descrição do pedido"};
 	
 	private final Integer tamanhoCampo[] = {};
 	
@@ -43,7 +43,9 @@ public class TablePagamentoBoletoModel extends JTableModel<PagamentoComBoleto>{
 			case 3:{
 				return pagamentoBoleto.getDataPagamento();
 			}
-			
+			case 4:{
+				return pagamentoBoleto.getPedido().getDescricao();
+			}
 			default:
 				return null;
 			
@@ -66,7 +68,9 @@ public class TablePagamentoBoletoModel extends JTableModel<PagamentoComBoleto>{
 			case 3:{
 				return String.class;
 			}
-			
+			case 4:{
+				return String.class;
+			}
 
 			default:
 				return null;

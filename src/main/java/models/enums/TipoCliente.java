@@ -42,4 +42,13 @@ public enum TipoCliente {
 		
 		throw new IllegalArgumentException("INVALID ID : "+ cod);
 	}
+	public static String[] enumsToStringArray() {
+        String[] results = new String[TipoCliente.values().length];
+        int count = 0;
+        for (TipoCliente each  : TipoCliente.values()) {
+            results[count] = each.toString();
+            count++;
+        }
+        return results;
+    }
 }

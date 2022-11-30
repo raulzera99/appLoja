@@ -22,7 +22,7 @@ public class SerialConnection implements SerialPortEventListener {
 	private SerialPort serialPort;
 	private CommPortIdentifier identificadorPorta;
 	private CommPort commPort;
-    private List<String> portas;
+    private List<String> ports;
 	
 	
 	private BufferedReader leitura;
@@ -31,25 +31,24 @@ public class SerialConnection implements SerialPortEventListener {
 	private boolean portOpen = false;
 	private int baudRate = 0;
 	private int dataBits = 0;
-	private int paridade = 0;
+	private int parity = 0;
 	private int stopBits = 0;
 
 	public SerialConnection() {
 		this.baudRate = 9600;
 		this.dataBits = SerialPort.DATABITS_8;
-		this.paridade = SerialPort.PARITY_NONE;
+		this.parity = SerialPort.PARITY_NONE;
 		this.stopBits = SerialPort.STOPBITS_1;
 	}
 
 	public SerialConnection(int baudRate, int dataBits, int paridade, int stopBits) {
 		this.baudRate = baudRate;
 		this.dataBits = dataBits;
-		this.paridade = paridade;
+		this.parity = paridade;
 		this.stopBits = stopBits;
 	}
 
 	
-
 	public int getBaudRate() {
 		return baudRate;
 	}
@@ -84,15 +83,15 @@ public class SerialConnection implements SerialPortEventListener {
 
 	public List<String> findPortas() {
 		
-		portas = new ArrayList<String>();
+		ports = new ArrayList<String>();
 		Enumeration<?> portList = CommPortIdentifier.getPortIdentifiers(); 
 		while (portList.hasMoreElements()) {
 			identificadorPorta = (CommPortIdentifier) portList.nextElement();
 			if (identificadorPorta.getPortType() == CommPortIdentifier.PORT_SERIAL) {
-			   portas.add(identificadorPorta.getName());	
+			   ports.add(identificadorPorta.getName());	
 			}
 		}
-		return portas;
+		return ports;
 	}
 	
 	
@@ -116,9 +115,9 @@ public class SerialConnection implements SerialPortEventListener {
 				}
 				if (portOpen==false) {
 					System.out.println("abrindo a porta ");
-					commPort = identificadorPorta.open("",2000);
+					commPort = identificadorPorta.open(this.getClass().getName(),2000);
 					serialPort = (SerialPort) commPort;
-					serialPort.setSerialPortParams(baudRate,dataBits,stopBits,paridade);
+					serialPort.setSerialPortParams(baudRate,dataBits,stopBits,parity);
 					serialPort.setFlowControlMode(SerialPort.FLOWCONTROL_NONE);
 					leitura = new BufferedReader(new InputStreamReader(serialPort.getInputStream()));
 					escrita = serialPort.getOutputStream();

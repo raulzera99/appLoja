@@ -25,10 +25,9 @@ public class CidadeDAO extends GenericDAO<Cidade, Long>{
 		}
 		Double totalPaginas = Math.ceil(total.doubleValue() / pageSize.doubleValue());
 		TypedQuery<Cidade> query = getEntityManager()
-				.createQuery("SELECT c FROM Cidade c "
+				.createQuery("SELECT c "
+						+ "FROM Cidade c "
 						+ "WHERE c.nome "
-						+ "LIKE (CONCAT('%',:text,'%')) "
-						+ "OR c.id_estado "
 						+ "LIKE (CONCAT('%',:text,'%')) ", Cidade.class);
 		
 		

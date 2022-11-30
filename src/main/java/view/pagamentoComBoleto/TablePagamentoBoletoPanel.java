@@ -33,10 +33,10 @@ public class TablePagamentoBoletoPanel extends JPanel {
 	JScrollPane scrollPaneTablePagamentoBoleto;
 	JPanel panelButtons;
 	JPanel panelSearch;
-	JButton btnPrimeiro;
-	JButton btnAnterior;
-	JButton btnProximo;
-	JButton btnUltimo;
+	JButton btnPrimeiro = new JButton("Primeiro");
+	JButton btnAnterior = new JButton("Anterior");
+	JButton btnProximo = new JButton("Próximo");
+	JButton btnUltimo = new JButton("Último");
 	JButton btnAdicionar;
 	JButton btnAlterar;
 	JButton btnRemover;
@@ -144,33 +144,23 @@ public class TablePagamentoBoletoPanel extends JPanel {
 		tablePagamentoBoleto = new JTable();
 		tablePagamentoBoleto.setFont(new Font("Tahoma", Font.PLAIN, 9));
 		scrollPaneTablePagamentoBoleto.setViewportView(tablePagamentoBoleto);
-		
 
 		panelButtons = new JPanel();
 		panelButtons.setBounds(11, 550, 1065, 79);
 		add(panelButtons);
 		panelButtons.setLayout(null);
 		
-
-		
-		btnPrimeiro = new JButton("Primeiro");
-		btnPrimeiro.setBounds(10, 11, 89, 23);
+		btnPrimeiro.setBounds(300, 11, 89, 23);
 		panelButtons.add(btnPrimeiro);
 		
-		btnAnterior = new JButton("Anterior");
-		btnAnterior.setBounds(109, 11, 89, 23);
+		btnAnterior.setBounds(399, 11, 89, 23);
 		panelButtons.add(btnAnterior);
 		
-
-		btnProximo = new JButton("Próximo");
-		btnProximo.setBounds(208, 11, 89, 23);
+		btnProximo.setBounds(498, 11, 89, 23);
 		panelButtons.add(btnProximo);
 		
-
-		btnUltimo = new JButton("Último");
-		btnUltimo.setBounds(307, 11, 89, 23);
+		btnUltimo.setBounds(597, 11, 89, 23);
 		panelButtons.add(btnUltimo);
-		
 
 		btnAdicionar = new JButton("Adicionar");
 		btnAdicionar.setBounds(10, 45, 89, 23);

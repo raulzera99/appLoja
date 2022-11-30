@@ -18,8 +18,10 @@ import config.Constantes;
 import config.Page;
 import dao.ClienteDAO;
 import models.Cliente;
+import models.PrintJasperReports;
 import persistence.DataBaseConnection;
 import services.ClienteService;
+import services.JasperReportsService;
 import view.table.RenderHeaderTable;
 import view.table.RenderTable;
 import javax.swing.JTextField;
@@ -41,6 +43,7 @@ public class TableClientePanel extends JPanel {
 	JButton btnAlterar = new JButton("Alterar");
 	JButton btnRemover = new JButton("Remover");
 	JButton btnConsultar = new JButton("Consultar");
+	JButton btnRelatorio = new JButton("Relatório");
 	JTextField txtSearch = new JTextField();
 	
 	
@@ -122,6 +125,16 @@ public class TableClientePanel extends JPanel {
 			}
 		});
 		
+		btnRelatorio.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				PrintJasperReports relatorio = new PrintJasperReports();
+				JasperReportsService service = new JasperReportsService();
+				
+				relatorio.setFile("relatorio_cliente");
+				service.gerarRelatorioPorSql(relatorio);
+			}
+		});
+		
 		txtSearch.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
@@ -145,22 +158,17 @@ public class TableClientePanel extends JPanel {
 		add(panelButtons);
 		panelButtons.setLayout(null);
 		
-		
-		btnPrimeiro.setBounds(10, 11, 89, 23);
+		btnPrimeiro.setBounds(300, 11, 89, 23);
 		panelButtons.add(btnPrimeiro);
 		
-		
-		btnAnterior.setBounds(109, 11, 89, 23);
+		btnAnterior.setBounds(399, 11, 89, 23);
 		panelButtons.add(btnAnterior);
 		
-		
-		btnProximo.setBounds(208, 11, 89, 23);
+		btnProximo.setBounds(498, 11, 89, 23);
 		panelButtons.add(btnProximo);
 		
-		
-		btnUltimo.setBounds(307, 11, 89, 23);
+		btnUltimo.setBounds(597, 11, 89, 23);
 		panelButtons.add(btnUltimo);
-		
 		
 		btnAdicionar.setBounds(10, 45, 89, 23);
 		panelButtons.add(btnAdicionar);
@@ -168,16 +176,14 @@ public class TableClientePanel extends JPanel {
 		btnAlterar.setBounds(119, 45, 89, 23);
 		panelButtons.add(btnAlterar);
 		
-		
-		
 		btnRemover.setBounds(233, 45, 89, 23);
 		panelButtons.add(btnRemover);
-		
-		
 		
 		btnConsultar.setBounds(346, 45, 89, 23);
 		panelButtons.add(btnConsultar);
 		
+		btnRelatorio.setBounds(460, 45, 89, 23);
+		panelButtons.add(btnRelatorio);
 		
 		panelSearch.setBounds(10, 11, 1065, 42);
 		add(panelSearch);
@@ -197,8 +203,12 @@ public class TableClientePanel extends JPanel {
 	
 	private void listarCliente() {
 		clienteService = getClienteService();
-		page = clienteService.listaPaginada(paginaAtual, tamanhoPagina);
-		
+		if(txtSearch.equals("")) {
+			page = clienteService.listaPaginada(paginaAtual, tamanhoPagina);
+		}
+		else {
+			page = clienteService.listaPaginada(paginaAtual, tamanhoPagina, txtSearch.getText());
+		}
 		if(paginaAtual == 1) {
 			btnPrimeiro.setEnabled(false);
 			btnAnterior.setEnabled(false);

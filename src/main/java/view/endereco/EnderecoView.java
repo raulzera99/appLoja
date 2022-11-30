@@ -35,9 +35,6 @@ import services.errors.ErrorsData;
 
 public class EnderecoView extends JFrame {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -2933295863195236029L;
 	private JPanel contentPane;
 	JButton btnSalvar = new JButton("Salvar");
@@ -106,7 +103,7 @@ public class EnderecoView extends JFrame {
 		else if(opcaoCadastro == Constantes.CONSULTAR) {
 			findById(endereco.getId());
 			btnSalvar.setVisible(false);
-			btnCancelar.setBounds(225, 131, 114, 37);
+			btnCancelar.setBounds(225, 210, 114, 37);
 			btnCancelar.setText("Sair");
 		}
 		
@@ -137,7 +134,7 @@ public class EnderecoView extends JFrame {
 			txtNumero.addFocusListener(new FocusAdapter() {
 				@Override
 				public void focusLost(FocusEvent e) {
-					txtNumero.setBorder(BorderFactory.createLineBorder(Color.black, 1));
+					txtNumero.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
 					lblMessageNum.setVisible(false);
 				}
 			});
@@ -145,7 +142,7 @@ public class EnderecoView extends JFrame {
 			txtBairro.addFocusListener(new FocusAdapter() {
 				@Override
 				public void focusLost(FocusEvent e) {
-					txtBairro.setBorder(BorderFactory.createLineBorder(Color.black, 1));
+					txtBairro.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
 					lblMessageBairro.setVisible(false);
 				}
 			});
@@ -153,7 +150,7 @@ public class EnderecoView extends JFrame {
 			txtCEP.addFocusListener(new FocusAdapter() {
 				@Override
 				public void focusLost(FocusEvent e) {
-					txtCEP.setBorder(BorderFactory.createLineBorder(Color.black, 1));
+					txtCEP.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
 					lblMessageCEP.setVisible(false);
 				}
 			});
@@ -166,6 +163,8 @@ public class EnderecoView extends JFrame {
 			int i = 1;
 
 			setEnderecoFromView();
+			
+			errors = (ModelResponse<ErrorsData>)enderecoService.validarDadosFromView(endereco);
 			
 			i = JOptionPane.showConfirmDialog(null, "Confirme os dados : "
 					+endereco.toString(),

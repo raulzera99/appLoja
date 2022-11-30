@@ -54,7 +54,7 @@ public class TableCategoriaPanel extends JPanel {
 	private int tamanhoPagina = 50;
 	private int paginaAtual = 0;
 	
-	private static TableCategoriaPanel TABLE_PEDIDO;
+	private static TableCategoriaPanel TABLE_CATEGORIA;
 
 	public TableCategoriaPanel() {
 		//setVisible(true);
@@ -161,23 +161,17 @@ public class TableCategoriaPanel extends JPanel {
 		btnUltimo.setBounds(307, 11, 89, 23);
 		panelButtons.add(btnUltimo);
 		
-		
 		btnAdicionar.setBounds(10, 45, 89, 23);
 		panelButtons.add(btnAdicionar);
 		
 		btnAlterar.setBounds(119, 45, 89, 23);
 		panelButtons.add(btnAlterar);
 		
-		
-		
 		btnRemover.setBounds(233, 45, 89, 23);
 		panelButtons.add(btnRemover);
 		
-		
-		
 		btnConsultar.setBounds(346, 45, 89, 23);
 		panelButtons.add(btnConsultar);
-		
 		
 		panelSearch.setBounds(10, 11, 1065, 42);
 		add(panelSearch);
@@ -189,10 +183,10 @@ public class TableCategoriaPanel extends JPanel {
 	}
 	
 	public static TableCategoriaPanel getInstance() {
-		if(Objects.isNull(TABLE_PEDIDO)) {
-			TABLE_PEDIDO = new TableCategoriaPanel();
+		if(Objects.isNull(TABLE_CATEGORIA)) {
+			TABLE_CATEGORIA = new TableCategoriaPanel();
 		}
-		return TABLE_PEDIDO;
+		return TABLE_CATEGORIA;
 	}
 	
 	private void listarCategoria() {
@@ -252,8 +246,8 @@ public class TableCategoriaPanel extends JPanel {
 		for(int col = 1; col<model.getColumnCount();col++ ) {
 			coluna = tableCategoria.getColumnModel().getColumn(col);
 			coluna.setMinWidth(200);
-			coluna.setMaxWidth(350);
-			coluna.setPreferredWidth(325);
+			coluna.setMaxWidth(1000);
+			coluna.setPreferredWidth(900);
 		}
 	}
 	

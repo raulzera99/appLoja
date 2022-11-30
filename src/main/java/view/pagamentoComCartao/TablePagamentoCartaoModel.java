@@ -11,7 +11,7 @@ public class TablePagamentoCartaoModel extends JTableModel<PagamentoComCartao>{
 	private static final long serialVersionUID = 2259690966041330349L;
 	private List<PagamentoComCartao> tabela;
 	
-	private final String colunaPagamentoCartao[] = {"Código","Estado do pagamento", "Número de parcelas"};
+	private final String colunaPagamentoCartao[] = {"Código","Estado do pagamento", "Número de parcelas", "Descrição do pedido"};
 	
 	private final Integer tamanhoCampo[] = {};
 	
@@ -39,6 +39,9 @@ public class TablePagamentoCartaoModel extends JTableModel<PagamentoComCartao>{
 			case 2:{
 				return pagamentoCartao.getNumeroDeParcelas();
 			}
+			case 3:{
+				return pagamentoCartao.getPedido().getDescricao();
+			}
 			
 			default:
 				return null;
@@ -58,6 +61,9 @@ public class TablePagamentoCartaoModel extends JTableModel<PagamentoComCartao>{
 			}
 			case 2:{
 				return Integer.class;
+			}
+			case 3:{
+				return String.class;
 			}
 			default:
 				return null;

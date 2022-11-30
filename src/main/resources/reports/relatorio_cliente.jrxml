@@ -13,12 +13,17 @@ from table_cliente cliente, table_telefone telefone, table_endereco endereco, ta
  table_pagamento pagamento, table_produto produto, table_item_pedido itemPedido
  where telefone.id_cliente = cliente.id
  AND endereco.id_cliente = cliente.id
+ AND pedido.id_endereco = endereco.id
  AND pedido.id_cliente = cliente.id
- order by cliente.id
- 
- ]]>
+ AND pagamento.id_pedido = pedido.id
+ AND itemPedido.id_pedido = pedido.id
+ AND produto.id = itemPedido.id_produto 
+ group by telefone.numero, endereco.numero, endereco.bairro, endereco.cep, pedido.instante, 
+pagamento.estado_pagamento, produto.nome, produto.preco, itemPedido.quantidade, itemPedido.desconto,
+itemPedido.preco
+ order by cliente.id]]>
 	</queryString>
-	<field name="id" class="java.lang.Integer">
+	<field name="id" class="java.lang.Long">
 		<property name="com.jaspersoft.studio.field.name" value="id"/>
 		<property name="com.jaspersoft.studio.field.label" value="id"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="table_cliente"/>
@@ -63,7 +68,7 @@ from table_cliente cliente, table_telefone telefone, table_endereco endereco, ta
 		<property name="com.jaspersoft.studio.field.label" value="cep"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="table_endereco"/>
 	</field>
-	<field name="instante" class="java.time.LocalDateTime">
+	<field name="instante" class="java.sql.Time">
 		<property name="com.jaspersoft.studio.field.name" value="instante"/>
 		<property name="com.jaspersoft.studio.field.label" value="instante"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="table_pedido"/>
@@ -120,15 +125,15 @@ from table_cliente cliente, table_telefone telefone, table_endereco endereco, ta
 		</band>
 	</pageHeader>
 	<columnHeader>
-		<band height="160" splitType="Stretch">
+		<band height="181" splitType="Stretch">
 			<staticText>
-				<reportElement mode="Opaque" x="-20" y="0" width="40" height="20" backcolor="#B0A9A9" uuid="908c7fe9-370d-496c-b0ae-735abca4c0a3"/>
+				<reportElement mode="Opaque" x="-20" y="20" width="40" height="20" backcolor="#B0A9A9" uuid="908c7fe9-370d-496c-b0ae-735abca4c0a3"/>
 				<box>
-					<pen lineWidth="0.25" lineColor="#E0E0E0"/>
-					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
-					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
-					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
-					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<pen lineWidth="1.0" lineColor="#E0E0E0"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="14" isBold="true"/>
@@ -136,13 +141,13 @@ from table_cliente cliente, table_telefone telefone, table_endereco endereco, ta
 				<text><![CDATA[ID]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="20" y="0" width="160" height="20" backcolor="#B0A9A9" uuid="0a8fc507-b0be-49fd-8f08-ac3ab442e43a"/>
+				<reportElement mode="Opaque" x="20" y="20" width="160" height="20" backcolor="#B0A9A9" uuid="0a8fc507-b0be-49fd-8f08-ac3ab442e43a"/>
 				<box>
-					<pen lineWidth="0.25" lineColor="#E0E0E0"/>
-					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
-					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
-					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
-					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<pen lineWidth="1.0" lineColor="#E0E0E0"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="14" isBold="true"/>
@@ -150,13 +155,13 @@ from table_cliente cliente, table_telefone telefone, table_endereco endereco, ta
 				<text><![CDATA[Nome]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="-20" y="20" width="595" height="20" backcolor="#B0A9A9" uuid="4ad6b175-ca46-4364-ae35-0bec5c64e2af"/>
+				<reportElement mode="Opaque" x="-20" y="40" width="595" height="20" backcolor="#B0A9A9" uuid="4ad6b175-ca46-4364-ae35-0bec5c64e2af"/>
 				<box>
-					<pen lineWidth="0.25" lineColor="#E0E0E0"/>
-					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
-					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
-					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
-					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<pen lineWidth="1.0" lineColor="#E0E0E0"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="14" isBold="true"/>
@@ -164,13 +169,13 @@ from table_cliente cliente, table_telefone telefone, table_endereco endereco, ta
 				<text><![CDATA[Telefone(s)]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="465" y="0" width="110" height="20" backcolor="#B0A9A9" uuid="94aeb6a3-7208-4585-85f1-693a805995b2"/>
+				<reportElement mode="Opaque" x="465" y="20" width="110" height="20" backcolor="#B0A9A9" uuid="94aeb6a3-7208-4585-85f1-693a805995b2"/>
 				<box>
-					<pen lineWidth="0.25" lineColor="#E0E0E0"/>
-					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
-					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
-					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
-					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<pen lineWidth="1.0" lineColor="#E0E0E0"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="14" isBold="true"/>
@@ -178,13 +183,13 @@ from table_cliente cliente, table_telefone telefone, table_endereco endereco, ta
 				<text><![CDATA[CPF/CNPJ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="180" y="0" width="200" height="20" backcolor="#B0A9A9" uuid="c047cca5-d4a1-4c28-bcb4-c5b45e64d8e2"/>
+				<reportElement mode="Opaque" x="180" y="20" width="200" height="20" backcolor="#B0A9A9" uuid="c047cca5-d4a1-4c28-bcb4-c5b45e64d8e2"/>
 				<box>
-					<pen lineWidth="0.25" lineColor="#E0E0E0"/>
-					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
-					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
-					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
-					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<pen lineWidth="1.0" lineColor="#E0E0E0"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="14" isBold="true"/>
@@ -192,13 +197,13 @@ from table_cliente cliente, table_telefone telefone, table_endereco endereco, ta
 				<text><![CDATA[Email]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="380" y="0" width="85" height="20" backcolor="#B0A9A9" uuid="9755a348-a241-428b-9eb4-224b72c2ac97"/>
+				<reportElement mode="Opaque" x="380" y="20" width="85" height="20" backcolor="#B0A9A9" uuid="9755a348-a241-428b-9eb4-224b72c2ac97"/>
 				<box>
-					<pen lineWidth="0.25" lineColor="#E0E0E0"/>
-					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
-					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
-					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
-					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<pen lineWidth="1.0" lineColor="#E0E0E0"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="14" isBold="true"/>
@@ -206,13 +211,13 @@ from table_cliente cliente, table_telefone telefone, table_endereco endereco, ta
 				<text><![CDATA[Tipo cliente]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="-20" y="40" width="595" height="20" backcolor="#B0A9A9" uuid="63650625-a351-4b4f-b1bb-f8d6073bcb3c"/>
+				<reportElement mode="Opaque" x="-20" y="60" width="595" height="20" backcolor="#B0A9A9" uuid="63650625-a351-4b4f-b1bb-f8d6073bcb3c"/>
 				<box>
-					<pen lineWidth="0.25" lineColor="#E0E0E0"/>
-					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
-					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
-					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
-					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<pen lineWidth="1.0" lineColor="#E0E0E0"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="14" isBold="true"/>
@@ -220,13 +225,13 @@ from table_cliente cliente, table_telefone telefone, table_endereco endereco, ta
 				<text><![CDATA[Endereço(s)]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="-20" y="80" width="595" height="20" backcolor="#B0A9A9" uuid="0983e2e2-6609-4c15-8c70-69f8fe930ff5"/>
+				<reportElement mode="Opaque" x="-20" y="100" width="595" height="20" backcolor="#B0A9A9" uuid="0983e2e2-6609-4c15-8c70-69f8fe930ff5"/>
 				<box>
-					<pen lineWidth="0.25" lineColor="#E0E0E0"/>
-					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
-					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
-					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
-					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<pen lineWidth="1.0" lineColor="#E0E0E0"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="14" isBold="true"/>
@@ -234,13 +239,13 @@ from table_cliente cliente, table_telefone telefone, table_endereco endereco, ta
 				<text><![CDATA[Pedido(s)]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="-20" y="60" width="160" height="20" backcolor="#B0A9A9" uuid="437b0c36-e6c7-4901-9838-10271a25fc4b"/>
+				<reportElement mode="Opaque" x="-20" y="80" width="160" height="20" backcolor="#B0A9A9" uuid="437b0c36-e6c7-4901-9838-10271a25fc4b"/>
 				<box>
-					<pen lineWidth="0.25" lineColor="#E0E0E0"/>
-					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
-					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
-					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
-					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<pen lineWidth="1.0" lineColor="#E0E0E0"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="14" isBold="true"/>
@@ -248,13 +253,13 @@ from table_cliente cliente, table_telefone telefone, table_endereco endereco, ta
 				<text><![CDATA[Número]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="140" y="60" width="240" height="20" backcolor="#B0A9A9" uuid="27d5ed1f-42cd-4397-b0b7-8618632441f1"/>
+				<reportElement mode="Opaque" x="140" y="80" width="240" height="20" backcolor="#B0A9A9" uuid="27d5ed1f-42cd-4397-b0b7-8618632441f1"/>
 				<box>
-					<pen lineWidth="0.25" lineColor="#E0E0E0"/>
-					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
-					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
-					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
-					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<pen lineWidth="1.0" lineColor="#E0E0E0"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="14" isBold="true"/>
@@ -262,13 +267,13 @@ from table_cliente cliente, table_telefone telefone, table_endereco endereco, ta
 				<text><![CDATA[Bairro]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="380" y="60" width="195" height="20" backcolor="#B0A9A9" uuid="b7996abc-e27f-45cb-89f6-c576b198c373"/>
+				<reportElement mode="Opaque" x="380" y="80" width="195" height="20" backcolor="#B0A9A9" uuid="b7996abc-e27f-45cb-89f6-c576b198c373"/>
 				<box>
-					<pen lineWidth="0.25" lineColor="#E0E0E0"/>
-					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
-					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
-					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
-					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<pen lineWidth="1.0" lineColor="#E0E0E0"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="14" isBold="true"/>
@@ -276,13 +281,13 @@ from table_cliente cliente, table_telefone telefone, table_endereco endereco, ta
 				<text><![CDATA[CEP]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="-20" y="100" width="355" height="20" backcolor="#B0A9A9" uuid="d4daaebe-166e-4e55-a0be-aceef4361578"/>
+				<reportElement mode="Opaque" x="-20" y="120" width="355" height="20" backcolor="#B0A9A9" uuid="d4daaebe-166e-4e55-a0be-aceef4361578"/>
 				<box>
-					<pen lineWidth="0.25" lineColor="#E0E0E0"/>
-					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
-					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
-					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
-					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<pen lineWidth="1.0" lineColor="#E0E0E0"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="14" isBold="true"/>
@@ -290,13 +295,13 @@ from table_cliente cliente, table_telefone telefone, table_endereco endereco, ta
 				<text><![CDATA[Instante]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="335" y="100" width="240" height="20" backcolor="#B0A9A9" uuid="cfc3e636-c9cd-4c16-a6c0-8d0fc6bafcd6"/>
+				<reportElement mode="Opaque" x="335" y="120" width="240" height="20" backcolor="#B0A9A9" uuid="cfc3e636-c9cd-4c16-a6c0-8d0fc6bafcd6"/>
 				<box>
-					<pen lineWidth="0.25" lineColor="#E0E0E0"/>
-					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
-					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
-					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
-					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<pen lineWidth="1.0" lineColor="#E0E0E0"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="14" isBold="true"/>
@@ -304,13 +309,13 @@ from table_cliente cliente, table_telefone telefone, table_endereco endereco, ta
 				<text><![CDATA[Estado do pagamento]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="-20" y="120" width="595" height="20" backcolor="#B0A9A9" uuid="41130c31-55ef-4064-8efd-741ba8bdac5d"/>
+				<reportElement mode="Opaque" x="-20" y="140" width="595" height="20" backcolor="#B0A9A9" uuid="41130c31-55ef-4064-8efd-741ba8bdac5d"/>
 				<box>
-					<pen lineWidth="0.25" lineColor="#E0E0E0"/>
-					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
-					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
-					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
-					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<pen lineWidth="1.0" lineColor="#E0E0E0"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="14" isBold="true"/>
@@ -318,13 +323,13 @@ from table_cliente cliente, table_telefone telefone, table_endereco endereco, ta
 				<text><![CDATA[Itens do pedido]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="-20" y="140" width="160" height="20" backcolor="#B0A9A9" uuid="b98469c1-5695-42d6-aaa8-2477991acd88"/>
+				<reportElement mode="Opaque" x="-20" y="160" width="160" height="20" backcolor="#B0A9A9" uuid="b98469c1-5695-42d6-aaa8-2477991acd88"/>
 				<box>
-					<pen lineWidth="0.25" lineColor="#E0E0E0"/>
-					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
-					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
-					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
-					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<pen lineWidth="1.0" lineColor="#E0E0E0"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="14" isBold="true"/>
@@ -332,13 +337,13 @@ from table_cliente cliente, table_telefone telefone, table_endereco endereco, ta
 				<text><![CDATA[Nome do produto]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="140" y="140" width="150" height="20" backcolor="#B0A9A9" uuid="6870787a-cbfb-4f6c-a8a8-9216ce1966b5"/>
+				<reportElement mode="Opaque" x="140" y="160" width="150" height="20" backcolor="#B0A9A9" uuid="6870787a-cbfb-4f6c-a8a8-9216ce1966b5"/>
 				<box>
-					<pen lineWidth="0.25" lineColor="#E0E0E0"/>
-					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
-					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
-					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
-					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<pen lineWidth="1.0" lineColor="#E0E0E0"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="14" isBold="true"/>
@@ -346,13 +351,13 @@ from table_cliente cliente, table_telefone telefone, table_endereco endereco, ta
 				<text><![CDATA[Preço do produto]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="290" y="140" width="90" height="20" backcolor="#B0A9A9" uuid="8d36b969-09d7-435c-aed6-a3cdde69fcf8"/>
+				<reportElement mode="Opaque" x="290" y="160" width="90" height="20" backcolor="#B0A9A9" uuid="8d36b969-09d7-435c-aed6-a3cdde69fcf8"/>
 				<box>
-					<pen lineWidth="0.25" lineColor="#E0E0E0"/>
-					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
-					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
-					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
-					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<pen lineWidth="1.0" lineColor="#E0E0E0"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="14" isBold="true"/>
@@ -360,13 +365,13 @@ from table_cliente cliente, table_telefone telefone, table_endereco endereco, ta
 				<text><![CDATA[Quantidade]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="377" y="140" width="90" height="20" backcolor="#B0A9A9" uuid="fb7ddb23-72a4-4bf5-b72e-93b258f6ca55"/>
+				<reportElement mode="Opaque" x="377" y="160" width="90" height="20" backcolor="#B0A9A9" uuid="fb7ddb23-72a4-4bf5-b72e-93b258f6ca55"/>
 				<box>
-					<pen lineWidth="0.25" lineColor="#E0E0E0"/>
-					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
-					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
-					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
-					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<pen lineWidth="1.0" lineColor="#E0E0E0"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="14" isBold="true"/>
@@ -374,25 +379,39 @@ from table_cliente cliente, table_telefone telefone, table_endereco endereco, ta
 				<text><![CDATA[Desconto]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="465" y="140" width="110" height="20" backcolor="#B0A9A9" uuid="f917dfa8-8a57-4399-974b-4ae08131dd2b"/>
+				<reportElement mode="Opaque" x="465" y="160" width="110" height="20" backcolor="#B0A9A9" uuid="f917dfa8-8a57-4399-974b-4ae08131dd2b"/>
 				<box>
-					<pen lineWidth="0.25" lineColor="#E0E0E0"/>
-					<topPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
-					<leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
-					<bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
-					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<pen lineWidth="1.0" lineColor="#E0E0E0"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="14" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Preço total]]></text>
 			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="-20" y="0" width="595" height="20" backcolor="#B0A9A9" uuid="9a7f599c-8f64-41ca-99d2-479faef14981"/>
+				<box>
+					<pen lineWidth="1.0" lineColor="#E0E0E0"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cliente]]></text>
+			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="209" splitType="Stretch">
+		<band height="107" splitType="Stretch">
 			<textField>
-				<reportElement x="-20" y="0" width="40" height="30" uuid="adf90857-f177-4e3a-84fa-239fbded110c">
+				<reportElement x="-22" y="0" width="42" height="20" uuid="adf90857-f177-4e3a-84fa-239fbded110c">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="a2fcbd08-df05-413f-acb6-345b27498bdd"/>
 				</reportElement>
 				<box>
@@ -405,7 +424,7 @@ from table_cliente cliente, table_telefone telefone, table_endereco endereco, ta
 				<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="20" y="0" width="160" height="30" uuid="d760c0ce-4a07-455b-a9fb-a98c211ee042">
+				<reportElement x="20" y="0" width="160" height="20" uuid="d760c0ce-4a07-455b-a9fb-a98c211ee042">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="54aa5596-41ff-46b2-b29e-5822cb212e62"/>
 				</reportElement>
 				<box>
@@ -418,7 +437,7 @@ from table_cliente cliente, table_telefone telefone, table_endereco endereco, ta
 				<textFieldExpression><![CDATA[$F{nome}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="180" y="0" width="200" height="30" uuid="b0d37881-327a-47b7-84d8-128a965a725c">
+				<reportElement x="180" y="0" width="200" height="20" uuid="b0d37881-327a-47b7-84d8-128a965a725c">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="79550826-908a-423c-ad5f-8cdc4b301d4c"/>
 				</reportElement>
 				<box>
@@ -431,7 +450,7 @@ from table_cliente cliente, table_telefone telefone, table_endereco endereco, ta
 				<textFieldExpression><![CDATA[$F{email}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="380" y="0" width="85" height="30" uuid="c342c690-66e6-466e-87b0-064bc02fbab4">
+				<reportElement x="380" y="0" width="85" height="20" uuid="c342c690-66e6-466e-87b0-064bc02fbab4">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="129731bd-af7e-45b0-a477-90d984ac1e25"/>
 				</reportElement>
 				<box>
@@ -444,7 +463,7 @@ from table_cliente cliente, table_telefone telefone, table_endereco endereco, ta
 				<textFieldExpression><![CDATA[$F{tipo}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="465" y="0" width="110" height="30" uuid="2bf21478-3819-4ae1-905c-7bbdf1e7aa03">
+				<reportElement x="465" y="0" width="110" height="20" uuid="2bf21478-3819-4ae1-905c-7bbdf1e7aa03">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="b94b900d-da24-4d80-906e-dbfe0d7ef658"/>
 				</reportElement>
 				<box>
@@ -457,7 +476,7 @@ from table_cliente cliente, table_telefone telefone, table_endereco endereco, ta
 				<textFieldExpression><![CDATA[$F{cpfOuCnpj}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="-20" y="30" width="595" height="30" uuid="12db7cc8-28c3-4891-9ed5-87b4272464bf">
+				<reportElement x="-22" y="20" width="597" height="20" uuid="12db7cc8-28c3-4891-9ed5-87b4272464bf">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="691727db-c780-42dc-b56c-bdc606ab839e"/>
 				</reportElement>
 				<box>
@@ -470,7 +489,7 @@ from table_cliente cliente, table_telefone telefone, table_endereco endereco, ta
 				<textFieldExpression><![CDATA[$F{numero_telefone}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="-20" y="60" width="160" height="30" uuid="1520d0f8-076f-4779-897c-b01dd91dd99d">
+				<reportElement x="-22" y="40" width="163" height="20" uuid="1520d0f8-076f-4779-897c-b01dd91dd99d">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="01c6414c-2449-4f40-858a-00b00e02eb6e"/>
 				</reportElement>
 				<box>
@@ -483,7 +502,7 @@ from table_cliente cliente, table_telefone telefone, table_endereco endereco, ta
 				<textFieldExpression><![CDATA[$F{numero_endereco}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="140" y="60" width="278" height="30" uuid="5d324c19-5b94-45c1-a804-8783f15464a0">
+				<reportElement x="141" y="40" width="278" height="20" uuid="5d324c19-5b94-45c1-a804-8783f15464a0">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="bb036e18-2fa3-4c82-8bbd-51db0b353c3f"/>
 				</reportElement>
 				<box>
@@ -496,7 +515,7 @@ from table_cliente cliente, table_telefone telefone, table_endereco endereco, ta
 				<textFieldExpression><![CDATA[$F{bairro}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="418" y="60" width="157" height="30" uuid="974295b9-117a-4c89-871e-5acaa24a97eb">
+				<reportElement x="419" y="40" width="157" height="20" uuid="974295b9-117a-4c89-871e-5acaa24a97eb">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="cbb26bce-8e2a-42c9-b34d-4eddddc75d4c"/>
 				</reportElement>
 				<box>
@@ -509,7 +528,7 @@ from table_cliente cliente, table_telefone telefone, table_endereco endereco, ta
 				<textFieldExpression><![CDATA[$F{cep}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="-20" y="90" width="355" height="30" uuid="e5f9c6ea-0e00-412b-9997-7e8f26b398bd">
+				<reportElement x="-22" y="60" width="355" height="20" uuid="e5f9c6ea-0e00-412b-9997-7e8f26b398bd">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="f8587ccb-245b-4a40-9aaf-6f645c46ac39"/>
 				</reportElement>
 				<box>
@@ -522,7 +541,7 @@ from table_cliente cliente, table_telefone telefone, table_endereco endereco, ta
 				<textFieldExpression><![CDATA[$F{instante}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="335" y="90" width="240" height="30" uuid="924fb333-35ae-4d80-ab3d-c7514a3c435a">
+				<reportElement x="333" y="60" width="242" height="20" uuid="924fb333-35ae-4d80-ab3d-c7514a3c435a">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="deb16bd6-ab18-4596-a900-329c278a2aac"/>
 				</reportElement>
 				<box>
@@ -535,7 +554,7 @@ from table_cliente cliente, table_telefone telefone, table_endereco endereco, ta
 				<textFieldExpression><![CDATA[$F{estado_pagamento}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="-20" y="120" width="160" height="30" uuid="913234d7-e7bd-4f58-b5e0-27004ad0f9ee">
+				<reportElement x="-22" y="80" width="162" height="20" uuid="913234d7-e7bd-4f58-b5e0-27004ad0f9ee">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="08c8edd3-e150-4219-af7a-3fc665dc34b5"/>
 				</reportElement>
 				<box>
@@ -548,7 +567,7 @@ from table_cliente cliente, table_telefone telefone, table_endereco endereco, ta
 				<textFieldExpression><![CDATA[$F{nome_produto}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="140" y="120" width="150" height="30" uuid="e480a1f6-5d0d-404f-857c-ea2757214477">
+				<reportElement x="140" y="80" width="151" height="20" uuid="e480a1f6-5d0d-404f-857c-ea2757214477">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="9a8b4e57-867f-4f44-b5b7-23291264073d"/>
 				</reportElement>
 				<box>
@@ -561,7 +580,7 @@ from table_cliente cliente, table_telefone telefone, table_endereco endereco, ta
 				<textFieldExpression><![CDATA[$F{preco}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="290" y="120" width="87" height="30" uuid="3c28f54d-92ac-457d-8d6b-e189a77cc799">
+				<reportElement x="291" y="80" width="87" height="20" uuid="3c28f54d-92ac-457d-8d6b-e189a77cc799">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="1bd44c39-b021-46fb-a156-8e3d631dd7b5"/>
 				</reportElement>
 				<box>
@@ -574,7 +593,7 @@ from table_cliente cliente, table_telefone telefone, table_endereco endereco, ta
 				<textFieldExpression><![CDATA[$F{quantidade}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="377" y="120" width="88" height="30" uuid="6376f823-09c3-4b67-bcf6-070fe3b00f44">
+				<reportElement x="378" y="80" width="88" height="20" uuid="6376f823-09c3-4b67-bcf6-070fe3b00f44">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="01754c9a-438e-40d8-b56e-4fd09f30cf86"/>
 				</reportElement>
 				<box>
@@ -587,7 +606,7 @@ from table_cliente cliente, table_telefone telefone, table_endereco endereco, ta
 				<textFieldExpression><![CDATA[$F{desconto}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="465" y="120" width="110" height="30" uuid="0d427523-0b48-4b28-baaf-99b8d1ac9c65">
+				<reportElement x="466" y="80" width="109" height="20" uuid="0d427523-0b48-4b28-baaf-99b8d1ac9c65">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="87486683-b4ec-4f7d-a91e-667374cdb102"/>
 				</reportElement>
 				<box>
@@ -599,6 +618,10 @@ from table_cliente cliente, table_telefone telefone, table_endereco endereco, ta
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{preco_total}]]></textFieldExpression>
 			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="-20" y="100" width="595" height="7" backcolor="#FF0703" uuid="f72dd349-1727-459e-bbd2-b15912f5c832"/>
+				<text><![CDATA[]]></text>
+			</staticText>
 		</band>
 	</detail>
 	<columnFooter>

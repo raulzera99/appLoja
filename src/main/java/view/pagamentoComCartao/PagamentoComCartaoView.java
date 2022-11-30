@@ -21,11 +21,14 @@ import javax.swing.border.EmptyBorder;
 
 import config.Constantes;
 import dao.PagamentoComCartaoDAO;
+import dao.PedidoDAO;
 import message.ModelResponse;
 import models.PagamentoComCartao;
+import models.Pedido;
 import models.enums.EstadoPagamento;
 import persistence.DataBaseConnection;
 import services.PagamentoComCartaoService;
+import services.PedidoService;
 import services.errors.ErrorsData;
 
 public class PagamentoComCartaoView extends JFrame {
@@ -35,14 +38,17 @@ public class PagamentoComCartaoView extends JFrame {
 	JButton btnSalvar = new JButton("Salvar");
 	JButton btnCancelar = new JButton("Cancelar");
 	JComboBox<String> comboBoxEstado;
+	JComboBox<String> cbPedido;
 	JTextField txtNumeroDeParcelas;
 	JLabel lblMessageEstado;
 	JLabel lblMessageNum;
+	JLabel lblMessagePedido;
 	
-	private Long idPagamentoComCartao = 0l;
+	private Long idPagamentoComCartao = 0L;
 	
 	private PagamentoComCartaoService pagamentoCartaoService;
-	private PagamentoComCartao pagamentoCartao;
+	private PagamentoComCartao pagamentoCartao = null;
+	private Pedido pedido = null;
 	
 	private ModelResponse<PagamentoComCartao> modelResponse = null;
 	private ModelResponse<ErrorsData> errors;
@@ -120,14 +126,23 @@ public class PagamentoComCartaoView extends JFrame {
 			comboBoxEstado.addFocusListener(new FocusAdapter() {
 				@Override
 				public void focusLost(FocusEvent e) {
-					comboBoxEstado.setBorder(BorderFactory.createLineBorder(Color.black, 1));
+					comboBoxEstado.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
 					lblMessageEstado.setVisible(false);
 				}
 			});
+			
+			cbPedido.addFocusListener(new FocusAdapter() {
+				@Override
+				public void focusLost(FocusEvent e) {
+					cbPedido.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
+					lblMessagePedido.setVisible(false);
+				}
+			});
+			
 			txtNumeroDeParcelas.addFocusListener(new FocusAdapter() {
 				@Override
 				public void focusLost(FocusEvent e) {
-					txtNumeroDeParcelas.setBorder(BorderFactory.createLineBorder(Color.black, 1));
+					txtNumeroDeParcelas.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
 					lblMessageNum.setVisible(false);
 				}
 			});
@@ -218,7 +233,7 @@ public class PagamentoComCartaoView extends JFrame {
 			pagamentoCartaoService = getPagamentoComCartaoService();
 			pagamentoCartao = getPagamentoComCartao();
 			
-			modelResponse = (ModelResponse<PagamentoComCartao>) pagamentoCartaoService.findById(idPagamentoComCartao);
+			modelResponse = (ModelResponse<PagamentoComCartao>) pagamentoCartaoService.findById(id);
 			
 			if(modelResponse.isError()) {
 				JOptionPane.showMessageDialog(null, modelResponse.getMessage(), "Erro!", JOptionPane.ERROR_MESSAGE);
@@ -235,28 +250,44 @@ public class PagamentoComCartaoView extends JFrame {
 			idPagamentoComCartao = 0L;
 			txtNumeroDeParcelas.setText("");
 			comboBoxEstado.setSelectedIndex(-1);
+			cbPedido.setSelectedIndex(-1);
 		}
 		
+		@SuppressWarnings("unchecked")
 		private void setPagamentoCartaoFromView() {
 			pagamentoCartao.setEstado(comboBoxEstado.getSelectedIndex()+1);
 			pagamentoCartao.setNumeroDeParcelas(Integer.parseInt(txtNumeroDeParcelas.getText()));
+			
+			ModelResponse<Pedido> mrPedido = new ModelResponse<Pedido>();
+			mrPedido = (ModelResponse<Pedido>) getPedidoService()
+					.findByName(cbPedido.getItemAt(cbPedido.getSelectedIndex()));
+			pedido = mrPedido.getObject();
+			
+			pagamentoCartao.setPedido(pedido);
 		}
 		
 		private void getPagamentoCartaoFromDataBase() {
 			idPagamentoComCartao = pagamentoCartao.getId();
 			comboBoxEstado.setSelectedIndex(pagamentoCartao.getEstado() - 1);
 			txtNumeroDeParcelas.setText(String.valueOf(pagamentoCartao.getNumeroDeParcelas()));
+			cbPedido.setSelectedItem(pagamentoCartao.getPedido());
 		}
 		
 		private void showErrorFromServidor() {
 			for(ErrorsData erro : errors.getListObject()) {
 				if(erro.getNumeroCampo() == 1) {
+					lblMessagePedido.setVisible(true);
+					lblMessagePedido.setForeground(Color.red);
+					lblMessagePedido.setText(erro.getShowMensagemError());
+					cbPedido.setBorder(BorderFactory.createLineBorder(Color.red, 2));
+				}
+				if(erro.getNumeroCampo() == 2) {
 					lblMessageEstado.setVisible(true);
 					lblMessageEstado.setForeground(Color.red);
 					lblMessageEstado.setText(erro.getShowMensagemError());
 					comboBoxEstado.setBorder(BorderFactory.createLineBorder(Color.red, 2));
 				}
-				if(erro.getNumeroCampo() == 2) {
+				if(erro.getNumeroCampo() == 3) {
 					lblMessageNum.setVisible(true);
 					lblMessageNum.setForeground(Color.red);
 					lblMessageNum.setText(erro.getShowMensagemError());
@@ -309,12 +340,12 @@ public class PagamentoComCartaoView extends JFrame {
 			
 			JLabel lblestado = new JLabel("Estado :");
 			lblestado.setFont(new Font("Segoe UI", Font.ITALIC, 15));
-			lblestado.setBounds(10, 25, 85, 21);
+			lblestado.setBounds(10, 50, 85, 21);
 			panel_1.add(lblestado);
 			
 			JLabel lblNewLabel_1_1 = new JLabel("Número de parcelas :");
 			lblNewLabel_1_1.setFont(new Font("Segoe UI", Font.ITALIC, 15));
-			lblNewLabel_1_1.setBounds(10, 56, 151, 21);
+			lblNewLabel_1_1.setBounds(10, 88, 151, 21);
 			panel_1.add(lblNewLabel_1_1);
 			
 			JPanel panel_2 = new JPanel();
@@ -326,21 +357,35 @@ public class PagamentoComCartaoView extends JFrame {
 			txtNumeroDeParcelas = new JTextField();
 			txtNumeroDeParcelas.setFont(new Font("Segoe UI", Font.ITALIC, 15));
 			txtNumeroDeParcelas.setColumns(10);
-			txtNumeroDeParcelas.setBounds(159, 57, 374, 19);
+			txtNumeroDeParcelas.setBounds(159, 89, 374, 19);
 			panel_1.add(txtNumeroDeParcelas);
 			
 			comboBoxEstado = new JComboBox<String>();
 			comboBoxEstado.setModel(new DefaultComboBoxModel<String>(EstadoPagamento.enumsToStringArray()));
-			comboBoxEstado.setBounds(159, 27, 374, 19);
+			comboBoxEstado.setBounds(159, 52, 374, 19);
 			panel_1.add(comboBoxEstado);
 			
 			lblMessageEstado = new JLabel("");
-			lblMessageEstado.setBounds(159, 45, 374, 14);
+			lblMessageEstado.setBounds(159, 70, 374, 14);
 			panel_1.add(lblMessageEstado);
 			
 			lblMessageNum = new JLabel("");
-			lblMessageNum.setBounds(159, 70, 374, 14);
+			lblMessageNum.setBounds(159, 106, 374, 14);
 			panel_1.add(lblMessageNum);
+			
+			cbPedido = new JComboBox<String>();
+			cbPedido.setModel(new DefaultComboBoxModel<String>(getPedidoService().stringListAllPedidos()));
+			cbPedido.setBounds(159, 15, 374, 19);
+			panel_1.add(cbPedido);
+			
+			lblMessagePedido = new JLabel("");
+			lblMessagePedido.setBounds(159, 36, 374, 14);
+			panel_1.add(lblMessagePedido);
+			
+			JLabel lblNewLabel_1_1_1 = new JLabel("Descrição do pedido:");
+			lblNewLabel_1_1_1.setFont(new Font("Segoe UI", Font.ITALIC, 15));
+			lblNewLabel_1_1_1.setBounds(10, 11, 139, 21);
+			panel_1.add(lblNewLabel_1_1_1);
 			
 		}
 		
@@ -352,5 +397,15 @@ public class PagamentoComCartaoView extends JFrame {
 		public PagamentoComCartao getPagamentoComCartao() {
 			return new PagamentoComCartao();
 		}
+		
+		public PedidoService getPedidoService() {
+			EntityManager em = DataBaseConnection.getConnection().getEntityManager();
+			return new PedidoService(em, new PedidoDAO(em));
+		}
+		
+		public Pedido getPedido() {
+			return new Pedido();
+		}
+		
 
 }

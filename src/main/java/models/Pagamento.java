@@ -12,7 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import jakarta.validation.constraints.NotNull;
@@ -38,7 +38,7 @@ public class Pagamento implements Serializable {
 	@Column(name = "estado_pagamento")
 	private Integer estado;
 
-	@OneToOne(mappedBy = "pagamento")
+	@ManyToOne
 	@JoinColumn(name = "id_pedido", referencedColumnName = "id")
 	private Pedido pedido;
 
@@ -116,4 +116,9 @@ public class Pagamento implements Serializable {
 		return true;
 	}
 
+	public String pagamentoToString() {
+		return "\nPagamento [id=" + id + ", \nestado=" + EstadoPagamento.toEnum(getEstado()).getDescricao() + ", \npedido=" + pedido + "]";
+	}
+	
+	
 }

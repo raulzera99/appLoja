@@ -18,7 +18,9 @@ import config.Constantes;
 import config.Page;
 import dao.PedidoDAO;
 import models.Pedido;
+import models.PrintJasperReports;
 import persistence.DataBaseConnection;
+import services.JasperReportsService;
 import services.PedidoService;
 import view.table.RenderHeaderTable;
 import view.table.RenderTable;
@@ -41,6 +43,7 @@ public class TablePedidoPanel extends JPanel {
 	JButton btnAlterar = new JButton("Alterar");
 	JButton btnRemover = new JButton("Remover");
 	JButton btnConsultar = new JButton("Consultar");
+	JButton btnRelatorio = new JButton("Relatório");
 	JTextField txtSearch = new JTextField();
 	
 	
@@ -119,6 +122,17 @@ public class TablePedidoPanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				getLinhaTabela();
 				showPedidoFrame(Constantes.CONSULTAR);
+				initTable();
+			}
+		});
+		
+		btnRelatorio.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				PrintJasperReports relatorio = new PrintJasperReports();
+				JasperReportsService service = new JasperReportsService();
+				
+				relatorio.setFile("relatorio_pedido");
+				service.gerarRelatorioPorSql(relatorio);
 			}
 		});
 		
@@ -145,22 +159,17 @@ public class TablePedidoPanel extends JPanel {
 		add(panelButtons);
 		panelButtons.setLayout(null);
 		
-		
-		btnPrimeiro.setBounds(10, 11, 89, 23);
+		btnPrimeiro.setBounds(300, 11, 89, 23);
 		panelButtons.add(btnPrimeiro);
 		
-		
-		btnAnterior.setBounds(109, 11, 89, 23);
+		btnAnterior.setBounds(399, 11, 89, 23);
 		panelButtons.add(btnAnterior);
 		
-		
-		btnProximo.setBounds(208, 11, 89, 23);
+		btnProximo.setBounds(498, 11, 89, 23);
 		panelButtons.add(btnProximo);
 		
-		
-		btnUltimo.setBounds(307, 11, 89, 23);
+		btnUltimo.setBounds(597, 11, 89, 23);
 		panelButtons.add(btnUltimo);
-		
 		
 		btnAdicionar.setBounds(10, 45, 89, 23);
 		panelButtons.add(btnAdicionar);
@@ -168,16 +177,14 @@ public class TablePedidoPanel extends JPanel {
 		btnAlterar.setBounds(119, 45, 89, 23);
 		panelButtons.add(btnAlterar);
 		
-		
-		
 		btnRemover.setBounds(233, 45, 89, 23);
 		panelButtons.add(btnRemover);
-		
-		
 		
 		btnConsultar.setBounds(346, 45, 89, 23);
 		panelButtons.add(btnConsultar);
 		
+		btnRelatorio.setBounds(460, 45, 89, 23);
+		panelButtons.add(btnRelatorio);
 		
 		panelSearch.setBounds(10, 11, 1065, 42);
 		add(panelSearch);
@@ -282,8 +289,6 @@ public class TablePedidoPanel extends JPanel {
 		return pedido;
 	}
 	
-	
-
 	public PedidoService getPedidoService() {
 		EntityManager em = DataBaseConnection.getConnection().getEntityManager();
 		return new PedidoService(em, new PedidoDAO(em));

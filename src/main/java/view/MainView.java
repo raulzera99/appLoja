@@ -20,11 +20,16 @@ import view.cliente.TableClientePanel;
 import view.codigo.TableCodigoPanel;
 import view.endereco.TableEnderecoPanel;
 import view.estado.TableEstadoPanel;
+import view.itemPedido.TableItemPedidoPanel;
 import view.pagamentoComBoleto.TablePagamentoBoletoPanel;
 import view.pagamentoComCartao.TablePagamentoCartaoPanel;
 import view.pedido.TablePedidoPanel;
 import view.produto.TableProdutoPanel;
+import view.serial.CommunicationView;
 import view.telefone.TableTelefonePanel;
+import java.awt.Dimension;
+import javax.swing.SwingConstants;
+import javax.swing.border.LineBorder;
 
 public class MainView extends JFrame {
 	private static final long serialVersionUID = 2435012607684752695L;
@@ -39,6 +44,7 @@ public class MainView extends JFrame {
 	TablePagamentoBoletoPanel tablePagamentoBoletoPanel = TablePagamentoBoletoPanel.getInstance();
 	TablePagamentoCartaoPanel tablePagamentoCartaoPanel = TablePagamentoCartaoPanel.getInstance();
 	TablePedidoPanel tablePedidoPanel = TablePedidoPanel.getInstance();
+	TableItemPedidoPanel tableItemPedidoPanel = TableItemPedidoPanel.getInstance();
 	TableProdutoPanel tableProdutoPanel = TableProdutoPanel.getInstance();
 	TableTelefonePanel tableTelefonePanel = TableTelefonePanel.getInstance();
 	
@@ -59,6 +65,8 @@ public class MainView extends JFrame {
 	JMenuItem mn_Pedido;
 	JMenuItem mn_Produto;
 	JMenuItem mn_Telefone;
+	JMenuItem mn_itensPedido;
+	JMenuItem mntmSerial;
 	/**
 	 * Launch the application.
 	 */
@@ -160,6 +168,21 @@ public class MainView extends JFrame {
 			}
 		});
 		
+		mn_itensPedido.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setVisiblePanels(false);
+				tableItemPedidoPanel.setVisible(true);
+			}
+		});
+		
+		mntmSerial.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				CommunicationView view = new CommunicationView();
+				view.setLocationRelativeTo(null);
+				view.setVisible(true);
+			}
+		});
+		
 	}
 	
 	private void setVisiblePanels(boolean b) {
@@ -174,7 +197,7 @@ public class MainView extends JFrame {
 		tablePedidoPanel.setVisible(b);
 		tableProdutoPanel.setVisible(b);
 		tableTelefonePanel.setVisible(b);
-		
+		tableItemPedidoPanel.setVisible(b);
 	}
 
 	private void initComponents() {
@@ -190,7 +213,7 @@ public class MainView extends JFrame {
 		setVisiblePanels(false);
 		
 		getContentPane().add(tableCategoriaPanel);
-		tableCategoriaPanel.setBounds(getBounds());
+		tableCategoriaPanel.setBounds(10, 130, 1079, 645);
 		
 		getContentPane().add(tableCidadePanel);
 		tableCidadePanel.setBounds(10, 130, 1079, 645);
@@ -211,7 +234,7 @@ public class MainView extends JFrame {
 		tablePagamentoBoletoPanel.setBounds(10, 130, 1079, 645);
 		
 		getContentPane().add(tablePagamentoCartaoPanel);
-		tablePagamentoBoletoPanel.setBounds(10, 130, 1079, 645);
+		tablePagamentoCartaoPanel.setBounds(10, 130, 1079, 645);
 
 		getContentPane().add(tablePedidoPanel);
 		tablePedidoPanel.setBounds(10, 130, 1079, 645);
@@ -222,6 +245,9 @@ public class MainView extends JFrame {
 		getContentPane().add(tableTelefonePanel);
 		tableTelefonePanel.setBounds(10, 130, 1079, 645);
 		
+		getContentPane().add(tableItemPedidoPanel);
+		tableItemPedidoPanel.setBounds(10, 130, 1079, 645);
+		
 		topBar = new JPanel();
 		topBar.setBackground(new Color(245, 41, 5));
 		topBar.setBounds(0, 0, 1101, 119);
@@ -230,16 +256,29 @@ public class MainView extends JFrame {
 		
 		menu = new JMenuBar();
 		menu.setBackground(new Color(245, 41, 5));
-		menu.setBounds(0, 0, 101, 22);
+		menu.setBounds(0, 0, 1101, 22);
 		topBar.add(menu);
 		
 		mn_Menu = new JMenu("Menu");
+		mn_Menu.setBorder(new LineBorder(Color.LIGHT_GRAY));
+		mn_Menu.setFocusable(false);
+		mn_Menu.setPreferredSize(new Dimension(100, 26));
 		mn_Menu.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 20));
-		mn_Menu.setForeground(new Color(255, 255, 255));
+		mn_Menu.setForeground(Color.BLACK);
 		mn_Menu.setBackground(new Color(245, 41, 5));
 		menu.add(mn_Menu);
 		
-		mn_pagamento = new JMenu("Pagamento");
+		mn_Pedido = new JMenuItem("Pedido");
+		mn_Pedido.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 15));
+		mn_Pedido.setBackground(new Color(245, 41, 5));
+		mn_Menu.add(mn_Pedido);
+		
+		mn_itensPedido = new JMenuItem("Itens do pedido");
+		mn_itensPedido.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 15));
+		mn_itensPedido.setBackground(new Color(245, 41, 5));
+		mn_Menu.add(mn_itensPedido);
+		
+		mn_pagamento = new JMenu("Pagamentos");
 		mn_pagamento.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 15));
 		mn_pagamento.setForeground(new Color(0, 0, 0));
 		mn_pagamento.setBackground(new Color(245, 41, 5));
@@ -255,50 +294,57 @@ public class MainView extends JFrame {
 		mntm_pagamentoCartao.setBackground(new Color(245, 41, 5));
 		mn_pagamento.add(mntm_pagamentoCartao);
 		
-		mn_Estado = new JMenuItem("Estado");
-		mn_Estado.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 15));
-		mn_Estado.setBackground(new Color(245, 41, 5));
-		mn_Menu.add(mn_Estado);
-		
-		mn_Cidade = new JMenuItem("Cidade");
-		mn_Cidade.setBackground(new Color(245, 41, 5));
-		mn_Cidade.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 15));
-		mn_Menu.add(mn_Cidade);
-		
-		mn_Endereco = new JMenuItem("Endereço");
-		mn_Endereco.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 15));
-		mn_Endereco.setBackground(new Color(245, 41, 5));
-		mn_Menu.add(mn_Endereco);
+		mn_Produto = new JMenuItem("Produto");
+		mn_Produto.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 15));
+		mn_Produto.setBackground(new Color(245, 41, 5));
+		mn_Menu.add(mn_Produto);
 		
 		mn_Cliente = new JMenuItem("Cliente");
 		mn_Cliente.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 15));
 		mn_Cliente.setBackground(new Color(245, 41, 5));
 		mn_Menu.add(mn_Cliente);
 		
+		mn_Endereco = new JMenuItem("Endereço");
+		mn_Endereco.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 15));
+		mn_Endereco.setBackground(new Color(245, 41, 5));
+		mn_Menu.add(mn_Endereco);
+		
 		mn_Telefone = new JMenuItem("Telefone");
 		mn_Telefone.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 15));
 		mn_Telefone.setBackground(new Color(245, 41, 5));
 		mn_Menu.add(mn_Telefone);
 		
-		mn_Pedido = new JMenuItem("Pedido");
-		mn_Pedido.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 15));
-		mn_Pedido.setBackground(new Color(245, 41, 5));
-		mn_Menu.add(mn_Pedido);
+		mn_Categoria = new JMenuItem("Categoria");
+		mn_Categoria.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 15));
+		mn_Categoria.setBackground(new Color(245, 41, 5));
+		mn_Menu.add(mn_Categoria);
 		
-		mn_Produto = new JMenuItem("Produto");
-		mn_Produto.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 15));
-		mn_Produto.setBackground(new Color(245, 41, 5));
-		mn_Menu.add(mn_Produto);
+		mn_Cidade = new JMenuItem("Cidade");
+		mn_Cidade.setBackground(new Color(245, 41, 5));
+		mn_Cidade.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 15));
+		mn_Menu.add(mn_Cidade);
+		
+		mn_Estado = new JMenuItem("Estado");
+		mn_Estado.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 15));
+		mn_Estado.setBackground(new Color(245, 41, 5));
+		mn_Menu.add(mn_Estado);
 		
 		mn_Codigo = new JMenuItem("Código");
 		mn_Codigo.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 15));
 		mn_Codigo.setBackground(new Color(245, 41, 5));
 		mn_Menu.add(mn_Codigo);
 		
-		mn_Categoria = new JMenuItem("Categoria");
-		mn_Categoria.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 15));
-		mn_Categoria.setBackground(new Color(245, 41, 5));
-		mn_Menu.add(mn_Categoria);
+		mntmSerial = new JMenuItem("Serial");
+		
+		mntmSerial.setMaximumSize(new Dimension(100, 32767));
+		mntmSerial.setHorizontalTextPosition(SwingConstants.CENTER);
+		mntmSerial.setBorder(new LineBorder(Color.LIGHT_GRAY));
+		mntmSerial.setHorizontalAlignment(SwingConstants.CENTER);
+		mntmSerial.setForeground(Color.BLACK);
+		mntmSerial.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 20));
+		mntmSerial.setBackground(new Color(245, 41, 5));
+		mntmSerial.setPreferredSize(new Dimension(100, 26));
+		menu.add(mntmSerial);
 		
 		lblTitle = new JLabel("Controle de Loja");
 		lblTitle.setForeground(new Color(255, 255, 255));

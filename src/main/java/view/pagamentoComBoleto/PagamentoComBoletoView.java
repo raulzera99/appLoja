@@ -21,11 +21,14 @@ import javax.swing.border.EmptyBorder;
 
 import config.Constantes;
 import dao.PagamentoComBoletoDAO;
+import dao.PedidoDAO;
 import message.ModelResponse;
 import models.PagamentoComBoleto;
+import models.Pedido;
 import models.enums.EstadoPagamento;
 import persistence.DataBaseConnection;
 import services.PagamentoComBoletoService;
+import services.PedidoService;
 import services.errors.ErrorsData;
 
 public class PagamentoComBoletoView extends JFrame {
@@ -36,15 +39,18 @@ public class PagamentoComBoletoView extends JFrame {
 	JButton btnCancelar = new JButton("Cancelar");
 	JTextField txtDataVencimento;
 	JTextField txtDataPagamento;
+	JComboBox<String> cbPedido;
 	JComboBox<String> comboBoxEstado;
 	JLabel lblMessageDataVencimento;
 	JLabel lblMessageDataPagamento;
 	JLabel lblMessageEstado;
+	JLabel lblMessagePedido;
 	
 	private Long idPagamentoComBoleto = 0L;
 	
 	private PagamentoComBoletoService pagamentoBoletoService;
 	private PagamentoComBoleto pagamentoBoleto = null;
+	private Pedido pedido = null;
 	
 	private ModelResponse<PagamentoComBoleto> modelResponse = null;
 	private ModelResponse<ErrorsData> errors;
@@ -90,7 +96,7 @@ public class PagamentoComBoletoView extends JFrame {
 		else if(opcaoCadastro == Constantes.CONSULTAR) {
 			findById(pagamentoBoleto.getId());
 			btnSalvar.setVisible(false);
-			btnCancelar.setBounds(225, 131, 114, 37);
+			btnCancelar.setBounds(225, 152, 114, 37);
 			btnCancelar.setText("Sair");
 		}
 	}
@@ -121,6 +127,14 @@ public class PagamentoComBoletoView extends JFrame {
 				public void focusLost(FocusEvent e) {
 					comboBoxEstado.setBorder(BorderFactory.createLineBorder(Color.black, 1));
 					lblMessageEstado.setVisible(false);
+				}
+			});
+			
+			cbPedido.addFocusListener(new FocusAdapter() {
+				@Override
+				public void focusLost(FocusEvent e) {
+					cbPedido.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
+					lblMessagePedido.setVisible(false);
 				}
 			});
 			
@@ -246,29 +260,48 @@ public class PagamentoComBoletoView extends JFrame {
 			comboBoxEstado.setSelectedIndex(-1);
 		}
 		
+		@SuppressWarnings("unchecked")
 		private void setPagamentoBoletoFromView() {
 			pagamentoBoleto.setEstado(comboBoxEstado.getSelectedIndex()+1);
 			pagamentoBoleto.setDataPagamento(txtDataPagamento.getText());
 			pagamentoBoleto.setDataVencimento(txtDataVencimento.getText());
+			ModelResponse<Pedido> mrPedido = new ModelResponse<Pedido>();
+			mrPedido = (ModelResponse<Pedido>) getPedidoService()
+					.findByName(cbPedido.getItemAt(cbPedido.getSelectedIndex()));
+			pedido = mrPedido.getObject();
+			
+			pagamentoBoleto.setPedido(pedido);
 		}
 		
 		private void getPagamentoBoletoFromDataBase() {
 			idPagamentoComBoleto = pagamentoBoleto.getId();
-			
 			comboBoxEstado.setSelectedIndex(pagamentoBoleto.getEstado() - 1);
 			txtDataPagamento.setText(pagamentoBoleto.getDataPagamento());
 			txtDataVencimento.setText(pagamentoBoleto.getDataVencimento());
+			cbPedido.setSelectedItem(pagamentoBoleto.getPedido());
 		}
 		
 		private void showErrorFromServidor() {
 			for(ErrorsData erro : errors.getListObject()) {
 				if(erro.getNumeroCampo() == 1) {
+					lblMessagePedido.setVisible(true);
+					lblMessagePedido.setForeground(Color.red);
+					lblMessagePedido.setText(erro.getShowMensagemError());
+					cbPedido.setBorder(BorderFactory.createLineBorder(Color.red, 2));
+				}
+				if(erro.getNumeroCampo() == 2) {
+					lblMessageEstado.setVisible(true);
+					lblMessageEstado.setForeground(Color.red);
+					lblMessageEstado.setText(erro.getShowMensagemError());
+					comboBoxEstado.setBorder(BorderFactory.createLineBorder(Color.red, 2));
+				}
+				if(erro.getNumeroCampo() == 3) {
 					lblMessageDataVencimento.setVisible(true);
 					lblMessageDataVencimento.setForeground(Color.red);
 					lblMessageDataVencimento.setText(erro.getShowMensagemError());
 					txtDataVencimento.setBorder(BorderFactory.createLineBorder(Color.red, 2));
 				}
-				if(erro.getNumeroCampo() == 2) {
+				if(erro.getNumeroCampo() == 4) {
 					lblMessageDataPagamento.setVisible(true);
 					lblMessageDataPagamento.setForeground(Color.red);
 					lblMessageDataPagamento.setText(erro.getShowMensagemError());
@@ -279,7 +312,7 @@ public class PagamentoComBoletoView extends JFrame {
 		
 		private void initComponents() {
 			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			setBounds(100, 100, 571, 344);
+			setBounds(100, 100, 571, 364);
 			contentPane = new JPanel();
 			contentPane.setBackground(new Color(0, 0, 0));
 			contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -309,68 +342,82 @@ public class PagamentoComBoletoView extends JFrame {
 			btnSalvar.setForeground(new Color(255, 255, 255));
 			btnSalvar.setBackground(new Color(211, 61, 48));
 			btnSalvar.setFont(new Font("Segoe UI", Font.ITALIC, 15));
-			btnSalvar.setBounds(120, 131, 114, 37);
+			btnSalvar.setBounds(120, 152, 114, 37);
 			panel_1.add(btnSalvar);
 			
 			
 			btnCancelar.setForeground(Color.WHITE);
 			btnCancelar.setFont(new Font("Segoe UI", Font.ITALIC, 15));
 			btnCancelar.setBackground(new Color(211, 61, 48));
-			btnCancelar.setBounds(320, 131, 114, 37);
+			btnCancelar.setBounds(320, 152, 114, 37);
 			panel_1.add(btnCancelar);
 			
 			JLabel lblestado = new JLabel("Estado :");
 			lblestado.setFont(new Font("Segoe UI", Font.ITALIC, 15));
-			lblestado.setBounds(10, 25, 85, 21);
+			lblestado.setBounds(10, 45, 85, 21);
 			panel_1.add(lblestado);
 			
 			JLabel lblNewLabel_1_1 = new JLabel("Data de Vencimento :");
 			lblNewLabel_1_1.setFont(new Font("Segoe UI", Font.ITALIC, 15));
-			lblNewLabel_1_1.setBounds(10, 56, 151, 21);
+			lblNewLabel_1_1.setBounds(10, 76, 151, 21);
 			panel_1.add(lblNewLabel_1_1);
 			
 			JLabel lblNewLabel_1_2 = new JLabel("Data de Pagamento :");
 			lblNewLabel_1_2.setFont(new Font("Segoe UI", Font.ITALIC, 15));
-			lblNewLabel_1_2.setBounds(10, 87, 139, 21);
+			lblNewLabel_1_2.setBounds(10, 107, 139, 21);
 			panel_1.add(lblNewLabel_1_2);
-			
-			JPanel panel_2 = new JPanel();
-			panel_2.setBackground(new Color(211, 61, 48));
-			panel_2.setBounds(0, 179, 555, 21);
-			panel_1.add(panel_2);
-			panel_2.setLayout(null);
 			
 			txtDataVencimento = new JTextField();
 			txtDataVencimento.setToolTipText("AAAA-MM-DD");
 			txtDataVencimento.setFont(new Font("Segoe UI", Font.ITALIC, 15));
 			txtDataVencimento.setColumns(10);
-			txtDataVencimento.setBounds(159, 57, 374, 19);
+			txtDataVencimento.setBounds(159, 77, 374, 19);
 			panel_1.add(txtDataVencimento);
 			
 			txtDataPagamento = new JTextField();
 			txtDataPagamento.setToolTipText("AAAA-MM-DD");
 			txtDataPagamento.setFont(new Font("Segoe UI", Font.ITALIC, 15));
 			txtDataPagamento.setColumns(10);
-			txtDataPagamento.setBounds(159, 88, 374, 19);
+			txtDataPagamento.setBounds(159, 108, 374, 19);
 			panel_1.add(txtDataPagamento);
 			
 			comboBoxEstado = new JComboBox<String>();
 			comboBoxEstado.setToolTipText("");
 			comboBoxEstado.setModel(new DefaultComboBoxModel<String>(EstadoPagamento.enumsToStringArray()));
-			comboBoxEstado.setBounds(159, 27, 374, 19);
+			comboBoxEstado.setBounds(159, 47, 374, 19);
 			panel_1.add(comboBoxEstado);
 			
+			cbPedido = new JComboBox<String>();
+			cbPedido.setModel(new DefaultComboBoxModel<String>(getPedidoService().stringListAllPedidos()));
+			cbPedido.setBounds(159, 15, 374, 19);
+			panel_1.add(cbPedido);
+			
+			lblMessagePedido = new JLabel("");
+			lblMessagePedido.setBounds(159, 36, 374, 14);
+			panel_1.add(lblMessagePedido);
+			
+			JLabel lblNewLabel_1_1_1 = new JLabel("Descrição do pedido:");
+			lblNewLabel_1_1_1.setFont(new Font("Segoe UI", Font.ITALIC, 15));
+			lblNewLabel_1_1_1.setBounds(10, 11, 139, 21);
+			panel_1.add(lblNewLabel_1_1_1);
+			
 			lblMessageDataVencimento = new JLabel("");
-			lblMessageDataVencimento.setBounds(159, 75, 374, 14);
+			lblMessageDataVencimento.setBounds(159, 95, 374, 14);
 			panel_1.add(lblMessageDataVencimento);
 			
 			lblMessageDataPagamento = new JLabel("");
-			lblMessageDataPagamento.setBounds(159, 106, 374, 14);
+			lblMessageDataPagamento.setBounds(159, 126, 374, 14);
 			panel_1.add(lblMessageDataPagamento);
 			
 			lblMessageEstado = new JLabel("");
-			lblMessageEstado.setBounds(159, 44, 374, 14);
+			lblMessageEstado.setBounds(159, 64, 374, 14);
 			panel_1.add(lblMessageEstado);
+			
+			JPanel panel_2 = new JPanel();
+			panel_2.setBounds(0, 304, 555, 21);
+			contentPane.add(panel_2);
+			panel_2.setBackground(new Color(211, 61, 48));
+			panel_2.setLayout(null);
 		}
 		
 		public PagamentoComBoletoService getPagamentoComBoletoService() {
@@ -380,6 +427,15 @@ public class PagamentoComBoletoView extends JFrame {
 		
 		public PagamentoComBoleto getPagamentoComBoleto() {
 			return new PagamentoComBoleto();
+		}
+		
+		public PedidoService getPedidoService() {
+			EntityManager em = DataBaseConnection.getConnection().getEntityManager();
+			return new PedidoService(em, new PedidoDAO(em));
+		}
+		
+		public Pedido getPedido() {
+			return new Pedido();
 		}
 		
 		public ModelResponse<PagamentoComBoleto> getModelResponse() {

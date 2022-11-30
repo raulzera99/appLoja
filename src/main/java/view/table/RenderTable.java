@@ -42,10 +42,10 @@ public class RenderTable extends DefaultTableCellRenderer {
 		
 		if(value instanceof Double) {
 			Number numero = (Number) value;
-			String texto = numberFormat.format(numberFormat);
+			String texto = numberFormat.format(numero);
 			setText(texto);
 			setForeground(numero.doubleValue()< 0 ? Color.RED : Color.BLACK);
-			setHorizontalAlignment(RIGHT);
+			setHorizontalAlignment(CENTER);
 		}
 		
 		if(value instanceof Integer) {

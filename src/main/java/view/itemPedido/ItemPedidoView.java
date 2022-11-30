@@ -44,12 +44,10 @@ public class ItemPedidoView extends JFrame {
 	JComboBox<String> cbProduto;
 	private JTextField txtDesconto;
 	private JTextField txtQuantidade;
-	private JTextField txtPreco;
 	JLabel lblMessageProduto;
 	JLabel lblMessagePedido;
 	JLabel lblMessageDesconto;
 	JLabel lblMessageQuantidade;
-	JLabel lblMessagePreco;
 	
 	private Long idItemPedido = 0L;
 	
@@ -84,7 +82,7 @@ public class ItemPedidoView extends JFrame {
 	 */
 	public ItemPedidoView(ItemPedido itemPedido, Integer opcaoCadastro) {
 		setBackground(new Color(0, 0, 0));
-		setTitle("ItemPedido com Boleto");
+		setTitle("Itens do Pedido");
 		initComponents();
 		eventhandler();
 		
@@ -104,7 +102,7 @@ public class ItemPedidoView extends JFrame {
 		else if(opcaoCadastro == Constantes.CONSULTAR) {
 			findById(itemPedido.getId());
 			btnSalvar.setVisible(false);
-			btnCancelar.setBounds(225, 131, 114, 37);
+			btnCancelar.setBounds(225, 141, 114, 37);
 			btnCancelar.setText("Sair");
 		}
 		
@@ -115,7 +113,7 @@ public class ItemPedidoView extends JFrame {
 		
 			btnSalvar.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					if(idItemPedido == 0l) {
+					if(idItemPedido == 0L) {
 						add();
 					}else if(btnSalvar.getText() == "Alterar"){
 						update();
@@ -132,17 +130,34 @@ public class ItemPedidoView extends JFrame {
 				}
 			});
 			
+			txtDesconto.addFocusListener(new FocusAdapter() {
+				@Override
+				public void focusLost(FocusEvent e) {
+					txtDesconto.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
+					lblMessageDesconto.setVisible(false);
+				}
+			});
+			
+			txtQuantidade.addFocusListener(new FocusAdapter() {
+				@Override
+				public void focusLost(FocusEvent e) {
+					txtQuantidade.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
+					lblMessageQuantidade.setVisible(false);
+				}
+			});
+			
+			
 			cbProduto.addFocusListener(new FocusAdapter() {
 				@Override
 				public void focusLost(FocusEvent e) {
-					cbProduto.setBorder(BorderFactory.createLineBorder(Color.black, 1));
+					cbProduto.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
 					lblMessageProduto.setVisible(false);
 				}
 			});
 			cbPedido.addFocusListener(new FocusAdapter() {
 				@Override
 				public void focusLost(FocusEvent e) {
-					cbPedido.setBorder(BorderFactory.createLineBorder(Color.black, 1));
+					cbPedido.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
 					lblMessagePedido.setVisible(false);
 				}
 			});
@@ -253,6 +268,9 @@ public class ItemPedidoView extends JFrame {
 		@SuppressWarnings("unchecked")
 		private void setItemPedidoFromView() {
 			
+			itemPedido.setDesconto(Double.valueOf(txtDesconto.getText()));
+			itemPedido.setQuantidade(Integer.valueOf(txtQuantidade.getText()));
+			
 			ModelResponse<Pedido> mrPedido = new ModelResponse<Pedido>();
 			mrPedido = (ModelResponse<Pedido>) getPedidoService()
 					.findByName(cbPedido.getItemAt(cbPedido.getSelectedIndex()));
@@ -260,14 +278,19 @@ public class ItemPedidoView extends JFrame {
 			itemPedido.setPedido(pedido);
 			
 			ModelResponse<Produto> mrProduto = new ModelResponse<Produto>();
-			mrProduto = (ModelResponse<Produto>) getPedidoService()
+			mrProduto = (ModelResponse<Produto>) getProdutoService()
 					.findByName(cbProduto.getItemAt(cbProduto.getSelectedIndex()));
 			produto = mrProduto.getObject();
 			itemPedido.setProduto(produto);
+			
+			itemPedido.setPreco((itemPedido.getQuantidade()*itemPedido.getProduto().getPreco()) - itemPedido.getDesconto());
+			
 		}
 		
 		private void getItemPedidoFromDataBase() {
 			idItemPedido = itemPedido.getId();
+			txtDesconto.setText(String.valueOf(itemPedido.getDesconto()));
+			txtQuantidade.setText(String.valueOf(itemPedido.getQuantidade()));
 			cbProduto.setSelectedItem(itemPedido.getProduto());
 			cbPedido.setSelectedItem(itemPedido.getPedido());
 		}
@@ -291,7 +314,7 @@ public class ItemPedidoView extends JFrame {
 		
 		private void initComponents() {
 			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			setBounds(100, 100, 571, 431);
+			setBounds(100, 100, 571, 393);
 			contentPane = new JPanel();
 			contentPane.setBackground(new Color(0, 0, 0));
 			contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -313,7 +336,7 @@ public class ItemPedidoView extends JFrame {
 			
 			JPanel panel_1 = new JPanel();
 			panel_1.setBackground(new Color(255, 255, 255));
-			panel_1.setBounds(0, 105, 555, 265);
+			panel_1.setBounds(0, 105, 555, 228);
 			contentPane.add(panel_1);
 			panel_1.setLayout(null);
 			
@@ -321,42 +344,42 @@ public class ItemPedidoView extends JFrame {
 			btnSalvar.setForeground(new Color(255, 255, 255));
 			btnSalvar.setBackground(new Color(211, 61, 48));
 			btnSalvar.setFont(new Font("Segoe UI", Font.ITALIC, 15));
-			btnSalvar.setBounds(118, 217, 114, 37);
+			btnSalvar.setBounds(116, 175, 114, 37);
 			panel_1.add(btnSalvar);
 			
 			
 			btnCancelar.setForeground(Color.WHITE);
 			btnCancelar.setFont(new Font("Segoe UI", Font.ITALIC, 15));
 			btnCancelar.setBackground(new Color(211, 61, 48));
-			btnCancelar.setBounds(317, 217, 114, 37);
+			btnCancelar.setBounds(315, 175, 114, 37);
 			panel_1.add(btnCancelar);
 			
 			JLabel lblNewLabel_1_1 = new JLabel("Nome do produto:");
 			lblNewLabel_1_1.setFont(new Font("Segoe UI", Font.ITALIC, 15));
-			lblNewLabel_1_1.setBounds(10, 126, 151, 21);
+			lblNewLabel_1_1.setBounds(10, 89, 151, 21);
 			panel_1.add(lblNewLabel_1_1);
 			
 			cbProduto = new JComboBox<String>();
 			cbProduto.setModel(new DefaultComboBoxModel<String>(getProdutoService().stringListAllProdutos()));
-			cbProduto.setBounds(159, 130, 374, 19);
+			cbProduto.setBounds(159, 93, 374, 19);
 			panel_1.add(cbProduto);
 			
 			lblMessageProduto = new JLabel("");
-			lblMessageProduto.setBounds(159, 149, 374, 14);
+			lblMessageProduto.setBounds(159, 112, 374, 14);
 			panel_1.add(lblMessageProduto);
 			
 			cbPedido = new JComboBox<String>();
 			cbPedido.setModel(new DefaultComboBoxModel<String>(getPedidoService().stringListAllPedidos()));
-			cbPedido.setBounds(159, 166, 374, 19);
+			cbPedido.setBounds(159, 129, 374, 19);
 			panel_1.add(cbPedido);
 			
 			lblMessagePedido = new JLabel("");
-			lblMessagePedido.setBounds(159, 187, 374, 14);
+			lblMessagePedido.setBounds(159, 150, 374, 14);
 			panel_1.add(lblMessagePedido);
 			
-			JLabel lblNewLabel_1_1_1 = new JLabel("Instante do pedido:");
+			JLabel lblNewLabel_1_1_1 = new JLabel("Descrição do pedido:");
 			lblNewLabel_1_1_1.setFont(new Font("Segoe UI", Font.ITALIC, 15));
-			lblNewLabel_1_1_1.setBounds(10, 162, 128, 21);
+			lblNewLabel_1_1_1.setBounds(10, 125, 128, 21);
 			panel_1.add(lblNewLabel_1_1_1);
 			
 			JLabel lblNewLabel_1_1_2 = new JLabel("Desconto:");
@@ -368,11 +391,6 @@ public class ItemPedidoView extends JFrame {
 			lblNewLabel_1_1_2_1.setFont(new Font("Segoe UI", Font.ITALIC, 15));
 			lblNewLabel_1_1_2_1.setBounds(10, 57, 151, 21);
 			panel_1.add(lblNewLabel_1_1_2_1);
-			
-			JLabel lblNewLabel_1_1_2_1_1 = new JLabel("Preço total:");
-			lblNewLabel_1_1_2_1_1.setFont(new Font("Segoe UI", Font.ITALIC, 15));
-			lblNewLabel_1_1_2_1_1.setBounds(10, 92, 151, 21);
-			panel_1.add(lblNewLabel_1_1_2_1_1);
 			
 			txtDesconto = new JTextField();
 			txtDesconto.setBounds(159, 22, 374, 20);
@@ -392,17 +410,8 @@ public class ItemPedidoView extends JFrame {
 			lblMessageQuantidade.setBounds(159, 77, 374, 14);
 			panel_1.add(lblMessageQuantidade);
 			
-			txtPreco = new JTextField();
-			txtPreco.setColumns(10);
-			txtPreco.setBounds(159, 93, 374, 20);
-			panel_1.add(txtPreco);
-			
-			lblMessagePreco = new JLabel("");
-			lblMessagePreco.setBounds(159, 113, 374, 14);
-			panel_1.add(lblMessagePreco);
-			
 			JPanel panel_2 = new JPanel();
-			panel_2.setBounds(0, 371, 555, 21);
+			panel_2.setBounds(0, 333, 555, 21);
 			contentPane.add(panel_2);
 			panel_2.setBackground(new Color(211, 61, 48));
 			panel_2.setLayout(null);

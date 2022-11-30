@@ -82,10 +82,6 @@ public class ProdutoView extends JFrame {
 //		});
 //	}
 	
-	
-	/**
-	 * Create the frame.
-	 */
 	public ProdutoView(Produto produto, Integer opcaoCadastro) {
 		setBackground(new Color(0, 0, 0));
 		setTitle("Produto");
@@ -106,7 +102,7 @@ public class ProdutoView extends JFrame {
 		else if(opcaoCadastro == Constantes.CONSULTAR) {
 			findById(produto.getId());
 			btnSalvar.setVisible(false);
-			btnCancelar.setBounds(225, 131, 114, 37);
+			btnCancelar.setBounds(225, 160, 114, 37);
 			btnCancelar.setText("Sair");
 		}
 	}
@@ -135,7 +131,7 @@ public class ProdutoView extends JFrame {
 			txtNome.addFocusListener(new FocusAdapter() {
 				@Override
 				public void focusLost(FocusEvent e) {
-					txtNome.setBorder(BorderFactory.createLineBorder(Color.black, 1));
+					txtNome.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
 					lblMessageNome.setVisible(false);
 				}
 			});
@@ -143,15 +139,7 @@ public class ProdutoView extends JFrame {
 			txtPreco.addFocusListener(new FocusAdapter() {
 				@Override
 				public void focusLost(FocusEvent e) {
-					txtPreco.setBorder(BorderFactory.createLineBorder(Color.black, 1));
-					lblMessagePreco.setVisible(false);
-				}
-			});
-			
-			txtPreco.addFocusListener(new FocusAdapter() {
-				@Override
-				public void focusLost(FocusEvent e) {
-					txtPreco.setBorder(BorderFactory.createLineBorder(Color.black, 1));
+					txtPreco.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
 					lblMessagePreco.setVisible(false);
 				}
 			});
@@ -159,8 +147,16 @@ public class ProdutoView extends JFrame {
 			cbCategoria.addFocusListener(new FocusAdapter() {
 				@Override
 				public void focusLost(FocusEvent e) {
-					cbCategoria.setBorder(BorderFactory.createLineBorder(Color.black, 1));
+					cbCategoria.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
 					lblMessageCategoria.setVisible(false);
+				}
+			});
+			
+			cbCodigoSerial.addFocusListener(new FocusAdapter() {
+				@Override
+				public void focusLost(FocusEvent e) {
+					cbCodigoSerial.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
+					lblMessageCodigoSerial.setVisible(false);
 				}
 			});
 		}
@@ -273,7 +269,7 @@ public class ProdutoView extends JFrame {
 			cbCodigoSerial.setSelectedIndex(-1);
 		}
 		
-		@SuppressWarnings({ "null", "unchecked" })
+		@SuppressWarnings({"unchecked" })
 		private void setProdutoFromView() {
 			produto.setNome(txtNome.getText());
 			produto.setPreco(Double.valueOf(txtPreco.getText()));
@@ -408,6 +404,7 @@ public class ProdutoView extends JFrame {
 			panel_1.add(cbCategoria);
 			
 			cbCodigoSerial = new JComboBox<String>();
+			cbCodigoSerial.setModel(new DefaultComboBoxModel<String>(getCodigoService().stringListAllCodigos()));
 			cbCodigoSerial.setBounds(102, 118, 431, 19);
 			panel_1.add(cbCodigoSerial);
 			

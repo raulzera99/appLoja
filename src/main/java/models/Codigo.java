@@ -66,5 +66,10 @@ public class Codigo implements Serializable{
 	public void setProduto(Produto produto) {
 		this.produto = produto;
 	}
+
+	@Override
+	public String toString() {
+		return "Codigo [id=" + id + ", numero=" + numero + ", produto=" + produto + "]";
+	}
 	
 }
