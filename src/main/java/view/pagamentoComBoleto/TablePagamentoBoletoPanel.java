@@ -18,7 +18,9 @@ import config.Constantes;
 import config.Page;
 import dao.PagamentoComBoletoDAO;
 import models.PagamentoComBoleto;
+import models.PrintJasperReports;
 import persistence.DataBaseConnection;
+import services.JasperReportsService;
 import services.PagamentoComBoletoService;
 import view.table.RenderHeaderTable;
 import view.table.RenderTable;
@@ -41,6 +43,7 @@ public class TablePagamentoBoletoPanel extends JPanel {
 	JButton btnAlterar;
 	JButton btnRemover;
 	JButton btnConsultar;
+	JButton btnRelatorio = new JButton("Relatório de todos os pagamentos");
 	JTextField txtSearch;
 	
 	
@@ -122,6 +125,16 @@ public class TablePagamentoBoletoPanel extends JPanel {
 			}
 		});
 		
+		btnRelatorio.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				PrintJasperReports relatorio = new PrintJasperReports();
+				JasperReportsService service = new JasperReportsService();
+				
+				relatorio.setFile("relatorio_pagamento");
+				service.gerarRelatorioPorSql(relatorio);
+			}
+		});
+		
 		txtSearch.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
@@ -177,6 +190,9 @@ public class TablePagamentoBoletoPanel extends JPanel {
 		btnConsultar = new JButton("Consultar");
 		btnConsultar.setBounds(346, 45, 89, 23);
 		panelButtons.add(btnConsultar);
+		
+		btnRelatorio.setBounds(460, 45, 197, 23);
+		panelButtons.add(btnRelatorio);
 		
 		panelSearch = new JPanel();
 		panelSearch.setBounds(10, 11, 1065, 42);

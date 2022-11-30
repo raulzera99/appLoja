@@ -21,7 +21,9 @@ import config.Constantes;
 import config.Page;
 import dao.PagamentoComCartaoDAO;
 import models.PagamentoComCartao;
+import models.PrintJasperReports;
 import persistence.DataBaseConnection;
+import services.JasperReportsService;
 import services.PagamentoComCartaoService;
 import view.table.RenderHeaderTable;
 import view.table.RenderTable;
@@ -41,6 +43,7 @@ public class TablePagamentoCartaoPanel extends JPanel {
 	JButton btnAlterar = new JButton("Alterar");
 	JButton btnRemover = new JButton("Remover");
 	JButton btnConsultar = new JButton("Consultar");
+	JButton btnRelatorio = new JButton("Relatório de todos os pagamentos");
 	JTextField txtSearch = new JTextField();
 	
 	
@@ -122,6 +125,16 @@ public class TablePagamentoCartaoPanel extends JPanel {
 			}
 		});
 		
+		btnRelatorio.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				PrintJasperReports relatorio = new PrintJasperReports();
+				JasperReportsService service = new JasperReportsService();
+				
+				relatorio.setFile("relatorio_pagamento");
+				service.gerarRelatorioPorSql(relatorio);
+			}
+		});
+		
 		txtSearch.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
@@ -168,6 +181,9 @@ public class TablePagamentoCartaoPanel extends JPanel {
 		
 		btnConsultar.setBounds(346, 45, 89, 23);
 		panelButtons.add(btnConsultar);
+		
+		btnRelatorio.setBounds(460, 45, 203, 23);
+		panelButtons.add(btnRelatorio);
 		
 		panelSearch.setBounds(10, 11, 1065, 42);
 		add(panelSearch);
