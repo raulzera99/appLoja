@@ -4,7 +4,7 @@
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="MySQLConnection"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<queryString>
-		<![CDATA[SELECT e.id, e.numero, e.bairro, e.CEP, ci.nome as cidade, c.nome as cliente, estado.nome
+		<![CDATA[SELECT e.id, e.numero, e.bairro, e.CEP, ci.nome as cidade, c.nome as cliente, estado.nome as estado
 FROM table_endereco e, table_cidade ci, table_cliente c, table_estado estado
 WHERE e.id_cidade = ci.id AND e.id_cliente = c.id AND ci.id_estado = estado.id
 ORDER BY e.id]]>
@@ -39,9 +39,9 @@ ORDER BY e.id]]>
 		<property name="com.jaspersoft.studio.field.label" value="cliente"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="table_cliente"/>
 	</field>
-	<field name="nome" class="java.lang.String">
+	<field name="estado" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.name" value="nome"/>
-		<property name="com.jaspersoft.studio.field.label" value="nome"/>
+		<property name="com.jaspersoft.studio.field.label" value="estado"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="table_estado"/>
 	</field>
 	<background>
@@ -283,26 +283,40 @@ ORDER BY e.id]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{nome}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{estado}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="32" splitType="Stretch">
+		<band height="34" splitType="Stretch">
 			<staticText>
-				<reportElement x="462" y="2" width="58" height="30" uuid="34961c5e-c650-4b0c-b158-34c537dff122"/>
+				<reportElement x="450" y="3" width="58" height="30" uuid="34961c5e-c650-4b0c-b158-34c537dff122"/>
 				<textElement textAlignment="Center">
 					<font size="12"/>
 				</textElement>
 				<text><![CDATA[Página:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="520" y="0" width="55" height="19" uuid="c3425629-3409-4e63-a97e-ad519f6c1a30"/>
+				<reportElement x="508" y="1" width="55" height="19" uuid="c3425629-3409-4e63-a97e-ad519f6c1a30"/>
 				<textElement>
 					<font size="14"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="200" y="1" width="55" height="19" uuid="78230f0f-9800-4ca7-a641-3f41189314f2"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="-11" y="3" width="201" height="30" uuid="c1ebf89d-0c4b-40ee-ac6e-d6c0193a36ee"/>
+				<textElement textAlignment="Center">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Número de endereços cadastrados: ]]></text>
+			</staticText>
 		</band>
 	</columnFooter>
 </jasperReport>

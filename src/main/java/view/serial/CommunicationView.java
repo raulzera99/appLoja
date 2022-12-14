@@ -311,11 +311,11 @@ public class CommunicationView extends JFrame {
 	private void leituraMicroControlador() {
 		
 		if (portOpen==true && conectado == true) {
-			//String c="A";
 			Thread leitura = new Thread() {
 				public void run() {
 				
 					while (true) {
+						conexao.sendData("1");
 						try {
 						 Thread.sleep(10000);
 						} catch(InterruptedException e) {

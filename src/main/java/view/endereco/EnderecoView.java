@@ -154,6 +154,21 @@ public class EnderecoView extends JFrame {
 					lblMessageCEP.setVisible(false);
 				}
 			});
+			
+			cbCidade.addFocusListener(new FocusAdapter() {
+				@Override
+				public void focusLost(FocusEvent e) {
+					cbCidade.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
+					lblMessageCidade.setVisible(false);
+				}
+			});
+			cbCliente.addFocusListener(new FocusAdapter() {
+				@Override
+				public void focusLost(FocusEvent e) {
+					cbCliente.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
+					lblMessageCliente.setVisible(false);
+				}
+			});
 		}
 		
 		@SuppressWarnings("unchecked")
@@ -256,6 +271,8 @@ public class EnderecoView extends JFrame {
 			
 			idEndereco = 0l;
 			txtNumero.setText("");
+			txtBairro.setText("");
+			txtCEP.setText("");
 			cbCidade.setSelectedIndex(-1);
 			cbCliente.setSelectedIndex(-1);
 		}
@@ -283,8 +300,8 @@ public class EnderecoView extends JFrame {
 			txtNumero.setText(String.valueOf(endereco.getNumero()));
 			txtBairro.setText(String.valueOf(endereco.getBairro()));
 			txtCEP.setText(String.valueOf(endereco.getCep()));
-			cbCidade.setSelectedItem(endereco.getCidade());
-			cbCliente.setSelectedItem(endereco.getCliente());
+			cbCidade.setSelectedItem(endereco.getCidade().getNome());
+			cbCliente.setSelectedItem(endereco.getCliente().getNome());
 		}
 
 		private void showErrorFromServidor() {

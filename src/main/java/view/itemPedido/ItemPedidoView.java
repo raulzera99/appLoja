@@ -16,6 +16,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import config.Constantes;
@@ -27,11 +28,11 @@ import models.ItemPedido;
 import models.Pedido;
 import models.Produto;
 import persistence.DataBaseConnection;
+import serial.SerialConnection;
 import services.ItemPedidoService;
 import services.PedidoService;
 import services.ProdutoService;
 import services.errors.ErrorsData;
-import javax.swing.JTextField;
 
 public class ItemPedidoView extends JFrame {
 	private static final long serialVersionUID = -2933295863195236029L;
@@ -55,6 +56,12 @@ public class ItemPedidoView extends JFrame {
 	private ItemPedido itemPedido = null;
 	private Pedido pedido = null;
 	private Produto produto = null;
+	
+	private String porta = new String();
+
+	private boolean portOpen = false;
+	private boolean conectado = false;
+	private SerialConnection conexao;
 	
 	private ModelResponse<ItemPedido> modelResponse = null;
 	private ModelResponse<ErrorsData> errors;
@@ -88,6 +95,7 @@ public class ItemPedidoView extends JFrame {
 		
 		if(opcaoCadastro == Constantes.INCLUIR) {
 			btnSalvar.setText("Incluir");
+			getConnection();
 		}
 		else if(opcaoCadastro == Constantes.ALTERAR) {
 			findById(itemPedido.getId());
@@ -105,7 +113,6 @@ public class ItemPedidoView extends JFrame {
 			btnCancelar.setBounds(225, 141, 114, 37);
 			btnCancelar.setText("Sair");
 		}
-		
 		
 	}
 	
@@ -184,6 +191,7 @@ public class ItemPedidoView extends JFrame {
 					modelResponse = (ModelResponse<ItemPedido>) itemPedidoService.add(itemPedido);
 					itemPedido = modelResponse.getObject();
 					JOptionPane.showMessageDialog(null, modelResponse.getMessage(), "Adicionado", JOptionPane.INFORMATION_MESSAGE);
+					conexao.close();
 				}
 				limpa();
 			}			
@@ -210,6 +218,7 @@ public class ItemPedidoView extends JFrame {
 			else {
 				itemPedido = modelResponse.getObject();
 				JOptionPane.showMessageDialog(null, modelResponse.getMessage(), "Alterado", JOptionPane.INFORMATION_MESSAGE);
+				conexao.close();
 			}
 			
 			limpa();
@@ -256,13 +265,22 @@ public class ItemPedidoView extends JFrame {
 			}
 			
 		}
-				
 		
 		private void limpa() {
 			
 			idItemPedido = 0L;
-			cbPedido.setSelectedIndex(-1);;
-			cbProduto.setSelectedIndex(-1);;
+			cbPedido.setSelectedIndex(-1);
+			cbProduto.setSelectedIndex(-1);
+		}
+		
+		@SuppressWarnings("unchecked")
+		public void setProdutoFromSerial() {
+			String codigo = conexao.getCodigo();
+			ModelResponse<Produto> mrProduto = new ModelResponse<Produto>();
+			mrProduto = (ModelResponse<Produto>) getProdutoService()
+					.findByCodigo(codigo);
+			produto = mrProduto.getObject();
+			cbProduto.setSelectedItem(produto.getNome());
 		}
 		
 		@SuppressWarnings("unchecked")
@@ -340,13 +358,11 @@ public class ItemPedidoView extends JFrame {
 			contentPane.add(panel_1);
 			panel_1.setLayout(null);
 			
-			
 			btnSalvar.setForeground(new Color(255, 255, 255));
 			btnSalvar.setBackground(new Color(211, 61, 48));
 			btnSalvar.setFont(new Font("Segoe UI", Font.ITALIC, 15));
 			btnSalvar.setBounds(116, 175, 114, 37);
 			panel_1.add(btnSalvar);
-			
 			
 			btnCancelar.setForeground(Color.WHITE);
 			btnCancelar.setFont(new Font("Segoe UI", Font.ITALIC, 15));
@@ -360,6 +376,7 @@ public class ItemPedidoView extends JFrame {
 			panel_1.add(lblNewLabel_1_1);
 			
 			cbProduto = new JComboBox<String>();
+			cbProduto.setEnabled(false);
 			cbProduto.setModel(new DefaultComboBoxModel<String>(getProdutoService().stringListAllProdutos()));
 			cbProduto.setBounds(159, 93, 374, 19);
 			panel_1.add(cbProduto);
@@ -451,4 +468,20 @@ public class ItemPedidoView extends JFrame {
 		public void setModelResponse(ModelResponse<ItemPedido> modelResponse) {
 			this.modelResponse = modelResponse;
 		}
+		
+		private void getConnection() {
+			
+			portOpen = conexao.openConnection(porta);
+			
+			if(portOpen == false) {
+				JOptionPane.showMessageDialog(null, "Erro: porta nao encontrada", "Erro", JOptionPane.ERROR_MESSAGE);
+			}
+			
+			if(portOpen == true && conectado == false) {
+				conectado = true;
+			}
+			
+		}
+
+		
 }

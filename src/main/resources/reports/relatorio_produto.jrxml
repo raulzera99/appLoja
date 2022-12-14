@@ -47,7 +47,7 @@ ORDER BY produto.id]]>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="20" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Relatório de Cidades Cadastradas]]></text>
+				<text><![CDATA[Relatório de Produtos Cadastrados]]></text>
 			</staticText>
 		</band>
 	</pageHeader>
@@ -175,7 +175,7 @@ ORDER BY produto.id]]>
 				<textFieldExpression><![CDATA[$F{nome_categoria}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="430" y="0" width="148" height="30" uuid="d5df08d7-229e-4af6-af25-222711d60e2d">
+				<reportElement x="430" y="0" width="145" height="30" uuid="d5df08d7-229e-4af6-af25-222711d60e2d">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="942f56cc-18df-47b4-91cb-d00e885dc2ad"/>
 				</reportElement>
 				<box>
@@ -193,21 +193,35 @@ ORDER BY produto.id]]>
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="32" splitType="Stretch">
+		<band height="35" splitType="Stretch">
 			<staticText>
-				<reportElement x="460" y="0" width="58" height="30" uuid="34961c5e-c650-4b0c-b158-34c537dff122"/>
+				<reportElement x="460" y="5" width="58" height="30" uuid="34961c5e-c650-4b0c-b158-34c537dff122"/>
 				<textElement textAlignment="Center">
 					<font size="12"/>
 				</textElement>
 				<text><![CDATA[Página:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="518" y="-2" width="55" height="19" uuid="c3425629-3409-4e63-a97e-ad519f6c1a30"/>
+				<reportElement x="518" y="3" width="55" height="19" uuid="c3425629-3409-4e63-a97e-ad519f6c1a30"/>
 				<textElement>
 					<font size="14"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="238" y="3" width="55" height="19" uuid="2dcc3b07-617b-42e3-bd44-737098d90d4c"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="40" y="5" width="198" height="30" uuid="dbbb79f7-f84a-4a67-a1f3-2af407068f10"/>
+				<textElement textAlignment="Center">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Número de produtos cadastrados:]]></text>
+			</staticText>
 		</band>
 	</columnFooter>
 </jasperReport>

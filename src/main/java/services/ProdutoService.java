@@ -6,6 +6,7 @@ import javax.persistence.EntityManager;
 
 import config.Page;
 import dao.ProdutoDAO;
+import message.Response;
 import models.Produto;
 
 public class ProdutoService extends DataBaseTransactionService<Produto, Long>{
@@ -36,5 +37,20 @@ public class ProdutoService extends DataBaseTransactionService<Produto, Long>{
 			i++;
 		}
 		return results;
+	}
+	
+	public Response findByCodigo(String name) {
+		openEntityManager();
+		Produto entity = null;
+		try {
+			entity = dao.searchByCodigo(name);
+			response = getMessageResponse().message(entity, "Encontrado com êxito !", false);	
+		} catch (Exception e) {
+			e.printStackTrace();
+			response = getMessageResponse().message(entity, e.getMessage(), true);	
+		} finally {
+			closeEntityManager();
+		}
+		return response;
 	}
 }

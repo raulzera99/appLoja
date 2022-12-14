@@ -69,7 +69,7 @@ public class Codigo implements Serializable{
 
 	@Override
 	public String toString() {
-		return "Codigo [id=" + id + ", numero=" + numero + ", produto=" + produto + "]";
+		return "Codigo [id=" + id + ", numero=" + numero +"]";
 	}
 	
 }

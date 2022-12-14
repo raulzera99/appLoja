@@ -23,6 +23,7 @@ public class SerialConnection implements SerialPortEventListener {
 	private CommPortIdentifier identificadorPorta;
 	private CommPort commPort;
     private List<String> ports;
+    private String codigo = null;
 	
 	
 	private BufferedReader leitura;
@@ -98,15 +99,16 @@ public class SerialConnection implements SerialPortEventListener {
 	
 
 	public boolean openConnection(String porta) {
-		System.out.println("tentando abrir a porta ");
+		System.out.println("tentando abrir a porta "+ porta);
 		if (!existe(porta)) {
+			
 			return false;
 		}
 		if (portOpen==true) {
 			portOpen = false;
 			close();
 		}
-		if (portOpen == false ) {
+		else {
 			try {
 				identificadorPorta = CommPortIdentifier.getPortIdentifier(porta);
 				if ( identificadorPorta.isCurrentlyOwned()) {
@@ -115,7 +117,7 @@ public class SerialConnection implements SerialPortEventListener {
 				}
 				if (portOpen==false) {
 					System.out.println("abrindo a porta ");
-					commPort = identificadorPorta.open(this.getClass().getName(),2000);
+					commPort = identificadorPorta.open("",2000);
 					serialPort = (SerialPort) commPort;
 					serialPort.setSerialPortParams(baudRate,dataBits,stopBits,parity);
 					serialPort.setFlowControlMode(SerialPort.FLOWCONTROL_NONE);
@@ -140,7 +142,7 @@ public class SerialConnection implements SerialPortEventListener {
 		return portOpen;
 	}
 
-	private void close() {
+	public void close() {
 		if ( serialPort != null) {
 			serialPort.removeEventListener();
 			serialPort.close();
@@ -158,7 +160,7 @@ public class SerialConnection implements SerialPortEventListener {
 	}
 
 	public void sendData(String palavra) {
-        System.out.println("tentado enviar mensagem >>>>>>>>>"+palavra +" " + portOpen);
+        System.out.println("tentado enviar mensagem >>>>>>>>> "+palavra +" " + portOpen);
 		try {
 			if (portOpen) {
 				System.out.println("escrevendo na serial >>>>>>");
@@ -175,19 +177,33 @@ public class SerialConnection implements SerialPortEventListener {
 	
 	@Override
 	public void serialEvent(SerialPortEvent event) {
-
+		System.out.println("evento disparado");
 		if (event.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
-			
+			System.out.println("existe informacao");
 			try {
-				int resultado = leitura.read();
-				System.out.println(" recebendo dados "+resultado);
+				
+				String resultado = leitura.readLine();
+				
+				System.out.println("recebendo dados "+resultado);
+				
+				setCodigo(resultado);
+				
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 			
 		}
-		
 	}
+	
+
+	public String getCodigo() {
+		return codigo;
+	}
+
+	public void setCodigo(String codigo) {
+		this.codigo = codigo;
+	}
+
 
 }
 

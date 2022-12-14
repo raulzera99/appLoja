@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
+import javax.validation.constraints.NotNull;
 
 import config.Page;
 import models.Produto;
@@ -40,6 +41,17 @@ public class ProdutoDAO extends GenericDAO<Produto, Long>{
 		
 		
 		return getPaginas(lista, page, pageSize, totalPaginas.intValue(), total.intValue());
+	}
+	
+	
+	public Produto searchByCodigo(@NotNull String name) {
+		Produto entity = null;
+		
+		TypedQuery<Produto> query = getEntityManager().createQuery("SELECT u FROM Produto u where u.codigo=:name", getClasse());
+		query.setParameter("name", name);
+		entity = query.getResultList().get(0);
+		
+		return entity; 
 	}
 
 }

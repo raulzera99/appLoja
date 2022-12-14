@@ -4,12 +4,13 @@
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="MySQLConnection"/>
 	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<queryString>
-		<![CDATA[SELECT c.id, c.nome, e.nome as estado
+		<![CDATA[SELECT c.id, c.nome, e.nome as estado, count(c.id)"num"
 FROM table_cidade c, table_estado e
 WHERE c.id_estado = e.id
-ORDER BY c.id]]>
+group by c.nome
+ORDER BY c.nome]]>
 	</queryString>
-	<field name="id" class="java.lang.Integer">
+	<field name="id" class="java.lang.Long">
 		<property name="com.jaspersoft.studio.field.name" value="id"/>
 		<property name="com.jaspersoft.studio.field.label" value="id"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="table_cidade"/>
@@ -24,6 +25,13 @@ ORDER BY c.id]]>
 		<property name="com.jaspersoft.studio.field.label" value="estado"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="table_estado"/>
 	</field>
+	<field name="num" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.name" value="num"/>
+		<property name="com.jaspersoft.studio.field.label" value="num"/>
+	</field>
+	<variable name="num1" class="java.lang.Integer" resetType="Column" calculation="Count">
+		<variableExpression><![CDATA[$F{num}]]></variableExpression>
+	</variable>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -177,20 +185,34 @@ ORDER BY c.id]]>
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="32" splitType="Stretch">
+		<band height="41" splitType="Stretch">
 			<staticText>
-				<reportElement x="460" y="0" width="58" height="30" uuid="34961c5e-c650-4b0c-b158-34c537dff122"/>
+				<reportElement x="460" y="9" width="58" height="30" uuid="34961c5e-c650-4b0c-b158-34c537dff122"/>
 				<textElement textAlignment="Center">
 					<font size="12"/>
 				</textElement>
 				<text><![CDATA[Página:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="518" y="-2" width="55" height="19" uuid="c3425629-3409-4e63-a97e-ad519f6c1a30"/>
+				<reportElement x="518" y="7" width="55" height="19" uuid="c3425629-3409-4e63-a97e-ad519f6c1a30"/>
 				<textElement>
 					<font size="14"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="100" y="11" width="178" height="30" uuid="d390850d-82f5-497c-b4fe-c25e9471b13c"/>
+				<textElement textAlignment="Center">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Número de cidades cadastradas: ]]></text>
+			</staticText>
+			<textField evaluationTime="Report">
+				<reportElement x="280" y="7" width="100" height="30" uuid="90667507-cd54-49ac-b693-498b4360dda0"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
 			</textField>
 		</band>
 	</columnFooter>
