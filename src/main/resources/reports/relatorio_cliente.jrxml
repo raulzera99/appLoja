@@ -224,7 +224,7 @@ order by cliente.id]]>
 					<rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[IF($F{tipo} == 1 ,"Pessoa Física" , "Pessoa Jurídica" )]]></textFieldExpression>
+				<textFieldExpression><![CDATA[($F{tipo}) == 1 ? "Pessoa Física": "Pessoa Jurídica" ]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="465" y="1" width="110" height="20" uuid="2bf21478-3819-4ae1-905c-7bbdf1e7aa03">

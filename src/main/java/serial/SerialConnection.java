@@ -16,6 +16,7 @@ import gnu.io.SerialPort;
 import gnu.io.SerialPortEvent;
 import gnu.io.SerialPortEventListener;
 import gnu.io.UnsupportedCommOperationException;
+import view.itemPedido.ItemPedidoView;
 
 public class SerialConnection implements SerialPortEventListener {
 
@@ -24,7 +25,7 @@ public class SerialConnection implements SerialPortEventListener {
 	private CommPort commPort;
     private List<String> ports;
     private String codigo = null;
-	
+	private ItemPedidoView itemPedidoView;
 	
 	private BufferedReader leitura;
 	private OutputStream escrita;
@@ -41,6 +42,14 @@ public class SerialConnection implements SerialPortEventListener {
 		this.parity = SerialPort.PARITY_NONE;
 		this.stopBits = SerialPort.STOPBITS_1;
 	}
+	
+	public SerialConnection(ItemPedidoView itemPedido) {
+		this.baudRate = 9600;
+		this.dataBits = SerialPort.DATABITS_8;
+		this.parity = SerialPort.PARITY_NONE;
+		this.stopBits = SerialPort.STOPBITS_1;
+		this.itemPedidoView = itemPedido;
+	}
 
 	public SerialConnection(int baudRate, int dataBits, int paridade, int stopBits) {
 		this.baudRate = baudRate;
@@ -49,7 +58,6 @@ public class SerialConnection implements SerialPortEventListener {
 		this.stopBits = stopBits;
 	}
 
-	
 	public int getBaudRate() {
 		return baudRate;
 	}
@@ -172,7 +180,6 @@ public class SerialConnection implements SerialPortEventListener {
 			e.printStackTrace();
 		}
 		
-		
 	}
 	
 	@Override
@@ -187,14 +194,13 @@ public class SerialConnection implements SerialPortEventListener {
 				System.out.println("recebendo dados "+resultado);
 				
 				setCodigo(resultado);
-				
+				itemPedidoView.setProdutoFromSerial();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 			
 		}
 	}
-	
 
 	public String getCodigo() {
 		return codigo;

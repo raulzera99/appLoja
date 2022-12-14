@@ -6,7 +6,9 @@
 	<queryString>
 		<![CDATA[select pedido.id, pedido.instante, pedido.data, pedido.descricao, produto.nome, categoria.nome as nome_categoria, 
 itemPedido.desconto, itemPedido.quantidade, itemPedido.preco, pagamento.estado_pagamento, endereco.numero, 
-endereco.bairro, endereco.cep, cliente.nome as nome_cliente, cliente.tipo, cliente.cpfOuCnpj, count(pedido.id) as total
+endereco.bairro, endereco.cep, cliente.nome as nome_cliente, cliente.tipo, cliente.cpfOuCnpj, 
+count(pedido.id) as total, 
+sum(itemPedido.preco) as total_preco
 from table_pedido pedido, table_produto produto, table_categoria categoria, table_item_pedido itemPedido,
 table_pagamento pagamento, table_endereco endereco, table_cliente cliente
 where 
@@ -16,8 +18,7 @@ AND itemPedido.id_produto = produto.id
 AND produto.id_categoria = categoria.id
 AND pedido.id_endereco = endereco.id
 AND pedido.id_cliente = cliente.id
-group by itemPedido.id
-]]>
+group by itemPedido.id]]>
 	</queryString>
 	<field name="id" class="java.lang.Long">
 		<property name="com.jaspersoft.studio.field.name" value="id"/>
@@ -102,6 +103,10 @@ group by itemPedido.id
 	<field name="total" class="java.lang.Long">
 		<property name="com.jaspersoft.studio.field.name" value="total"/>
 		<property name="com.jaspersoft.studio.field.label" value="total"/>
+	</field>
+	<field name="total_preco" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.name" value="total_preco"/>
+		<property name="com.jaspersoft.studio.field.label" value="total_preco"/>
 	</field>
 	<background>
 		<band splitType="Stretch"/>
@@ -623,7 +628,7 @@ group by itemPedido.id
 					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#E0E0E0"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[IF($F{tipo} == 1 ,"Pessoa Física" , "Pessoa Jurídica" )]]></textFieldExpression>
+				<textFieldExpression><![CDATA[($F{tipo}) == 1 ? "Pessoa Física": "Pessoa Jurídica" ]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="400" y="60" width="176" height="20" uuid="a806c25d-52ae-4df2-b36a-a42b4a9efcde">
@@ -678,7 +683,7 @@ group by itemPedido.id
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA[SUM($F{preco})]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{total_preco}]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report">
 				<reportElement x="170" y="3" width="55" height="19" uuid="a9a2768d-3957-4b45-9d25-b49faac8c554"/>

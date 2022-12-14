@@ -326,7 +326,6 @@ public class CommunicationView extends JFrame {
 			};
 			leitura.start();
 		}
-		
 	}
 	
 	public String[] getBaudRate() {

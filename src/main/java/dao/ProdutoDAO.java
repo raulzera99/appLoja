@@ -44,7 +44,7 @@ public class ProdutoDAO extends GenericDAO<Produto, Long>{
 	}
 	
 	
-	public Produto searchByCodigo(@NotNull String name) {
+	public Produto searchByCodigo(String name) {
 		Produto entity = null;
 		
 		TypedQuery<Produto> query = getEntityManager().createQuery("SELECT u FROM Produto u where u.codigo=:name", getClasse());

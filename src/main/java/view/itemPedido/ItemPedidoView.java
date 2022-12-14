@@ -57,11 +57,10 @@ public class ItemPedidoView extends JFrame {
 	private Pedido pedido = null;
 	private Produto produto = null;
 	
-	private String porta = new String();
 
 	private boolean portOpen = false;
 	private boolean conectado = false;
-	private SerialConnection conexao;
+	private SerialConnection conexao = new SerialConnection(this);
 	
 	private ModelResponse<ItemPedido> modelResponse = null;
 	private ModelResponse<ErrorsData> errors;
@@ -275,10 +274,10 @@ public class ItemPedidoView extends JFrame {
 		
 		@SuppressWarnings("unchecked")
 		public void setProdutoFromSerial() {
-			String codigo = conexao.getCodigo();
+			
 			ModelResponse<Produto> mrProduto = new ModelResponse<Produto>();
 			mrProduto = (ModelResponse<Produto>) getProdutoService()
-					.findByCodigo(codigo);
+					.findByCodigo(conexao.getCodigo());
 			produto = mrProduto.getObject();
 			cbProduto.setSelectedItem(produto.getNome());
 		}
@@ -471,7 +470,7 @@ public class ItemPedidoView extends JFrame {
 		
 		private void getConnection() {
 			
-			portOpen = conexao.openConnection(porta);
+			portOpen = conexao.openConnection("COM4");
 			
 			if(portOpen == false) {
 				JOptionPane.showMessageDialog(null, "Erro: porta nao encontrada", "Erro", JOptionPane.ERROR_MESSAGE);
