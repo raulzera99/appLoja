@@ -109,7 +109,7 @@ public class ItemPedidoView extends JFrame {
 		else if(opcaoCadastro == Constantes.CONSULTAR) {
 			findById(itemPedido.getId());
 			btnSalvar.setVisible(false);
-			btnCancelar.setBounds(225, 141, 114, 37);
+			btnCancelar.setBounds(225, 148, 114, 37);
 			btnCancelar.setText("Sair");
 		}
 		
@@ -473,7 +473,7 @@ public class ItemPedidoView extends JFrame {
 			portOpen = conexao.openConnection("COM4");
 			
 			if(portOpen == false) {
-				JOptionPane.showMessageDialog(null, "Erro: porta nao encontrada", "Erro", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, "Erro: porta não encontrada", "Erro", JOptionPane.ERROR_MESSAGE);
 			}
 			
 			if(portOpen == true && conectado == false) {
